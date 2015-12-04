@@ -2,7 +2,7 @@
 
 namespace ITCO.SboAddon.Framework.Helpers
 {
-    public class UserDefiniedHelper
+    public class UserDefinedHelper
     {
         public static int GetFieldId(string tableName, string fieldAlias)
         {
