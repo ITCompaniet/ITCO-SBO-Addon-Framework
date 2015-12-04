@@ -36,6 +36,12 @@ namespace ITCO.SboAddon.Framework.Helpers
             return true;
         }
 
+        public static bool CreateFieldOnUDT(string tableName, string fieldName, string fieldDescription, BoFieldTypes type = BoFieldTypes.db_Alpha, int size = 50)
+        {
+            tableName = "@" + tableName;
+            return CreateField(tableName, fieldName, fieldDescription, type, size);
+        }
+
         public static bool CreateField(string tableName, string fieldName, string fieldDescription, BoFieldTypes type = BoFieldTypes.db_Alpha, int size = 50)
         {
             UserFieldsMD userFieldsMD = null;
@@ -44,7 +50,7 @@ namespace ITCO.SboAddon.Framework.Helpers
             {
                 userFieldsMD = SboApp.Company.GetBusinessObject(BoObjectTypes.oUserFields) as UserFieldsMD;
 
-                var fieldId = UserDefinedHelper.GetFieldId(tableName, fieldName);
+                var fieldId = GetFieldId(tableName, fieldName);
                 if (fieldId == -1)
                 {
                     userFieldsMD.TableName = tableName;

@@ -11,6 +11,18 @@ namespace ITCO.SboAddon.Framework.Services
         public const string UDT_Settings = "ITCO_FW_Settings";
         public const string UDF_Setting_Value = "ITCO_FW_SValue";
 
+        public static bool Setup()
+        {
+            var setupOk = true;
+            if (!UserDefinedHelper.CreateTable(UDT_Settings, "Settings"))
+                setupOk = false;
+
+            if (!UserDefinedHelper.CreateFieldOnUDT(UDT_Settings, UDF_Setting_Value, "Value"))
+                setupOk = false;
+
+            return setupOk;
+        }
+
         public static T GetSettingByKey<T>(string key, T defaultValue = default(T))
         {
             if (string.IsNullOrEmpty(key))
