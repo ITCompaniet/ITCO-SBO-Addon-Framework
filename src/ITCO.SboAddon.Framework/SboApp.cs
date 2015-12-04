@@ -20,13 +20,13 @@ namespace ITCO.SboAddon.Framework
                 var contextCookie = _diCompany.GetContextCookie();
                 var diCompanyConnectionString = _application.Company.GetConnectionContext(contextCookie);
 
-                var response = _diCompany.SetSboLoginContext(diCompanyConnectionString);
-                if (response != 0)
-                    throw new Exception("DI API Could not Set Sbo Login Context");
+                var responseCode = _diCompany.SetSboLoginContext(diCompanyConnectionString);
+                if (responseCode != 0)
+                    throw new Exception(string.Format("DI API Could not Set Sbo Login Context: Error Code {0}", responseCode));
 
                 var connectResponse = _diCompany.Connect();
                 if (connectResponse != 0)
-                    throw new Exception("DI API Could not connect");
+                    throw new Exception(string.Format("DI API Could not connect: Error Code {0}", connectResponse));
 
                 _application.StatusBar.SetText("Connected to SBO", SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success);
 
