@@ -5,7 +5,7 @@ namespace ITCO.SboAddon.Framework.Helpers
 {
     public class UserDefinedHelper
     {
-        public static bool CreateTable(string tableName, string tableDescription, BoFieldTypes type, int size = 30)
+        public static bool CreateTable(string tableName, string tableDescription)
         {
             UserTablesMD userTablesMD = null;
 
@@ -36,7 +36,7 @@ namespace ITCO.SboAddon.Framework.Helpers
             return true;
         }
 
-        public static bool CreateField(string tableName, string fieldName, string fieldDescription, BoFieldTypes type, int size = 30)
+        public static bool CreateField(string tableName, string fieldName, string fieldDescription, BoFieldTypes type = BoFieldTypes.db_Alpha, int size = 50)
         {
             UserFieldsMD userFieldsMD = null;
 
