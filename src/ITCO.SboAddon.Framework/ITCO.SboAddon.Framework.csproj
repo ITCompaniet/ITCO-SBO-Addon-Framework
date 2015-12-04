@@ -44,6 +44,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants\SboForm.cs" />
+    <Compile Include="Constants\SboMenuItem.cs" />
+    <Compile Include="Constants\SboTable.cs" />
+    <Compile Include="Extensions\DataExtensions.cs" />
+    <Compile Include="Extensions\FormExtensions.cs" />
+    <Compile Include="Extensions\ItemExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Helpers\FormHelper.cs" />
+    <Compile Include="Helpers\MenuHelper.cs" />
+    <Compile Include="Helpers\RecordsetQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SboApp.cs" />
   </ItemGroup>
