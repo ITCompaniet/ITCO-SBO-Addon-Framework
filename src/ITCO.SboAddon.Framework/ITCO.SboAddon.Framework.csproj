@@ -51,11 +51,14 @@
     <Compile Include="Extensions\FormExtensions.cs" />
     <Compile Include="Extensions\ItemExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Helpers\ErrorHelper.cs" />
     <Compile Include="Helpers\FormHelper.cs" />
     <Compile Include="Helpers\MenuHelper.cs" />
     <Compile Include="Helpers\RecordsetQuery.cs" />
+    <Compile Include="Helpers\UserDefiniedHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SboApp.cs" />
+    <Compile Include="Services\SettingService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
