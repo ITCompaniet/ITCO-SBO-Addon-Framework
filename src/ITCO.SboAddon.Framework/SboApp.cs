@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ITCO.SboAddon.Framework.Helpers;
+using System;
 
 namespace ITCO.SboAddon.Framework
 {
@@ -21,12 +22,10 @@ namespace ITCO.SboAddon.Framework
                 var diCompanyConnectionString = _application.Company.GetConnectionContext(contextCookie);
 
                 var responseCode = _diCompany.SetSboLoginContext(diCompanyConnectionString);
-                if (responseCode != 0)
-                    throw new Exception(string.Format("DI API Could not Set Sbo Login Context: Error Code {0}", responseCode));
+                ErrorHelper.HandleErrorWithException(responseCode, "DI API Could not Set Sbo Login Context");
 
                 var connectResponse = _diCompany.Connect();
-                if (connectResponse != 0)
-                    throw new Exception(string.Format("DI API Could not connect: Error Code {0}", connectResponse));
+                ErrorHelper.HandleErrorWithException(connectResponse, "DI API Could not connect");
 
                 _application.StatusBar.SetText("Connected to SBO", SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success);
 
@@ -35,6 +34,39 @@ namespace ITCO.SboAddon.Framework
             catch (Exception ex)
             {
                 _application.StatusBar.SetText(ex.Message, SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Error);
+                throw ex;
+            }
+        }
+
+        public static void DiConnect(string serverName, SAPbobsCOM.BoDataServerTypes serverType, string companyDb,
+            string dbUsername = null, string dbPassword = null, string username = null, string password = null)
+        {
+            _diCompany = new SAPbobsCOM.Company();
+
+            try
+            {
+                _diCompany.Server = serverName;
+                _diCompany.DbServerType = serverType;
+                _diCompany.CompanyDB = companyDb;
+
+                if (username == null)
+                {
+                    _diCompany.UseTrusted = true;
+                }
+                else
+                {
+                    _diCompany.UseTrusted = false;
+                    _diCompany.UserName = username;
+                    _diCompany.Password = password;
+                    _diCompany.DbUserName = dbUsername;
+                    _diCompany.DbPassword = dbPassword;
+                }
+
+                var connectResponse = _diCompany.Connect();
+                ErrorHelper.HandleErrorWithException(connectResponse, "DI API Could not connect");
+            }
+            catch (Exception ex)
+            {
                 throw ex;
             }
         }
@@ -62,6 +94,9 @@ namespace ITCO.SboAddon.Framework
                 case SAPbouiCOM.BoAppEventTypes.aet_CompanyChanged:
                 case SAPbouiCOM.BoAppEventTypes.aet_LanguageChanged:
                 case SAPbouiCOM.BoAppEventTypes.aet_ServerTerminition:
+                    if (Company.Connected)
+                        Company.Disconnect();
+
                     Environment.Exit(0);
                     break;
             }
