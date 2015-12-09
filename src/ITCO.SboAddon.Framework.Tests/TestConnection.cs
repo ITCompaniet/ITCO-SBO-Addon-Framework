@@ -13,9 +13,9 @@ namespace ITCO.SboAddon.Framework.Tests
             {
                 SboApp.DiConnect("KENNY-SUPERDELL", SAPbobsCOM.BoDataServerTypes.dst_MSSQL2014, "SBODemoUS", "dbo", "dbopass", "manager", "password");
             }
-            catch
+            catch (Exception e)
             {
-
+                throw new AssertFailedException(e.Message);
             }
         }
     }
