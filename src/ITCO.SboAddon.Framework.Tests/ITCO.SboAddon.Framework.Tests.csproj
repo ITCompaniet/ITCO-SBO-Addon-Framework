@@ -53,9 +53,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="TestConnection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestDialogs.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ITCO.SboAddon.Framework\ITCO.SboAddon.Framework.csproj">
