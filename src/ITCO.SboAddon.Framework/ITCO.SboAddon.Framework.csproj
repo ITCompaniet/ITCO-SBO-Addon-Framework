@@ -55,6 +55,7 @@
     <Compile Include="Extensions\FormExtensions.cs" />
     <Compile Include="Extensions\ItemExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="FormController.cs" />
     <Compile Include="Helpers\DialogHelper.cs" />
     <Compile Include="Helpers\ErrorHelper.cs" />
     <Compile Include="Helpers\FormHelper.cs" />

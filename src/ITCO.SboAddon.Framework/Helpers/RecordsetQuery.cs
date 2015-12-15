@@ -4,15 +4,15 @@ using System.Collections.Generic;
 
 namespace ITCO.SboAddon.Framework.Helpers
 {
-    public class RecordsetQuery : IDisposable
+    public class SboRecordsetQuery : IDisposable
     {
         private Recordset _recordSetObject;
 
-        public RecordsetQuery(string sql)
+        public SboRecordsetQuery(string sql, params object[] args)
         {
             _recordSetObject = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;
 
-            _recordSetObject.DoQuery(sql);
+            _recordSetObject.DoQuery(string.Format(sql, args));
         }
 
         public int Count
@@ -48,18 +48,21 @@ namespace ITCO.SboAddon.Framework.Helpers
         }
     }
 
-
-    public class RecordsetQuery<T> : IDisposable
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T">SBO Business Object</typeparam>
+    public class SboRecordsetQuery<T> : IDisposable
     {
         private Recordset _recordSetObject;
         private dynamic _businessObject;
 
-        public RecordsetQuery(string sql, BoObjectTypes boObjectTypes)
+        public SboRecordsetQuery(string sql, BoObjectTypes boObjectTypes, params object[] args)
         {
             _recordSetObject = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;
             _businessObject = SboApp.Company.GetBusinessObject(boObjectTypes);
 
-            _recordSetObject.DoQuery(sql);
+            _recordSetObject.DoQuery(string.Format(sql, args));
             _businessObject.Browser.Recordset = _recordSetObject;
         }
 
@@ -93,6 +96,22 @@ namespace ITCO.SboAddon.Framework.Helpers
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(_recordSetObject);
 
             _recordSetObject = null;
+        }
+    }
+
+
+    public static class SboRecordset
+    {
+        /// <summary>
+        /// Executes SQL without result set
+        /// </summary>
+        /// <param name="sql">SQL query</param>
+        /// <returns>Affected rows</returns>
+        public static int NonQuery(string sql, params object[] args)
+        {
+            var recordSetObject = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;
+            recordSetObject.DoQuery(string.Format(sql, args));
+            return recordSetObject.RecordCount;
         }
     }
 }
