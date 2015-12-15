@@ -3,11 +3,18 @@ using System;
 
 namespace ITCO.SboAddon.Framework
 {
+    /// <summary>
+    /// SBO Application Connector
+    /// </summary>
     public class SboApp
     {
         private static SAPbouiCOM.Application _application;
         private static SAPbobsCOM.Company _diCompany;
 
+        /// <summary>
+        /// Connect UI and DI Api
+        /// </summary>
+        /// <param name="connectionString"></param>
         public static void Connect(string connectionString)
         {
             var sboGuiApi = new SAPbouiCOM.SboGuiApi();
@@ -38,6 +45,16 @@ namespace ITCO.SboAddon.Framework
             }
         }
 
+        /// <summary>
+        /// Connect only DI Api
+        /// </summary>
+        /// <param name="serverName">SQL Server Name</param>
+        /// <param name="serverType"></param>
+        /// <param name="companyDb"></param>
+        /// <param name="dbUsername"></param>
+        /// <param name="dbPassword"></param>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
         public static void DiConnect(string serverName, SAPbobsCOM.BoDataServerTypes serverType, string companyDb,
             string dbUsername = null, string dbPassword = null, string username = null, string password = null)
         {
@@ -71,17 +88,23 @@ namespace ITCO.SboAddon.Framework
             }
         }
 
+        /// <summary>
+        /// SBO UI Application Object
+        /// </summary>
         public static SAPbouiCOM.Application Application
         {
             get { return _application; }
         }
 
+        /// <summary>
+        /// SBO DI Company Object
+        /// </summary>
         public static SAPbobsCOM.Company Company
         {
             get { return _diCompany; }
         }
 
-        public static void SetEvents()
+        private static void SetEvents()
         {
             Application.AppEvent += Application_AppEvent;
         }
@@ -97,7 +120,7 @@ namespace ITCO.SboAddon.Framework
                     if (Company.Connected)
                         Company.Disconnect();
 
-                    Environment.Exit(0);
+                    System.Windows.Forms.Application.Exit();
                     break;
             }
         }
