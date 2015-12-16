@@ -34,7 +34,11 @@ namespace ITCO.SboAddon.Framework.Tester
                 new TextDialogInput("t3", "Title 3 Req", null, true),
                 new DateDialogInput("t4", "Date 1"),
                 new CheckboxDialogInput("t5", "Check 1", true),
-                new CheckboxDialogInput("t6", "Check off", false)
+                new CheckboxDialogInput("t6", "Check off", false),
+                new DropdownDialogInput("t7", "Droppy", new Dictionary<string, string>() {
+                    { "o1", "Option 1" },
+                    { "o2", "Option 2" }
+                }, "o2", true)
             });
         }
     }

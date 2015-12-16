@@ -77,6 +77,9 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
 
         public object GetValue()
         {
+            if (_editText.Value.Length != 8)
+                return null;
+            
             return DateTime.ParseExact(_editText.Value, "yyyyMMdd", CultureInfo.InvariantCulture);
         }
     }

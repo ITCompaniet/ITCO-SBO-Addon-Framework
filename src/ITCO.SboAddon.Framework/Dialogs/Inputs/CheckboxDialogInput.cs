@@ -29,8 +29,8 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
             {
                 _item = value;
                 _checkBox = _item.Specific as CheckBox;
-                _checkBox.Checked = _defaultValue;
                 _checkBox.DataBind.SetBound(true, "", _id);
+                _checkBox.Checked = _defaultValue;
             }
         }
 
