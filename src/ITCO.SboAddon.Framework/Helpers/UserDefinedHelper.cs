@@ -5,6 +5,12 @@ namespace ITCO.SboAddon.Framework.Helpers
 {
     public class UserDefinedHelper
     {
+        /// <summary>
+        /// Create UDT
+        /// </summary>
+        /// <param name="tableName">Table name eg: NS_MyTable</param>
+        /// <param name="tableDescription"></param>
+        /// <returns>Success</returns>
         public static bool CreateTable(string tableName, string tableDescription)
         {
             UserTablesMD userTablesMD = null;
@@ -36,12 +42,30 @@ namespace ITCO.SboAddon.Framework.Helpers
             return true;
         }
 
+        /// <summary>
+        /// Create UDF on UDT
+        /// </summary>
+        /// <param name="tableName">UDT Name without @</param>
+        /// <param name="fieldName">Field name</param>
+        /// <param name="fieldDescription"></param>
+        /// <param name="type">BoFieldTypes type</param>
+        /// <param name="size"></param>
+        /// <returns></returns>
         public static bool CreateFieldOnUDT(string tableName, string fieldName, string fieldDescription, BoFieldTypes type = BoFieldTypes.db_Alpha, int size = 50)
         {
             tableName = "@" + tableName;
             return CreateField(tableName, fieldName, fieldDescription, type, size);
         }
 
+        /// <summary>
+        /// Create field on table
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="fieldName"></param>
+        /// <param name="fieldDescription"></param>
+        /// <param name="type"></param>
+        /// <param name="size"></param>
+        /// <returns></returns>
         public static bool CreateField(string tableName, string fieldName, string fieldDescription, BoFieldTypes type = BoFieldTypes.db_Alpha, int size = 50)
         {
             UserFieldsMD userFieldsMD = null;
@@ -78,7 +102,12 @@ namespace ITCO.SboAddon.Framework.Helpers
             return true;
         }
 
-
+        /// <summary>
+        /// Get Field Id
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="fieldAlias"></param>
+        /// <returns></returns>
         public static int GetFieldId(string tableName, string fieldAlias)
         {
             var recordSet = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;

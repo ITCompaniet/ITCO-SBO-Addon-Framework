@@ -1,4 +1,6 @@
-﻿using ITCO.SboAddon.Framework.Helpers;
+﻿using ITCO.SboAddon.Framework.Dialogs;
+using ITCO.SboAddon.Framework.Dialogs.Inputs;
+using ITCO.SboAddon.Framework.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -26,11 +28,13 @@ namespace ITCO.SboAddon.Framework.Tester
 
         private void Test_GetString()
         {
-            var s = DialogHelper.GetInputs("Test", new List<IDialogInput>() {
+            var s = InputHelper.GetInputs("Test", new List<IDialogInput>() {
                 new TextDialogInput("t1", "Title 1"),
                 new TextDialogInput("t2", "Title 2", "def 2"),
                 new TextDialogInput("t3", "Title 3 Req", null, true),
-                new TextDialogInput("t4", "Title 4")
+                new DateDialogInput("t4", "Date 1"),
+                new CheckboxDialogInput("t5", "Check 1", true),
+                new CheckboxDialogInput("t6", "Check off", false)
             });
         }
     }
