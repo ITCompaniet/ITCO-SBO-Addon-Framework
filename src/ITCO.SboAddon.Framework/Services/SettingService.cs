@@ -75,6 +75,9 @@ namespace ITCO.SboAddon.Framework.Services
                     foreach (var setting in query.Result)
                     {
                         var value = setting.Item(0).Value as string;
+                        if (value == "")
+                            value = null;
+
                         name = setting.Item(1).Value as string;
                         
                         returnValue = To<T>(value);
@@ -89,7 +92,7 @@ namespace ITCO.SboAddon.Framework.Services
 
             if (returnValue == null && askIfNotFound)
             {
-                var inputTitle = string.Format("Insert setting {0}", key);
+                var inputTitle = string.Format("Insert setting {0}", name);
                 if (userCode != null)
                     inputTitle += string.Format(" for {0}", userCode);
 
@@ -131,17 +134,21 @@ namespace ITCO.SboAddon.Framework.Services
                 exists = query.Count == 1;
             }
 
+            var sqlValue = string.Format("'{0}'", value);
+            if (value == null)
+                sqlValue = "NULL";
+
             if (exists)
             {
-                sql = string.Format("UPDATE [@{0}] SET [U_{1}] = '{2}' WHERE [Code] = '{3}'", UDT_Settings, UDF_Setting_Value, value, sqlKey);
+                sql = string.Format("UPDATE [@{0}] SET [U_{1}] = {2} WHERE [Code] = '{3}'", UDT_Settings, UDF_Setting_Value, sqlValue, sqlKey);
             }
             else
             {
                 if (name == null)
                     name = sqlKey;
 
-                sql = string.Format("INSERT INTO [@{0}] ([Code], [Name], [U_{1}]) VALUES ('{2}', '{3}', '{4}')", 
-                    UDT_Settings, UDF_Setting_Value, sqlKey, name, value);
+                sql = string.Format("INSERT INTO [@{0}] ([Code], [Name], [U_{1}]) VALUES ('{2}', '{3}', {4})", 
+                    UDT_Settings, UDF_Setting_Value, sqlKey, name, sqlValue);
             }
 
             SboRecordset.NonQuery(sql);
