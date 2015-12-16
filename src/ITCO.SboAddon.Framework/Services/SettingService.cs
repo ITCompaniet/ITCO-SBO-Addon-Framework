@@ -13,7 +13,6 @@ namespace ITCO.SboAddon.Framework.Services
     {
         private const string UDT_Settings = "ITCO_FW_Settings";
         private const string UDF_Setting_Value = "ITCO_FW_SValue";
-        private const string UDF_Setting_Usercode = "ITCO_FW_User";
         private static bool setupOk = false;
 
         public static bool Init()
@@ -28,14 +27,22 @@ namespace ITCO.SboAddon.Framework.Services
 
             if (!UserDefinedHelper.CreateFieldOnUDT(UDT_Settings, UDF_Setting_Value, "Value"))
                 setupOk = false;
-
-            //if (!UserDefinedHelper.CreateFieldOnUDT(UDT_Settings, UDF_Setting_Usercode, "Usercode"))
-            //    setupOk = false;
-
+            
             if (setupOk)
                 SboApp.Application.StatusBar.SetText("SettingService Init [OK]", SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success);
 
             return setupOk;
+        }
+        /// <summary>
+        /// Create Empty Setting if not exists
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="name"></param>
+        public static void InitSetting<T>(string key, string name)
+        {
+            if (GetSettingByKey<T>(key) == null)
+                SaveSetting<T>(key, name: name);
         }
 
         public static T GetCurrentUserSettingByKey<T>(string key, T defaultValue = default(T), bool askIfNotFound = false)
@@ -117,7 +124,7 @@ namespace ITCO.SboAddon.Framework.Services
         /// <param name="value"></param>
         /// <param name="userCode"></param>
         /// <param name="name"></param>
-        public static void SaveSetting<T>(string key, T value, string userCode = null, string name = null)
+        public static void SaveSetting<T>(string key, T value = default(T), string userCode = null, string name = null)
         {
             Init();
 
