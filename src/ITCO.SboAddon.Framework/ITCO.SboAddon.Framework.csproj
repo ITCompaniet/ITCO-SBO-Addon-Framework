@@ -56,6 +56,8 @@
     <Compile Include="Dialogs\Inputs\DateDialogInput.cs" />
     <Compile Include="Dialogs\Inputs\DropdownDialogInput.cs" />
     <Compile Include="Dialogs\Inputs\IDialogInput.cs" />
+    <Compile Include="Dialogs\Inputs\DecimalDialogInput.cs" />
+    <Compile Include="Dialogs\Inputs\IntegerDialogInput.cs" />
     <Compile Include="Dialogs\Inputs\TextDialogInput.cs" />
     <Compile Include="Extensions\DataExtensions.cs" />
     <Compile Include="Extensions\FormExtensions.cs" />

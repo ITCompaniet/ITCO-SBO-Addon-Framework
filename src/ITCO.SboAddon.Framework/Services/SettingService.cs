@@ -66,6 +66,7 @@ namespace ITCO.SboAddon.Framework.Services
 
             var returnValue = defaultValue;
             var name = key;
+            var notFound = true;
 
             try
             {
@@ -84,6 +85,8 @@ namespace ITCO.SboAddon.Framework.Services
                         var value = setting.Item(0).Value as string;
                         if (value == "")
                             value = null;
+                        else
+                            notFound = false;
 
                         name = setting.Item(1).Value as string;
                         
@@ -97,17 +100,31 @@ namespace ITCO.SboAddon.Framework.Services
                 return returnValue;
             }
 
-            if (returnValue == null && askIfNotFound)
+            if (notFound && askIfNotFound)
             {
                 var inputTitle = string.Format("Insert setting {0}", name);
                 if (userCode != null)
                     inputTitle += string.Format(" for {0}", userCode);
 
+                IDialogInput input = new TextDialogInput("setting", name, required: true);
+
+                if (typeof(T) == typeof(bool))
+                    input = new CheckboxDialogInput("setting", name);
+
+                if (typeof(T) == typeof(DateTime))
+                    input = new DateDialogInput("setting", name, required: true);
+
+                if (typeof(T) == typeof(int))
+                    input = new IntegerDialogInput("setting", name, required: true);
+
+                if (typeof(T) == typeof(decimal))
+                    input = new DecimalDialogInput("setting", name, required: true);
+
                 var result = InputHelper.GetInputs(inputTitle, new List<IDialogInput>()
                             {
-                                new TextDialogInput("setting", name, required: true)
+                                input
                             });
-                var newSetting = result.First().Value as string;
+                var newSetting = result.First().Value;
                 SaveSetting(key, newSetting, userCode);
 
                 returnValue = To<T>(newSetting);
@@ -141,7 +158,7 @@ namespace ITCO.SboAddon.Framework.Services
                 exists = query.Count == 1;
             }
 
-            var sqlValue = string.Format("'{0}'", value);
+            var sqlValue = string.Format(CultureInfo.InvariantCulture, "'{0}'", value);
             if (value == null)
                 sqlValue = "NULL";
 

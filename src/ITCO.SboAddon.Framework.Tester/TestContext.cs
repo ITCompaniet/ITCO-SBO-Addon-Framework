@@ -30,12 +30,16 @@ namespace ITCO.SboAddon.Framework.Tester
 
         private void Test_Setting()
         {
-            SettingService.InitSetting<string>("test.init", "Test INIT");
+            //SettingService.InitSetting<string>("test.init", "Test INIT");
 
-            var setting_init = SettingService.GetSettingByKey<string>("test.init", askIfNotFound: true);
+            //var setting_init = SettingService.GetSettingByKey<string>("test.init", askIfNotFound: true);
 
-            var setting = SettingService.GetSettingByKey<string>("test.key2", askIfNotFound: true);
-            var setting2 = SettingService.GetCurrentUserSettingByKey<string>("test.key2", askIfNotFound: true);
+            //var setting_str = SettingService.GetSettingByKey<string>("test.string", askIfNotFound: true);
+            var setting_int = SettingService.GetSettingByKey<int>("test.int", askIfNotFound: true);
+            var setting_dec = SettingService.GetSettingByKey<decimal>("test.decimal", askIfNotFound: true);
+            //var setting_bool = SettingService.GetSettingByKey<bool>("test.bool", askIfNotFound: true);
+            //var setting = SettingService.GetSettingByKey<string>("test.key2", askIfNotFound: true);
+            //var setting2 = SettingService.GetCurrentUserSettingByKey<string>("test.key2", askIfNotFound: true);
         }
 
         private void Test_GetString()
