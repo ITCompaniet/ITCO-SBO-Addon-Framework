@@ -1,6 +1,7 @@
 ﻿using ITCO.SboAddon.Framework.Dialogs;
 using ITCO.SboAddon.Framework.Dialogs.Inputs;
 using ITCO.SboAddon.Framework.Helpers;
+using ITCO.SboAddon.Framework.Services;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -17,13 +18,20 @@ namespace ITCO.SboAddon.Framework.Tester
             {
                 SboApp.Connect(connectionString);
 
-                Test_GetString();       
+                // Test_GetString();
+                Test_Setting();       
             }
             catch (Exception e)
             {
                 MessageBox.Show(string.Format("Error: {0}\nExiting...", e.Message));
                 Application.Exit();
             }
+        }
+
+        private void Test_Setting()
+        {
+            var setting = SettingService.GetSettingByKey<string>("test.key2", askIfNotFound: true);
+            var setting2 = SettingService.GetCurrentUserSettingByKey<string>("test.key2", askIfNotFound: true);
         }
 
         private void Test_GetString()

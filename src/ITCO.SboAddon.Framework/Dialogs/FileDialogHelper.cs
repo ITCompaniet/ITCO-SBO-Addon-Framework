@@ -1,7 +1,8 @@
-﻿using System;
+﻿using ITCO.SboAddon.Framework.Helpers;
+using System;
 using System.Windows.Forms;
 
-namespace ITCO.SboAddon.Framework.Helpers
+namespace ITCO.SboAddon.Framework.Dialogs
 {
     /// <summary>
     /// Dialog helper
