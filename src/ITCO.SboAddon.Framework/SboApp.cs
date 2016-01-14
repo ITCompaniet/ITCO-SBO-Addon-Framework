@@ -12,6 +12,19 @@ namespace ITCO.SboAddon.Framework
         private static SAPbobsCOM.Company _diCompany;
 
         /// <summary>
+        /// Set existing DI and/or UI Api Connection
+        /// </summary>
+        /// <param name="diCompany">SAPbobsCOM.Company</param>
+        /// <param name="application">SAPbouiCOM.Application</param>
+        public static void SetApiConnection(
+            SAPbobsCOM.Company diCompany, SAPbouiCOM.Application application = null)
+        {
+            _diCompany = diCompany;
+            if (_application != null)
+                _application = application;
+        }
+
+        /// <summary>
         /// Connect UI and DI Api
         /// </summary>
         /// <param name="connectionString"></param>
@@ -36,7 +49,7 @@ namespace ITCO.SboAddon.Framework
 
                 _application.StatusBar.SetText("Connected to SBO", SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success);
 
-                SetEvents();
+                SetAppEvents();
             }
             catch (Exception ex)
             {
@@ -104,9 +117,9 @@ namespace ITCO.SboAddon.Framework
             get { return _diCompany; }
         }
 
-        private static void SetEvents()
+        private static void SetAppEvents()
         {
-            Application.AppEvent += Application_AppEvent;
+            _application.AppEvent += Application_AppEvent;
         }
 
         private static void Application_AppEvent(SAPbouiCOM.BoAppEventTypes EventType)
@@ -117,8 +130,8 @@ namespace ITCO.SboAddon.Framework
                 case SAPbouiCOM.BoAppEventTypes.aet_CompanyChanged:
                 case SAPbouiCOM.BoAppEventTypes.aet_LanguageChanged:
                 case SAPbouiCOM.BoAppEventTypes.aet_ServerTerminition:
-                    if (Company.Connected)
-                        Company.Disconnect();
+                    if (_diCompany.Connected)
+                        _diCompany.Disconnect();
 
                     System.Windows.Forms.Application.Exit();
                     break;

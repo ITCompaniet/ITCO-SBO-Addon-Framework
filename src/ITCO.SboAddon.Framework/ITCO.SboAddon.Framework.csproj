@@ -63,8 +63,9 @@
     <Compile Include="Extensions\FormExtensions.cs" />
     <Compile Include="Extensions\ItemExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="FormController.cs" />
+    <Compile Include="Forms\FormController.cs" />
     <Compile Include="Dialogs\FileDialogHelper.cs" />
+    <Compile Include="Forms\Freeze.cs" />
     <Compile Include="Helpers\ErrorHelper.cs" />
     <Compile Include="Helpers\FormHelper.cs" />
     <Compile Include="Helpers\MenuHelper.cs" />

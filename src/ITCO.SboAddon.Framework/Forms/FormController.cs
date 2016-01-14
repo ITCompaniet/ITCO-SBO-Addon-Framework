@@ -1,7 +1,7 @@
 ﻿using ITCO.SboAddon.Framework.Helpers;
 using SAPbouiCOM;
 
-namespace ITCO.SboAddon.Framework
+namespace ITCO.SboAddon.Framework.Forms
 {
     /// <summary>
     /// Base Form Controller
