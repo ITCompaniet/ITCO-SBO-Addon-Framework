@@ -20,7 +20,7 @@ namespace ITCO.SboAddon.Framework
             SAPbobsCOM.Company diCompany, SAPbouiCOM.Application application = null)
         {
             _diCompany = diCompany;
-            if (_application != null)
+            if (application != null)
                 _application = application;
         }
 
