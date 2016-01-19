@@ -5,13 +5,31 @@ namespace ITCO.SboAddon.Framework.Helpers
 {
     public class UserDefinedHelper
     {
+        public class UserDefinedTable
+        {
+            public UserDefinedTable(string tableName)
+            {
+                TableName = tableName;
+            }
+            public string TableName { get; set; }
+
+            // Floud API
+            public UserDefinedTable CreateUDF(string fieldName, string fieldDescription,
+            BoFieldTypes type = BoFieldTypes.db_Alpha, int size = 50, BoFldSubTypes subType = BoFldSubTypes.st_None)
+            {
+                CreateField(TableName, fieldName, fieldDescription, type, size, subType);            
+                return this;
+            }
+        }
+
         /// <summary>
         /// Create UDT
         /// </summary>
         /// <param name="tableName">Table name eg: NS_MyTable</param>
         /// <param name="tableDescription"></param>
+        /// <param name="tableType"></param>
         /// <returns>Success</returns>
-        public static bool CreateTable(string tableName, string tableDescription)
+        public static UserDefinedTable CreateTable(string tableName, string tableDescription, BoUTBTableType tableType = BoUTBTableType.bott_NoObject)
         {
             UserTablesMD userTablesMD = null;
 
@@ -23,6 +41,8 @@ namespace ITCO.SboAddon.Framework.Helpers
                 {
                     userTablesMD.TableName = tableName;
                     userTablesMD.TableDescription = tableDescription;
+                    userTablesMD.TableType = tableType;
+
                     ErrorHelper.HandleErrorWithException(
                         userTablesMD.Add(), 
                         string.Format("Could not create UDT {0}", tableName));
@@ -31,7 +51,7 @@ namespace ITCO.SboAddon.Framework.Helpers
             catch (Exception ex)
             {
                 SboApp.Application.MessageBox(ex.Message);
-                return false;
+                throw ex;                
             }
             finally
             {
@@ -39,7 +59,7 @@ namespace ITCO.SboAddon.Framework.Helpers
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(userTablesMD);
             }
 
-            return true;
+            return new UserDefinedTable("@" + tableName);
         }
 
         /// <summary>
@@ -50,11 +70,13 @@ namespace ITCO.SboAddon.Framework.Helpers
         /// <param name="fieldDescription"></param>
         /// <param name="type">BoFieldTypes type</param>
         /// <param name="size"></param>
+        /// <param name="subType"></param>
         /// <returns></returns>
-        public static bool CreateFieldOnUDT(string tableName, string fieldName, string fieldDescription, BoFieldTypes type = BoFieldTypes.db_Alpha, int size = 50)
+        public static void CreateFieldOnUDT(string tableName, string fieldName, string fieldDescription, 
+            BoFieldTypes type = BoFieldTypes.db_Alpha, int size = 50, BoFldSubTypes subType = BoFldSubTypes.st_None)
         {
             tableName = "@" + tableName;
-            return CreateField(tableName, fieldName, fieldDescription, type, size);
+            CreateField(tableName, fieldName, fieldDescription, type, size, subType);
         }
 
         /// <summary>
@@ -65,8 +87,10 @@ namespace ITCO.SboAddon.Framework.Helpers
         /// <param name="fieldDescription"></param>
         /// <param name="type"></param>
         /// <param name="size"></param>
+        /// <param name="subType"></param>
         /// <returns></returns>
-        public static bool CreateField(string tableName, string fieldName, string fieldDescription, BoFieldTypes type = BoFieldTypes.db_Alpha, int size = 50)
+        public static void CreateField(string tableName, string fieldName, string fieldDescription, 
+            BoFieldTypes type = BoFieldTypes.db_Alpha, int size = 50, BoFldSubTypes subType = BoFldSubTypes.st_None)
         {
             UserFieldsMD userFieldsMD = null;
 
@@ -81,6 +105,7 @@ namespace ITCO.SboAddon.Framework.Helpers
                     userFieldsMD.Name = fieldName;
                     userFieldsMD.Description = fieldDescription;
                     userFieldsMD.Type = type;
+                    userFieldsMD.SubType = subType;
                     userFieldsMD.Size = size;
                     userFieldsMD.EditSize = size;
                     ErrorHelper.HandleErrorWithException(
@@ -91,15 +116,13 @@ namespace ITCO.SboAddon.Framework.Helpers
             catch (Exception ex)
             {
                 SboApp.Application.MessageBox(ex.Message);
-                return false;
+                throw ex;
             }
             finally
             {
                 if (userFieldsMD != null)
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(userFieldsMD);
             }
-
-            return true;
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using ITCO.SboAddon.Framework.Helpers;
+using ITCO.SboAddon.Framework.Setup;
 using SAPbouiCOM;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,7 @@ namespace ITCO.SboAddon.Framework
 
                 SboApp.Connect(connectionString);
 
-                Setup();
+                SetupManager.FindAndRunSetups(Assembly.GetEntryAssembly());
 
                 SboApp.Application.SetFilter(EventFilters());
                 MenuItems();
@@ -102,11 +103,6 @@ namespace ITCO.SboAddon.Framework
                 Action = action
             });
             MenuHelper.AddItem(title, menuId, parentMenuId, position);
-        }
-
-        public virtual void Setup()
-        {
-
         }
 
         public virtual EventFilters EventFilters()

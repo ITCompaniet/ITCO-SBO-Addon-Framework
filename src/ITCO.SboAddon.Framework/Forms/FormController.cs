@@ -1,5 +1,6 @@
 ﻿using ITCO.SboAddon.Framework.Helpers;
 using SAPbouiCOM;
+using System;
 
 namespace ITCO.SboAddon.Framework.Forms
 {
@@ -50,11 +51,17 @@ namespace ITCO.SboAddon.Framework.Forms
         {
             if (_form != null)
                 return;
-
-            var assembly = GetType().Assembly;
-            _form = FormHelper.CreateFormFromResource(FormResource, FormType, assembly);
-            BindFormEvents();
-            _form.Visible = true;
+            try
+            {
+                var assembly = GetType().Assembly;
+                _form = FormHelper.CreateFormFromResource(FormResource, FormType, assembly);
+                BindFormEvents();
+                _form.Visible = true;
+            }
+            catch (Exception e)
+            {
+                SboApp.Application.MessageBox(string.Format("Failed to open form {0}: {1}", FormType, e.Message));
+            }      
         }
 
         /// <summary>

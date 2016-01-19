@@ -19,18 +19,24 @@ namespace ITCO.SboAddon.Framework.Services
         {
             if (setupOk)
                 return true;
-
-            setupOk = true;
-
-            if (!UserDefinedHelper.CreateTable(UDT_Settings, "Settings"))
-                setupOk = false;
-
-            if (!UserDefinedHelper.CreateFieldOnUDT(UDT_Settings, UDF_Setting_Value, "Value"))
-                setupOk = false;
             
-            if (setupOk)
-                SboApp.Application.StatusBar.SetText("SettingService Init [OK]", SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success);
+            try
+            {
+                UserDefinedHelper.CreateTable(UDT_Settings, "Settings")
+                    .CreateUDF(UDF_Setting_Value, "Value");
 
+                setupOk = true;
+                SboApp.Application.StatusBar.SetText("SettingService Init [OK]", 
+                    SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success);
+            }
+            catch (Exception e)
+            {
+                SboApp.Application.StatusBar.SetText(string.Format("SettingService Init [NOT OK] {0}", e.Message), 
+                    SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Error);
+                
+                setupOk = false;
+            }
+                
             return setupOk;
         }
         /// <summary>
