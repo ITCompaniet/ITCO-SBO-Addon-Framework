@@ -47,13 +47,15 @@ namespace ITCO.SboAddon.Framework
                 var connectResponse = _diCompany.Connect();
                 ErrorHelper.HandleErrorWithException(connectResponse, "DI API Could not connect");
 
-                _application.StatusBar.SetText("Connected to SBO", SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success);
+                var assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+                _application.StatusBar.SetText(string.Format("{0} connected to SBO", assemblyName), SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success);
 
                 SetAppEvents();
             }
             catch (Exception ex)
             {
-                _application.StatusBar.SetText(ex.Message, SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Error);
+                if (_application != null)
+                    _application.StatusBar.SetText(ex.Message, SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Error);
                 throw ex;
             }
         }
@@ -115,6 +117,37 @@ namespace ITCO.SboAddon.Framework
         public static SAPbobsCOM.Company Company
         {
             get { return _diCompany; }
+        }
+
+        /// <summary>
+        /// Check if SBO UI API is Connected
+        /// </summary>
+        public static bool ApplicationConnected
+        {
+            get
+            {
+                if (_application == null)
+                    return false;
+                
+                if (DiConnected)
+                    return true;
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Check if SBO DI API is Connected
+        /// </summary>
+        public static bool DiConnected
+        {
+            get
+            {
+                if (_diCompany != null && _diCompany.Connected)
+                    return true;
+
+                return false;
+            }
         }
 
         private static void SetAppEvents()
