@@ -28,7 +28,8 @@ namespace ITCO.SboAddon.Framework.Forms
         /// </summary>
         public FormController()
         {
-            _form = FormHelper.CreateFormFromResource(FormResource, FormType);
+            var assembly = System.Reflection.Assembly.GetCallingAssembly();
+            _form = FormHelper.CreateFormFromResource(FormResource, FormType, assembly);
             BindFormEvents();
             _form.Visible = true;
         }
