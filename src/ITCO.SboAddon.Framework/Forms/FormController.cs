@@ -55,6 +55,7 @@ namespace ITCO.SboAddon.Framework.Forms
             {
                 var assembly = GetType().Assembly;
                 _form = FormHelper.CreateFormFromResource(FormResource, FormType, assembly);
+                FormCreated();
                 BindFormEvents();
                 _form.Visible = true;
             }
@@ -62,6 +63,13 @@ namespace ITCO.SboAddon.Framework.Forms
             {
                 SboApp.Application.MessageBox(string.Format("Failed to open form {0}: {1}", FormType, e.Message));
             }      
+        }
+
+        /// <summary>
+        /// Edit Form after it is created
+        /// </summary>
+        public virtual void FormCreated()
+        {
         }
 
         /// <summary>
