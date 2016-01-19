@@ -47,7 +47,7 @@ namespace ITCO.SboAddon.Framework
                 var connectResponse = _diCompany.Connect();
                 ErrorHelper.HandleErrorWithException(connectResponse, "DI API Could not connect");
 
-                var assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+                var assemblyName = System.Reflection.Assembly.GetEntryAssembly().GetName().Name;
                 _application.StatusBar.SetText(string.Format("{0} connected to SBO", assemblyName), SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success);
 
                 SetAppEvents();
