@@ -1,12 +1,53 @@
-﻿using SAPbouiCOM;
+﻿using ITCO.SboAddon.Framework.Forms;
+using SAPbouiCOM;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Xml;
 
 namespace ITCO.SboAddon.Framework.Helpers
 {
+    /// <summary>
+    /// Helpers for menu handling
+    /// </summary>
     public class MenuHelper
     {
+        /// <summary>
+        /// Get Menu Items Events from Form Controller Classes
+        /// </summary>
+        /// <param name="assembly"></param>
+        /// <returns></returns>
+        public static ICollection<AddonMenuEvent> LoadMenuItemsFromFormControllers(Assembly assembly)
+        {
+            var addonMenuEvents = new List<AddonMenuEvent>();
+
+            var formControllers = (from t in assembly.GetTypes()
+                                   where t.IsClass && !t.IsAbstract
+                                   && t.IsSubclassOf(typeof(FormController))
+                                   && t.GetInterfaces().Contains(typeof(IFormMenuItem))
+                                   select t).ToList();
+
+            foreach (var formController in formControllers)
+            {
+                var formMenuItem = Activator.CreateInstance(formController) as IFormMenuItem;
+                var item = new AddonMenuEvent
+                {
+                    MenuId = formMenuItem.MenuItemId,
+                    ParentMenuId = formMenuItem.ParentMenuItemId,
+                    Position = formMenuItem.MenuItemPosition,
+                    Title = formMenuItem.MenuItemTitle,
+                    Action = () =>
+                    {
+                        ((FormController)Activator.CreateInstance(formController)).Start();
+                    }
+                };
+                addonMenuEvents.Add(item);
+            }
+
+            return addonMenuEvents;
+        }
+
         /// <summary>
         /// Load Menu from XML
         /// </summary>

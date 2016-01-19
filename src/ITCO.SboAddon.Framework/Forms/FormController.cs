@@ -11,24 +11,47 @@ namespace ITCO.SboAddon.Framework.Forms
         /// <summary>
         /// Form Object
         /// </summary>
-        protected readonly IForm _form;
+        protected IForm _form;
 
         /// <summary>
-        /// Eg. MyProject.Forms.MyForm.srf
+        /// Eg. Forms.MyForm.srf
         /// </summary>
-        public abstract string FormResource { get; }
+        public virtual string FormResource
+        {
+            get
+            {
+                return string.Format("Forms.{0}.srf", GetType().Name.Replace("Controller", string.Empty));
+            }
+        }
 
         /// <summary>
         /// Eg. NS_MyFormType1
         /// </summary>
-        public abstract string FormType { get; }
-
+        public virtual string FormType
+        {
+            get
+            {
+                return string.Format("ITCO_{0}", GetType().Name.Replace("Controller", string.Empty));
+            }
+        }
         /// <summary>
         /// Create new Form
-        /// </summary>
-        public FormController()
+        /// </summary>        
+        public FormController(bool autoStart = false)
         {
-            var assembly = System.Reflection.Assembly.GetCallingAssembly();
+            if (autoStart)
+                Start();
+        }
+
+        /// <summary>
+        /// Initalize and show form
+        /// </summary>
+        public void Start()
+        {
+            if (_form != null)
+                return;
+
+            var assembly = GetType().Assembly;
             _form = FormHelper.CreateFormFromResource(FormResource, FormType, assembly);
             BindFormEvents();
             _form.Visible = true;
@@ -41,5 +64,17 @@ namespace ITCO.SboAddon.Framework.Forms
         {
         }
 
+        #region Default IFormMenuItem
+        public string MenuItemId
+        {
+            get { return string.Format("{0}_M", FormType); }
+            
+        }
+
+        public int MenuItemPosition
+        {
+            get { return -1; }
+        }
+        #endregion
     }
 }

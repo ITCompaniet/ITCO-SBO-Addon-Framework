@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\IFormMenuItem.cs" />
     <Compile Include="SboAddonContext.cs" />
     <Compile Include="Constants\SboDocumentItem.cs" />
     <Compile Include="Constants\SboForm.cs" />

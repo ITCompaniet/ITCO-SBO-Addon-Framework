@@ -1,5 +1,9 @@
-﻿using SAPbouiCOM;
+﻿using ITCO.SboAddon.Framework.Helpers;
+using SAPbouiCOM;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace ITCO.SboAddon.Framework
@@ -16,11 +20,14 @@ namespace ITCO.SboAddon.Framework
     /// </example>
     public class SboAddonContext : ApplicationContext
     {
+        private List<AddonMenuEvent> _addonMenuEvents = new List<AddonMenuEvent>();
         /// <summary>
         /// Connecting to SBO
         /// </summary>
         public SboAddonContext()
         {
+            System.Windows.Forms.Application.ApplicationExit += Application_ApplicationExit;
+            
             try
             {
                 // Debug connection string
@@ -36,12 +43,65 @@ namespace ITCO.SboAddon.Framework
 
                 SboApp.Application.SetFilter(EventFilters());
                 MenuItems();
+
+                var formMenuEvents = MenuHelper.LoadMenuItemsFromFormControllers(Assembly.GetEntryAssembly());
+                foreach (var item in formMenuEvents)
+                {
+                    AddMenuItemEvent(item.Title, item.MenuId, item.ParentMenuId, item.Action, item.Position);
+                }
+
+                SboApp.Application.MenuEvent += Application_MenuEvent;
             }
             catch (Exception e)
             {
                 MessageBox.Show(string.Format("SBO Connect Error: {0}\nExiting...", e.Message));
                 ExitThread();
             }
+        }
+
+        #region Events
+        private void Application_ApplicationExit(object sender, EventArgs e)
+        {
+            foreach (var item in _addonMenuEvents)
+            {
+                // TODO: Remove menu items
+            }
+        }
+
+        private void Application_MenuEvent(ref MenuEvent pVal, out bool BubbleEvent)
+        {
+            BubbleEvent = true;
+
+            if (pVal.BeforeAction)
+                return;
+
+            var menuId = pVal.MenuUID;
+            var menuEvent = _addonMenuEvents.FirstOrDefault(e => e.MenuId == menuId);
+
+            if (menuEvent != null)
+            {
+                menuEvent.Action.Invoke();
+            }
+        }
+        #endregion
+
+        /// <summary>
+        /// Add Menu Item with action
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="menuId"></param>
+        /// <param name="parentMenuId"></param>
+        /// <param name="action"></param>
+        /// <param name="position"></param>
+        protected void AddMenuItemEvent(string title, string menuId, string parentMenuId, Action action, int position = -1)
+        {
+            _addonMenuEvents.Add(new AddonMenuEvent
+            {
+                MenuId = menuId,
+                ParentMenuId = parentMenuId,
+                Action = action
+            });
+            MenuHelper.AddItem(title, menuId, parentMenuId, position);
         }
 
         public virtual void Setup()
@@ -51,12 +111,24 @@ namespace ITCO.SboAddon.Framework
 
         public virtual EventFilters EventFilters()
         {
-            return new EventFilters();
+            var eventFilters = new EventFilters();
+            eventFilters.Add(BoEventTypes.et_MENU_CLICK);
+            return eventFilters;
         }
 
         public virtual void MenuItems()
         {
 
         }
+
+    }
+
+    public class AddonMenuEvent
+    {
+        public string ParentMenuId { get; set; }
+        public string MenuId { get; set; }
+        public Action Action { get; set; }
+        public string Title { get; set; }
+        public int Position { get; set; }
     }
 }

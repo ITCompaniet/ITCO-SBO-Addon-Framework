@@ -18,6 +18,7 @@ namespace ITCO.SboAddon.Framework.Helpers
             var formXml = string.Empty;
             try
             {
+                resourceName = string.Concat(assembly.GetName().Name, ".", resourceName);
                 var stream = assembly.GetManifestResourceStream(resourceName);
                 if (stream == null)
                     throw new Exception(string.Format("Failed to load resource {0}", resourceName));
