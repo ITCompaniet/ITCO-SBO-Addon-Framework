@@ -13,8 +13,11 @@ namespace ITCO.SboAddon.Framework.Helpers
         /// <param name="formtype">Form type (identifyer)</param>
         /// <param name="assembly"></param>
         /// <returns>IForm reference</returns>
-        public static IForm CreateFormFromResource(string resourceName, string formtype, Assembly assembly)
+        public static IForm CreateFormFromResource(string resourceName, string formtype, Assembly assembly = null)
         {
+            if (assembly == null)
+                assembly = Assembly.GetCallingAssembly();
+
             var formXml = string.Empty;
             try
             {
