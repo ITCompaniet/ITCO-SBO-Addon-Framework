@@ -19,6 +19,18 @@ namespace ITCO.SboAddon.Framework.Helpers
             if (assembly == null)
                 assembly = Assembly.GetCallingAssembly();
 
+
+            if (formId != null)
+            {
+                // Try get existing form
+                try
+                {
+                    var form = SboApp.Application.Forms.Item(formId);                    
+                    return form;
+                }
+                catch { }                
+            }
+
             var formXml = string.Empty;
             try
             {

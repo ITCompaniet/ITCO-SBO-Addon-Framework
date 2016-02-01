@@ -54,7 +54,7 @@ namespace ITCO.SboAddon.Framework.Forms
             try
             {
                 var assembly = GetType().Assembly;
-                _form = FormHelper.CreateFormFromResource(FormResource, FormType, assembly);
+                _form = FormHelper.CreateFormFromResource(FormResource, FormType, null, assembly);
                 FormCreated();
                 BindFormEvents();
                 _form.Visible = true;
