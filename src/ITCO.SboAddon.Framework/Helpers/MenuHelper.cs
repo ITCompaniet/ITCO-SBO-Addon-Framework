@@ -11,7 +11,7 @@ namespace ITCO.SboAddon.Framework.Helpers
     /// <summary>
     /// Helpers for menu handling
     /// </summary>
-    public class MenuHelper
+    public static class MenuHelper
     {
         /// <summary>
         /// Get Menu Items Events from Form Controller Classes
@@ -72,35 +72,41 @@ namespace ITCO.SboAddon.Framework.Helpers
         }
 
         /// <summary>
+        /// Add Folder (Fluid API Style)
+        /// </summary>
+        /// <param name="parentMenuItem"></param>
+        /// <param name="title"></param>
+        /// <param name="itemId"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public static MenuItem AddFolder(this MenuItem parentMenuItem, string title, string itemId, int position = -1)
+        {
+            return parentMenuItem.Add(title, itemId, position, BoMenuType.mt_POPUP);
+        }
+
+        /// <summary>
         /// Add Menu Folder
         /// </summary>
         /// <param name="title"></param>
         /// <param name="itemId"></param>
         /// <param name="parentItemId"></param>
         /// <param name="position"></param>
-        public static void AddFolder(string title, string itemId, string parentItemId, int position = -1)
+        public static MenuItem AddFolder(string title, string itemId, string parentItemId, int position = -1)
         {
-            try
-            {
-                var parentMenuItem = SboApp.Application.Menus.Item(parentItemId);
+            var parentMenuItem = SboApp.Application.Menus.Item(parentItemId);
+            return parentMenuItem.Add(title, itemId, position, BoMenuType.mt_POPUP);
+        }
 
-                if (!parentMenuItem.SubMenus.Exists(itemId))
-                {
-                    var creationPackage = SboApp.Application.CreateObject(BoCreatableObjectType.cot_MenuCreationParams) as MenuCreationParams;
-
-                    creationPackage.Type = BoMenuType.mt_POPUP;
-                    creationPackage.UniqueID = itemId;
-                    creationPackage.String = title;
-                    creationPackage.Enabled = true;
-                    creationPackage.Position = position;
-
-                    parentMenuItem.SubMenus.AddEx(creationPackage);
-                }
-            }
-            catch (Exception e)
-            {
-                SboApp.Application.SetStatusBarMessage(string.Format("Error creating menu item (folder) {0}: {1}", itemId, e.Message));
-            }
+        /// <summary>
+        /// Add Menu Item (Fluid API Style)
+        /// </summary>
+        /// <param name="parentMenuItem"></param>
+        /// <param name="title"></param>
+        /// <param name="itemId"></param>
+        /// <param name="position"></param>
+        public static MenuItem AddItem(this MenuItem parentMenuItem, string title, string itemId, int position = -1)
+        {
+            return parentMenuItem.Add(title, itemId, position, BoMenuType.mt_STRING);
         }
 
         /// <summary>
@@ -110,17 +116,32 @@ namespace ITCO.SboAddon.Framework.Helpers
         /// <param name="itemId"></param>
         /// <param name="parentItemId"></param>
         /// <param name="position"></param>
-        public static void AddItem(string title, string itemId, string parentItemId, int position = -1)
+        public static MenuItem AddItem(string title, string itemId, string parentItemId, int position = -1)
+        {
+            var parentMenuItem = SboApp.Application.Menus.Item(parentItemId);
+            return parentMenuItem.Add(title, itemId, position, BoMenuType.mt_STRING);
+        }
+
+        /// <summary>
+        /// Add Separator
+        /// </summary>
+        /// <param name="parentMenuItem"></param>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
+        public static MenuItem AddSeparator(this MenuItem parentMenuItem, string itemId)
+        {
+            return parentMenuItem.Add("", itemId, -1, BoMenuType.mt_SEPERATOR);
+        }
+
+        private static MenuItem Add(this MenuItem parentMenuItem, string title, string itemId, int position, BoMenuType type)
         {
             try
             {
-                var parentMenuItem = SboApp.Application.Menus.Item(parentItemId);
-
                 if (!parentMenuItem.SubMenus.Exists(itemId))
                 {
                     var creationPackage = SboApp.Application.CreateObject(BoCreatableObjectType.cot_MenuCreationParams) as MenuCreationParams;
 
-                    creationPackage.Type = BoMenuType.mt_STRING;
+                    creationPackage.Type = type;
                     creationPackage.UniqueID = itemId;
                     creationPackage.String = title;
                     creationPackage.Image = "";
@@ -134,7 +155,18 @@ namespace ITCO.SboAddon.Framework.Helpers
             {
                 SboApp.Application.SetStatusBarMessage(string.Format("Error creating menu item (string) {0}: {1}", itemId, e.Message));
             }
-        }
 
+            try
+            {
+                if (type == BoMenuType.mt_POPUP)
+                    return parentMenuItem.SubMenus.Item(itemId);
+                else
+                    return parentMenuItem;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(string.Format("Menu {0} not found in {1}", itemId, parentMenuItem.UID), e);
+            }
+        }
     }
 }
