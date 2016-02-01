@@ -11,9 +11,10 @@ namespace ITCO.SboAddon.Framework.Helpers
         /// </summary>
         /// <param name="resourceName"></param>
         /// <param name="formtype">Form type (identifyer)</param>
+        /// <param name="formId">Optional FormId</param>
         /// <param name="assembly"></param>
         /// <returns>IForm reference</returns>
-        public static IForm CreateFormFromResource(string resourceName, string formtype, Assembly assembly = null)
+        public static IForm CreateFormFromResource(string resourceName, string formtype, string formId = null, Assembly assembly = null)
         {
             if (assembly == null)
                 assembly = Assembly.GetCallingAssembly();
@@ -34,6 +35,9 @@ namespace ITCO.SboAddon.Framework.Helpers
                 creationPackage.FormType = formtype;
                 creationPackage.BorderStyle = BoFormBorderStyle.fbs_Fixed;
                 creationPackage.XmlData = formXml;
+
+                if (formId != null)
+                    creationPackage.UniqueID = formId;
 
                 var form = SboApp.Application.Forms.AddEx(creationPackage);
                 return form;
