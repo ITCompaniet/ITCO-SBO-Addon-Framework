@@ -55,7 +55,7 @@ namespace ITCO.SboAddon.Framework
             }
             catch (Exception e)
             {
-                MessageBox.Show(string.Format("SBO Connect Error: {0}\nExiting...", e.Message));
+                MessageBox.Show($"SBO Connect Error: {e.Message}\nExiting...");
                 ExitThread();
             }
         }

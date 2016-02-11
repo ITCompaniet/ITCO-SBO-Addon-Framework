@@ -24,7 +24,8 @@ namespace ITCO.SboAddon.Framework.Helpers
         {
             _statObject = staTreadObject;
             _invoker = invoker;
-            _invokeThread = new Thread(new ThreadStart(InvokeMethod));
+            _invokeThread = new Thread(InvokeMethod);
+            _invokeThread.IsBackground = true;
             _invokeThread.SetApartmentState(ApartmentState.STA);
         }
         /// <summary>

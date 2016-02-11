@@ -1,5 +1,7 @@
 ﻿using ITCO.SboAddon.Framework.Helpers;
 using System;
+using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace ITCO.SboAddon.Framework.Dialogs
@@ -27,10 +29,7 @@ namespace ITCO.SboAddon.Framework.Dialogs
             if (filter != null)
                 fileSelector.Filter = filter;
 
-            var result = new STAInvoker<SaveFileDialog, DialogResult>(fileSelector, (x) =>
-            {
-                return x.ShowDialog();
-            }).Invoke();
+            var result = new STAInvoker<SaveFileDialog, DialogResult>(fileSelector, (x) => x.ShowDialog(ForegroundWindowWrapper.GetWindow())).Invoke();
 
             if (result != DialogResult.OK)
                 throw new DialogCanceledException();
@@ -54,10 +53,7 @@ namespace ITCO.SboAddon.Framework.Dialogs
             if (filter != null)
                 fileSelector.Filter = filter;
 
-            var result = new STAInvoker<OpenFileDialog, DialogResult>(fileSelector, (x) =>
-            {
-                return x.ShowDialog();
-            }).Invoke();
+            var result = new STAInvoker<OpenFileDialog, DialogResult>(fileSelector, (x) => x.ShowDialog(ForegroundWindowWrapper.GetWindow())).Invoke();
 
             if (result != DialogResult.OK)
                 throw new DialogCanceledException();
@@ -76,10 +72,7 @@ namespace ITCO.SboAddon.Framework.Dialogs
             if (defaultFolder != null)
                 folderBrowserDialog.SelectedPath = defaultFolder;
 
-            var result = new STAInvoker<FolderBrowserDialog, DialogResult>(folderBrowserDialog, (x) =>
-            {
-                return x.ShowDialog();
-            }).Invoke();
+            var result = new STAInvoker<FolderBrowserDialog, DialogResult>(folderBrowserDialog, (x) => x.ShowDialog(ForegroundWindowWrapper.GetWindow())).Invoke();
 
             if (result != DialogResult.OK)
                 throw new DialogCanceledException();
@@ -95,9 +88,29 @@ namespace ITCO.SboAddon.Framework.Dialogs
     /// </summary>
     public class DialogCanceledException : Exception
     {
+        /// <summary>
+        /// Dialog is Canceled
+        /// </summary>
         public DialogCanceledException()
             :base("Dialog canceled")
         { }
     }
+    
+    internal class ForegroundWindowWrapper : IWin32Window
+    {
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
 
+        public virtual IntPtr Handle { get; }
+
+        public ForegroundWindowWrapper(IntPtr handle)
+        {
+            this.Handle = handle;
+        }
+
+        public static ForegroundWindowWrapper GetWindow()
+        {
+            return new ForegroundWindowWrapper(GetForegroundWindow());
+        }
+    }
 }

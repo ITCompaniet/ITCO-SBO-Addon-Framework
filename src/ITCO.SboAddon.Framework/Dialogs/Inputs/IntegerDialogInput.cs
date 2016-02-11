@@ -19,20 +19,11 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
             _required = required;
         }
 
-        public string Id
-        {
-            get { return _id; }
-        }
+        public string Id => _id;
 
-        public bool Required
-        {
-            get { return _required; }
-        }
+        public bool Required => _required;
 
-        public string Title
-        {
-            get { return _title; }
-        }
+        public string Title => _title;
 
         public Item Item
         {
@@ -47,10 +38,7 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
             }
         }
 
-        public BoFormItemTypes ItemType
-        {
-            get { return BoFormItemTypes.it_EDIT; }
-        }
+        public BoFormItemTypes ItemType => BoFormItemTypes.it_EDIT;
 
         public bool Validated
         {
@@ -67,15 +55,9 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
             }
         }
 
-        public BoDataType DataType
-        {
-            get { return BoDataType.dt_LONG_NUMBER; }
-        }
+        public BoDataType DataType => BoDataType.dt_LONG_NUMBER;
 
-        public int Length
-        {
-            get { return 0; }
-        }
+        public int Length => 0;
 
         public object GetValue()
         {

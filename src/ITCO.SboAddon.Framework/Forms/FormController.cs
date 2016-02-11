@@ -12,33 +12,29 @@ namespace ITCO.SboAddon.Framework.Forms
         /// <summary>
         /// Form Object
         /// </summary>
-        protected IForm _form;
+        protected IForm Form;
 
         /// <summary>
-        /// Eg. Forms.MyForm.srf
+        /// Embeded resources name
         /// </summary>
-        public virtual string FormResource
-        {
-            get
-            {
-                return string.Format("Forms.{0}.srf", GetType().Name.Replace("Controller", string.Empty));
-            }
-        }
+        /// <example>Forms.MyForm.srf</example>
+        /// <remarks>In VB Embeded Resources does not have Folder added in Name</remarks>
+        public virtual string FormResource => $"Forms.{GetType().Name.Replace("Controller", string.Empty)}.srf";
 
         /// <summary>
         /// Eg. NS_MyFormType1
         /// </summary>
-        public virtual string FormType
-        {
-            get
-            {
-                return string.Format("ITCO_{0}", GetType().Name.Replace("Controller", string.Empty));
-            }
-        }
+        public virtual string FormType => $"ITCO_{GetType().Name.Replace("Controller", string.Empty)}";
+
+        /// <summary>
+        /// Open only once
+        /// </summary>
+        public virtual bool Unique { get; set; }
+
         /// <summary>
         /// Create new Form
         /// </summary>        
-        public FormController(bool autoStart = false)
+        protected FormController(bool autoStart = false)
         {
             if (autoStart)
                 Start();
@@ -49,19 +45,52 @@ namespace ITCO.SboAddon.Framework.Forms
         /// </summary>
         public void Start()
         {
-            if (_form != null)
+            if (Form != null)
                 return;
+
+            if (!Unique)
+            {
+                // Try get existing form
+                try
+                {
+                    var form = SboApp.Application.Forms.Item(FormType);
+                    form.Select();
+                    //SboApp.Application.MessageBox($"Form {FormType} already open");
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
+
             try
             {
                 var assembly = GetType().Assembly;
-                _form = FormHelper.CreateFormFromResource(FormResource, FormType, null, assembly);
-                FormCreated();
-                BindFormEvents();
-                _form.Visible = true;
+                Form = FormHelper.CreateFormFromResource(FormResource, FormType, Unique ? null : FormType, assembly);
+
+                try
+                {
+                    FormCreated();
+                }
+                catch (Exception e)
+                {
+                    SboApp.Application.MessageBox($"FormCreated Error: {e.Message}");
+                }
+
+                try
+                {
+                    BindFormEvents();
+                }
+                catch (Exception e)
+                {
+                    SboApp.Application.MessageBox($"BindFormEvents Error: {e.Message}");
+                }
+
+                Form.Visible = true;
             }
             catch (Exception e)
             {
-                SboApp.Application.MessageBox(string.Format("Failed to open form {0}: {1}", FormType, e.Message));
+                SboApp.Application.MessageBox($"Failed to open form {FormType}: {e.Message}");
             }      
         }
 
@@ -80,16 +109,15 @@ namespace ITCO.SboAddon.Framework.Forms
         }
 
         #region Default IFormMenuItem
-        public string MenuItemId
-        {
-            get { return string.Format("{0}_M", FormType); }
-            
-        }
+        /// <summary>
+        /// Menu Id
+        /// </summary>
+        public string MenuItemId => $"{FormType}_M";
 
-        public int MenuItemPosition
-        {
-            get { return -1; }
-        }
+        /// <summary>
+        /// Menu position, -1 = Last
+        /// </summary>
+        public int MenuItemPosition => -1;
         #endregion
     }
 }

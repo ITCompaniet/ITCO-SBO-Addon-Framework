@@ -22,10 +22,7 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
             _withEmpty = withEmpty;
         }
 
-        public string Id
-        {
-            get { return _id; }
-        }
+        public string Id => _id;
 
         public Item Item
         {
@@ -46,35 +43,17 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
             }
         }
 
-        public bool Required
-        {
-            get { return false; }
-        }
+        public bool Required => false;
 
-        public string Title
-        {
-            get { return _title; }
-        }
+        public string Title => _title;
 
-        public BoFormItemTypes ItemType
-        {
-            get { return BoFormItemTypes.it_COMBO_BOX; }
-        }
+        public BoFormItemTypes ItemType => BoFormItemTypes.it_COMBO_BOX;
 
-        public bool Validated
-        {
-            get { return true; }
-        }
+        public bool Validated => true;
 
-        public BoDataType DataType
-        {
-            get { return BoDataType.dt_SHORT_TEXT; }
-        }
+        public BoDataType DataType => BoDataType.dt_SHORT_TEXT;
 
-        public int Length
-        {
-            get { return 20; }
-        }
+        public int Length => 20;
 
         public object GetValue()
         {

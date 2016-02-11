@@ -15,13 +15,7 @@ namespace ITCO.SboAddon.Framework.Helpers
             _recordSetObject.DoQuery(string.Format(sql, args));
         }
 
-        public int Count
-        {
-            get
-            {
-                return _recordSetObject.RecordCount;
-            }
-        }
+        public int Count => _recordSetObject.RecordCount;
 
         /// <summary>
         /// Note that Fields is COM object reference
@@ -66,13 +60,7 @@ namespace ITCO.SboAddon.Framework.Helpers
             _businessObject.Browser.Recordset = _recordSetObject;
         }
 
-        public int Count
-        {
-            get
-            {
-                return _recordSetObject.RecordCount;
-            }
-        }
+        public int Count => _recordSetObject.RecordCount;
 
         /// <summary>
         /// Note that T is COM object reference

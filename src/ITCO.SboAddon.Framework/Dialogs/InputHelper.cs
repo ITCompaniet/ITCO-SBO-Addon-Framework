@@ -29,7 +29,7 @@ namespace ITCO.SboAddon.Framework.Dialogs
             {
                 top += 15;
                 // Caption
-                var titleText = form.Items.Add(string.Format("T{0}", dialogInput.Id), BoFormItemTypes.it_STATIC).Specific as StaticText;
+                var titleText = form.Items.Add($"T{dialogInput.Id}", BoFormItemTypes.it_STATIC).Specific as StaticText;
                 titleText.Item.Top = top;
                 titleText.Item.Left = 10;
                 titleText.Item.Width = 100;

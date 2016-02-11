@@ -29,7 +29,7 @@ namespace ITCO.SboAddon.Framework.Setup
             foreach (var setup in setups)
             {
                 var setupInstance = Activator.CreateInstance(setup) as ISetup;
-                var key = string.Format("setup.lastversion.{0}", setup.Name.Replace("Setup", string.Empty));
+                var key = $"setup.lastversion.{setup.Name.Replace("Setup", string.Empty)}";
                 var lastVersionInstalled = SettingService.GetSettingByKey(key, 0);
                 if (lastVersionInstalled < setupInstance.Version)
                 {
@@ -40,7 +40,7 @@ namespace ITCO.SboAddon.Framework.Setup
                     }
                     catch(Exception ex)
                     {
-                        SboApp.Application.MessageBox(string.Format("Error in {0}: {1}", setup.Name, ex.Message));
+                        SboApp.Application.MessageBox($"Error in {setup.Name}: {ex.Message}");
                     }
                 }
             }

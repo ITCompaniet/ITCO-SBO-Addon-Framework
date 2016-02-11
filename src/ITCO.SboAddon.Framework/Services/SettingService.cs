@@ -31,7 +31,7 @@ namespace ITCO.SboAddon.Framework.Services
             }
             catch (Exception e)
             {
-                SboApp.Application.StatusBar.SetText(string.Format("SettingService Init [NOT OK] {0}", e.Message), 
+                SboApp.Application.StatusBar.SetText($"SettingService Init [NOT OK] {e.Message}", 
                     SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Error);
                 
                 setupOk = false;
@@ -79,9 +79,9 @@ namespace ITCO.SboAddon.Framework.Services
                 var sqlKey = key.Trim().ToLowerInvariant();
 
                 if (userCode != null)
-                    sqlKey = string.Format("{0}[{1}]", sqlKey, userCode);
+                    sqlKey = $"{sqlKey}[{userCode}]";
 
-                var sql = string.Format("SELECT [U_{0}], [Name] FROM [@{1}] WHERE [Code] = '{2}'", UDF_Setting_Value, UDT_Settings, sqlKey);
+                var sql = $"SELECT [U_{UDF_Setting_Value}], [Name] FROM [@{UDT_Settings}] WHERE [Code] = '{sqlKey}'";
 
 
                 using (var query = new SboRecordsetQuery(sql))
@@ -102,15 +102,15 @@ namespace ITCO.SboAddon.Framework.Services
             }
             catch (Exception e)
             {
-                SboApp.Application.StatusBar.SetText(string.Format("SettingService Error: {0}", e.Message), SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Warning);
+                SboApp.Application.StatusBar.SetText($"SettingService Error: {e.Message}", SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Warning);
                 return returnValue;
             }
 
             if (notFound && askIfNotFound)
             {
-                var inputTitle = string.Format("Insert setting {0}", name);
+                var inputTitle = $"Insert setting {name}";
                 if (userCode != null)
-                    inputTitle += string.Format(" for {0}", userCode);
+                    inputTitle += $" for {userCode}";
 
                 IDialogInput input = new TextDialogInput("setting", name, required: true);
 
@@ -154,9 +154,9 @@ namespace ITCO.SboAddon.Framework.Services
             var sqlKey = key.Trim().ToLowerInvariant();
 
             if (userCode != null)
-                sqlKey = string.Format("{0}[{1}]", key, userCode);
+                sqlKey = $"{key}[{userCode}]";
 
-            var sql = string.Format("SELECT [U_{0}], [Name] FROM [@{1}] WHERE [Code] = '{2}'", UDF_Setting_Value, UDT_Settings, sqlKey);
+            var sql = $"SELECT [U_{UDF_Setting_Value}], [Name] FROM [@{UDT_Settings}] WHERE [Code] = '{sqlKey}'";
             
             var exists = false;
             using (var query = new SboRecordsetQuery(sql))
@@ -170,15 +170,15 @@ namespace ITCO.SboAddon.Framework.Services
 
             if (exists)
             {
-                sql = string.Format("UPDATE [@{0}] SET [U_{1}] = {2} WHERE [Code] = '{3}'", UDT_Settings, UDF_Setting_Value, sqlValue, sqlKey);
+                sql = $"UPDATE [@{UDT_Settings}] SET [U_{UDF_Setting_Value}] = {sqlValue} WHERE [Code] = '{sqlKey}'";
             }
             else
             {
                 if (name == null)
                     name = sqlKey;
 
-                sql = string.Format("INSERT INTO [@{0}] ([Code], [Name], [U_{1}]) VALUES ('{2}', '{3}', {4})", 
-                    UDT_Settings, UDF_Setting_Value, sqlKey, name, sqlValue);
+                sql =
+                    $"INSERT INTO [@{UDT_Settings}] ([Code], [Name], [U_{UDF_Setting_Value}]) VALUES ('{sqlKey}', '{name}', {sqlValue})";
             }
 
             SboRecordset.NonQuery(sql);

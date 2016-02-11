@@ -44,8 +44,8 @@ namespace ITCO.SboAddon.Framework.Helpers
                     userTablesMD.TableType = tableType;
 
                     ErrorHelper.HandleErrorWithException(
-                        userTablesMD.Add(), 
-                        string.Format("Could not create UDT {0}", tableName));
+                        userTablesMD.Add(),
+                        $"Could not create UDT {tableName}");
                 }
             }
             catch (Exception ex)
@@ -109,8 +109,8 @@ namespace ITCO.SboAddon.Framework.Helpers
                     userFieldsMD.Size = size;
                     userFieldsMD.EditSize = size;
                     ErrorHelper.HandleErrorWithException(
-                        userFieldsMD.Add(), 
-                        string.Format("Could not create {0} on {1}", fieldName, tableName));
+                        userFieldsMD.Add(),
+                        $"Could not create {fieldName} on {tableName}");
                 }
             }
             catch (Exception ex)
@@ -137,7 +137,7 @@ namespace ITCO.SboAddon.Framework.Helpers
 
             try
             {
-                recordSet.DoQuery(string.Format("SELECT FieldID FROM CUFD WHERE TableID='{0}' AND AliasID='{1}'", tableName, fieldAlias));
+                recordSet.DoQuery($"SELECT FieldID FROM CUFD WHERE TableID='{tableName}' AND AliasID='{fieldAlias}'");
 
                 if (recordSet.RecordCount == 1)
                 {

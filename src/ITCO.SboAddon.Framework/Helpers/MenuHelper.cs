@@ -153,7 +153,7 @@ namespace ITCO.SboAddon.Framework.Helpers
             }
             catch (Exception e)
             {
-                SboApp.Application.SetStatusBarMessage(string.Format("Error creating menu item (string) {0}: {1}", itemId, e.Message));
+                SboApp.Application.SetStatusBarMessage($"Error creating menu item (string) {itemId}: {e.Message}");
             }
 
             try
@@ -165,7 +165,7 @@ namespace ITCO.SboAddon.Framework.Helpers
             }
             catch (Exception e)
             {
-                throw new Exception(string.Format("Menu {0} not found in {1}", itemId, parentMenuItem.UID), e);
+                throw new Exception($"Menu {itemId} not found in {parentMenuItem.UID}", e);
             }
         }
     }

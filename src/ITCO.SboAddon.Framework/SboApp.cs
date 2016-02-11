@@ -48,7 +48,7 @@ namespace ITCO.SboAddon.Framework
                 ErrorHelper.HandleErrorWithException(connectResponse, "DI API Could not connect");
 
                 var assemblyName = System.Reflection.Assembly.GetEntryAssembly().GetName().Name;
-                _application.StatusBar.SetText(string.Format("{0} connected to SBO", assemblyName), SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success);
+                _application.StatusBar.SetText($"{assemblyName} connected to SBO", SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success);
 
                 SetAppEvents();
             }
@@ -106,18 +106,12 @@ namespace ITCO.SboAddon.Framework
         /// <summary>
         /// SBO UI Application Object
         /// </summary>
-        public static SAPbouiCOM.Application Application
-        {
-            get { return _application; }
-        }
+        public static SAPbouiCOM.Application Application => _application;
 
         /// <summary>
         /// SBO DI Company Object
         /// </summary>
-        public static SAPbobsCOM.Company Company
-        {
-            get { return _diCompany; }
-        }
+        public static SAPbobsCOM.Company Company => _diCompany;
 
         /// <summary>
         /// Check if SBO UI API is Connected
@@ -150,7 +144,10 @@ namespace ITCO.SboAddon.Framework
             }
         }
 
-        private static void SetAppEvents()
+        /// <summary>
+        /// Set Default App Events
+        /// </summary>
+        protected static void SetAppEvents()
         {
             _application.AppEvent += Application_AppEvent;
         }

@@ -19,7 +19,7 @@ namespace ITCO.SboAddon.Framework.Helpers
             if (returnCode != 0)
             {
                 var error = GetLastErrorMessage();
-                throw new Exception(string.Format("{0}: {1} {2}", errorDescription, error.Code, error.Message));
+                throw new Exception($"{errorDescription}: {error.Code} {error.Message}");
             }
         }
 
@@ -28,7 +28,7 @@ namespace ITCO.SboAddon.Framework.Helpers
             if (returnCode != 0)
             {
                 var error = GetLastErrorMessage();
-                var errorMessage = string.Format("{0}: {1} {2}", errorDescription, error.Code, error.Message);
+                var errorMessage = $"{errorDescription}: {error.Code} {error.Message}";
                 SboApp.Application.StatusBar.SetText(errorMessage, BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Error);
                 SboApp.Application.MessageBox(errorMessage);
                 return false;
