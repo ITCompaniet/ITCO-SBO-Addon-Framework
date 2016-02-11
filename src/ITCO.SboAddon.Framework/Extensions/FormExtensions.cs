@@ -1,5 +1,6 @@
 ﻿using SAPbouiCOM;
 using System;
+using ITCO.SboAddon.Framework.Helpers;
 
 namespace ITCO.SboAddon.Framework.Extensions
 {
@@ -52,5 +53,22 @@ namespace ITCO.SboAddon.Framework.Extensions
         {
             return form.Items.Item(itemId).Specific as CheckBox;
         }
+
+        /// <summary>
+        /// Add values into Combobox from SQL
+        /// </summary>
+        /// <param name="comboBox"></param>
+        /// <param name="sql"></param>
+        public static void AddComboBoxValues(this ComboBox comboBox, string sql)
+        {
+            using (var query = new SboRecordsetQuery(sql))
+            {
+                foreach (var combo in query.Result)
+                {
+                    comboBox.ValidValues.Add(combo.Item(0).Value.ToString(), combo.Item(1).Value.ToString());
+                }
+            }
+        }
     }
+
 }
