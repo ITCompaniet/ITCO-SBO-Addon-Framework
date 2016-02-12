@@ -54,6 +54,11 @@ namespace ITCO.SboAddon.Framework.Extensions
             return form.Items.Item(itemId).Specific as CheckBox;
         }
 
+        public static Matrix GetMatrix(this IForm form, string itemId)
+        {
+            return form.Items.Item(itemId).Specific as Matrix;
+        }
+
         /// <summary>
         /// Add values into Combobox from SQL
         /// </summary>
