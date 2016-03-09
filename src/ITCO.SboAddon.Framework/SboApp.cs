@@ -1,5 +1,7 @@
 ﻿using ITCO.SboAddon.Framework.Helpers;
 using System;
+using System.Configuration;
+using SAPbobsCOM;
 
 namespace ITCO.SboAddon.Framework
 {
@@ -105,6 +107,35 @@ namespace ITCO.SboAddon.Framework
             {
                 throw ex;
             }
+        }
+        /// <summary>
+        /// Connect only DI Api from app.config
+        /// </summary>
+        /// <example>
+        /// Sbo:ServerName
+        /// Sbo:ServerType (BoDataServerTypes eg. MSSQL2012)
+        /// Sbo:CompanyDb
+        /// Sbo:DbUsername
+        /// Sbo:DbPassword
+        /// Sbo:Username
+        /// Sbo:Password
+        /// Sbo:LicenceService
+        /// </example>
+        public static void DiConnectFromAppConfig()
+        {
+            var serverName = ConfigurationManager.AppSettings["Sbo:ServerName"];
+
+            BoDataServerTypes serverType;
+            Enum.TryParse("dst_" + ConfigurationManager.AppSettings["Sbo:ServerType"], out serverType);
+
+            var companyDb = ConfigurationManager.AppSettings["Sbo:CompanyDb"];
+            var dbUsername = ConfigurationManager.AppSettings["Sbo:DbUsername"];
+            var dbPassword = ConfigurationManager.AppSettings["Sbo:DbPassword"];
+            var username = ConfigurationManager.AppSettings["Sbo:Username"];
+            var password = ConfigurationManager.AppSettings["Sbo:Password"];
+            var licenceServer = ConfigurationManager.AppSettings["Sbo:LicenceService"];
+
+            DiConnect(serverName, serverType, companyDb, dbUsername, dbPassword, username, password, licenceServer);
         }
 
         /// <summary>
