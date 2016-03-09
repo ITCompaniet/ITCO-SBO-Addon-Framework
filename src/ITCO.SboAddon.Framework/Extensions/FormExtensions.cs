@@ -1,9 +1,13 @@
 ﻿using SAPbouiCOM;
 using System;
+using ITCO.SboAddon.Framework.Forms;
 using ITCO.SboAddon.Framework.Helpers;
 
 namespace ITCO.SboAddon.Framework.Extensions
 {
+    /// <summary>
+    /// Form Extensions
+    /// </summary>
     public static class FormExtensions
     {
         /// <summary>
@@ -13,7 +17,7 @@ namespace ITCO.SboAddon.Framework.Extensions
         /// <returns>Form object</returns>
         public static Form GetForm(this SBOItemEventArg pVal)
         {
-            return SboApp.Application.Forms.Item(pVal.FormUID) as Form;
+            return SboApp.Application.Forms.Item(pVal.FormUID);
         }
 
         /// <summary>
@@ -28,32 +32,68 @@ namespace ITCO.SboAddon.Framework.Extensions
         {
             return (T)form.Items.Item(itemId).Specific;
         }
-        
+
+        /// <summary>
+        /// Get Static Text
+        /// </summary>
+        /// <param name="form"></param>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
         public static StaticText GetStaticText(this IForm form, string itemId)
         {
             return form.Items.Item(itemId).Specific as StaticText;
         }
 
+        /// <summary>
+        /// Get Combo Box
+        /// </summary>
+        /// <param name="form"></param>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
         public static ComboBox GetComboBox(this IForm form, string itemId)
         {
             return form.Items.Item(itemId).Specific as ComboBox;
         }
 
+        /// <summary>
+        /// Get Button
+        /// </summary>
+        /// <param name="form"></param>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
         public static Button GetButton(this IForm form, string itemId)
         {
             return form.Items.Item(itemId).Specific as Button;
         }
 
+        /// <summary>
+        /// Get Edit Text
+        /// </summary>
+        /// <param name="form"></param>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
         public static EditText GetEditText(this IForm form, string itemId)
         {
             return form.Items.Item(itemId).Specific as EditText;
         }
 
+        /// <summary>
+        /// Get Check Box
+        /// </summary>
+        /// <param name="form"></param>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
         public static CheckBox GetCheckBox(this IForm form, string itemId)
         {
             return form.Items.Item(itemId).Specific as CheckBox;
         }
 
+        /// <summary>
+        /// Get Matrix
+        /// </summary>
+        /// <param name="form"></param>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
         public static Matrix GetMatrix(this IForm form, string itemId)
         {
             return form.Items.Item(itemId).Specific as Matrix;
@@ -73,6 +113,16 @@ namespace ITCO.SboAddon.Framework.Extensions
                     comboBox.ValidValues.Add(combo.Item(0).Value.ToString(), combo.Item(1).Value.ToString());
                 }
             }
+        }
+
+        /// <summary>
+        /// Freeze Form
+        /// </summary>
+        /// <param name="form"></param>
+        /// <returns></returns>
+        public static Freeze FreezeEx(this IForm form)
+        {
+            return new Freeze(form);
         }
     }
 

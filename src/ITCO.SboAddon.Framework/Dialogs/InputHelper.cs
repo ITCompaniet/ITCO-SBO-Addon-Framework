@@ -56,7 +56,10 @@ namespace ITCO.SboAddon.Framework.Dialogs
             form.Visible = true;
 
             var wait = new ManualResetEvent(false);
-            okButton.PressedAfter += (o, e) => { wait.Set(); };
+            okButton.PressedAfter += (o, e) =>
+            {
+                wait.Set();
+            };
 
             var validated = false;
             while (!validated)

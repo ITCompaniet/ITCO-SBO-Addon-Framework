@@ -21,7 +21,7 @@ namespace ITCO.SboAddon.Framework
     /// </example>
     public class SboAddonContext : ApplicationContext
     {
-        private List<AddonMenuEvent> _addonMenuEvents = new List<AddonMenuEvent>();
+        private readonly List<AddonMenuEvent> _addonMenuEvents = new List<AddonMenuEvent>();
         /// <summary>
         /// Connecting to SBO
         /// </summary>
@@ -31,6 +31,8 @@ namespace ITCO.SboAddon.Framework
             
             try
             {
+                var mainAssembly = Assembly.GetEntryAssembly();
+
                 // Debug connection string
                 var connectionString = "0030002C0030002C00530041005000420044005F00440061007400650076002C0050004C006F006D0056004900490056";
 
@@ -40,12 +42,12 @@ namespace ITCO.SboAddon.Framework
 
                 SboApp.Connect(connectionString);
 
-                SetupManager.FindAndRunSetups(Assembly.GetEntryAssembly());
+                SetupManager.FindAndRunSetups(mainAssembly);
 
                 SboApp.Application.SetFilter(EventFilters());
                 MenuItems();
 
-                var formMenuEvents = MenuHelper.LoadMenuItemsFromFormControllers(Assembly.GetEntryAssembly());
+                var formMenuEvents = MenuHelper.LoadMenuItemsFromFormControllers(mainAssembly);
                 foreach (var item in formMenuEvents)
                 {
                     AddMenuItemEvent(item.Title, item.MenuId, item.ParentMenuId, item.Action, item.Position);
@@ -69,9 +71,9 @@ namespace ITCO.SboAddon.Framework
             }
         }
 
-        private void Application_MenuEvent(ref MenuEvent pVal, out bool BubbleEvent)
+        private void Application_MenuEvent(ref MenuEvent pVal, out bool bubbleEvent)
         {
-            BubbleEvent = true;
+            bubbleEvent = true;
 
             if (pVal.BeforeAction)
                 return;
@@ -79,10 +81,7 @@ namespace ITCO.SboAddon.Framework
             var menuId = pVal.MenuUID;
             var menuEvent = _addonMenuEvents.FirstOrDefault(e => e.MenuId == menuId);
 
-            if (menuEvent != null)
-            {
-                menuEvent.Action.Invoke();
-            }
+            menuEvent?.Action();
         }
         #endregion
 
@@ -105,13 +104,21 @@ namespace ITCO.SboAddon.Framework
             MenuHelper.AddItem(title, menuId, parentMenuId, position);
         }
 
+        /// <summary>
+        /// Event Filters
+        /// </summary>
+        /// <returns></returns>
         public virtual EventFilters EventFilters()
         {
             var eventFilters = new EventFilters();
-            eventFilters.Add(BoEventTypes.et_MENU_CLICK);
+            //eventFilters.Add(BoEventTypes.et_MENU_CLICK);
+            eventFilters.Add(BoEventTypes.et_ALL_EVENTS);
             return eventFilters;
         }
 
+        /// <summary>
+        /// Setup Menu Items
+        /// </summary>
         public virtual void MenuItems()
         {
 
@@ -119,12 +126,34 @@ namespace ITCO.SboAddon.Framework
 
     }
 
+    /// <summary>
+    /// Menu Item Event
+    /// </summary>
     public class AddonMenuEvent
     {
+        /// <summary>
+        /// Parent Menu Id
+        /// </summary>
         public string ParentMenuId { get; set; }
+
+        /// <summary>
+        /// Menu ID
+        /// </summary>
         public string MenuId { get; set; }
+
+        /// <summary>
+        /// Action when clicking the menu item
+        /// </summary>
         public Action Action { get; set; }
+
+        /// <summary>
+        /// Title
+        /// </summary>
         public string Title { get; set; }
+
+        /// <summary>
+        /// Position, -1 = Last
+        /// </summary>
         public int Position { get; set; }
     }
 }

@@ -34,7 +34,7 @@ namespace ITCO.SboAddon.Framework.Forms
         /// <summary>
         /// Create new Form
         /// </summary>        
-        protected FormController(bool autoStart = false)
+        public FormController(bool autoStart = true)
         {
             if (autoStart)
                 Start();
@@ -92,6 +92,15 @@ namespace ITCO.SboAddon.Framework.Forms
             {
                 SboApp.Application.MessageBox($"Failed to open form {FormType}: {e.Message}");
             }      
+        }
+
+        /// <summary>
+        /// Close Form
+        /// </summary>
+        public void Close()
+        {
+            Form.Close();
+            Form = null;
         }
 
         /// <summary>

@@ -9,12 +9,19 @@ using System.Linq;
 
 namespace ITCO.SboAddon.Framework.Services
 {
+    /// <summary>
+    /// Generic Setting Service
+    /// </summary>
     public static class SettingService
     {
         private const string UDT_Settings = "ITCO_FW_Settings";
         private const string UDF_Setting_Value = "ITCO_FW_SValue";
         private static bool setupOk = false;
 
+        /// <summary>
+        /// Initialize Setting Service
+        /// </summary>
+        /// <returns></returns>
         public static bool Init()
         {
             if (setupOk)
@@ -45,23 +52,55 @@ namespace ITCO.SboAddon.Framework.Services
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <param name="name"></param>
-        public static void InitSetting<T>(string key, string name)
+        /// <param name="defaultValue">Default Value</param>
+        public static void InitSetting<T>(string key, string name, T defaultValue = default(T))
         {
-            if (GetSettingByKey<T>(key) == null)
-                SaveSetting<T>(key, name: name);
+            if (GetSettingAsString(key) == null)
+            {
+                SaveSetting(key, defaultValue, name: name);
+            }
         }
 
+        /// <summary>
+        /// Get Setting for Current User
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        /// <param name="askIfNotFound"></param>
+        /// <returns></returns>
         public static T GetCurrentUserSettingByKey<T>(string key, T defaultValue = default(T), bool askIfNotFound = false)
         {
             var userCode = SboApp.Company.UserName;
-            return GetSettingByKey<T>(key, defaultValue , userCode, askIfNotFound);
+            return GetSettingByKey(key, defaultValue , userCode, askIfNotFound);
         }
+
+        private static string GetSettingAsString(string key, string userCode = null)
+        {
+            var sqlKey = key.Trim().ToLowerInvariant();
+
+            if (userCode != null)
+                sqlKey = $"{sqlKey}[{userCode}]";
+
+            var sql = $"SELECT [U_{UDF_Setting_Value}], [Name] FROM [@{UDT_Settings}] WHERE [Code] = '{sqlKey}'";
+            using (var query = new SboRecordsetQuery(sql))
+            {
+                if (query.Count == 0)
+                    return null;
+
+                var result = query.Result.First();
+                return result.Item(0).Value as string;
+            }
+        }
+
         /// <summary>
         /// Get Setting
         /// </summary>
         /// <typeparam name="T">Return Type</typeparam>
         /// <param name="key">Setting Key</param>
         /// <param name="defaultValue">Default Value</param>
+        /// <param name="userCode">User Code</param>
+        /// <param name="askIfNotFound">Ask for value if not found</param>
         /// <returns>Setting Value</returns>
         public static T GetSettingByKey<T>(string key, T defaultValue = default(T), string userCode = null, bool askIfNotFound = false)
         {
@@ -71,72 +110,78 @@ namespace ITCO.SboAddon.Framework.Services
                 return defaultValue;
 
             var returnValue = defaultValue;
-            var name = key;
             var notFound = true;
 
             try
             {
-                var sqlKey = key.Trim().ToLowerInvariant();
+                var value = GetSettingAsString(key, userCode);
+                if (value == "")
+                    value = null;
+                else
+                    notFound = false;
 
-                if (userCode != null)
-                    sqlKey = $"{sqlKey}[{userCode}]";
-
-                var sql = $"SELECT [U_{UDF_Setting_Value}], [Name] FROM [@{UDT_Settings}] WHERE [Code] = '{sqlKey}'";
-
-
-                using (var query = new SboRecordsetQuery(sql))
-                {
-                    foreach (var setting in query.Result)
-                    {
-                        var value = setting.Item(0).Value as string;
-                        if (value == "")
-                            value = null;
-                        else
-                            notFound = false;
-
-                        name = setting.Item(1).Value as string;
-                        
-                        returnValue = To<T>(value);
-                    }
-                }
+                returnValue = To<T>(value);
             }
             catch (Exception e)
             {
-                SboApp.Application.StatusBar.SetText($"SettingService Error: {e.Message}", SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Warning);
+                SboApp.Application.StatusBar.SetText($"SettingService Error: {e.Message}",
+                    SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Warning);
                 return returnValue;
             }
 
-            if (notFound && askIfNotFound)
+            if (notFound)
             {
-                var inputTitle = $"Insert setting {name}";
-                if (userCode != null)
-                    inputTitle += $" for {userCode}";
+                if (askIfNotFound)
+                {
+                    var name = GetSettingTitle(key);
+                    var inputTitle = $"Insert setting {name}";
+                    if (userCode != null)
+                        inputTitle += $" for {userCode}";
 
-                IDialogInput input = new TextDialogInput("setting", name, required: true);
+                    IDialogInput input = new TextDialogInput("setting", name, required: true);
 
-                if (typeof(T) == typeof(bool))
-                    input = new CheckboxDialogInput("setting", name);
+                    if (typeof (T) == typeof (bool))
+                        input = new CheckboxDialogInput("setting", name);
 
-                if (typeof(T) == typeof(DateTime))
-                    input = new DateDialogInput("setting", name, required: true);
+                    if (typeof (T) == typeof (DateTime))
+                        input = new DateDialogInput("setting", name, required: true);
 
-                if (typeof(T) == typeof(int))
-                    input = new IntegerDialogInput("setting", name, required: true);
+                    if (typeof (T) == typeof (int))
+                        input = new IntegerDialogInput("setting", name, required: true);
 
-                if (typeof(T) == typeof(decimal))
-                    input = new DecimalDialogInput("setting", name, required: true);
+                    if (typeof (T) == typeof (decimal))
+                        input = new DecimalDialogInput("setting", name, required: true);
 
-                var result = InputHelper.GetInputs(inputTitle, new List<IDialogInput>()
-                            {
-                                input
-                            });
-                var newSetting = result.First().Value;
-                SaveSetting(key, newSetting, userCode);
+                    var result = InputHelper.GetInputs(inputTitle, new List<IDialogInput>()
+                    {
+                        input
+                    });
 
-                returnValue = To<T>(newSetting);
+                    var newSetting = result.First().Value;
+                    SaveSetting(key, newSetting, userCode);
+
+                    returnValue = To<T>(newSetting);
+                }
             }
 
             return returnValue;
+        }
+
+        private static string GetSettingTitle(string key)
+        {
+            var sqlKey = key.Trim().ToLowerInvariant();
+            var sql = $"SELECT [Name] FROM [@{UDT_Settings}] WHERE [Code] = '{sqlKey}'";
+
+            using (var query = new SboRecordsetQuery(sql))
+            {
+                if (query.Count == 0)
+                    return key;
+
+                var result = query.Result.First();
+                var name = result.Item(0).Value as string;
+
+                return string.IsNullOrEmpty(name) ? key : name;
+            }
         }
 
         /// <summary>
@@ -158,7 +203,7 @@ namespace ITCO.SboAddon.Framework.Services
 
             var sql = $"SELECT [U_{UDF_Setting_Value}], [Name] FROM [@{UDT_Settings}] WHERE [Code] = '{sqlKey}'";
             
-            var exists = false;
+            bool exists;
             using (var query = new SboRecordsetQuery(sql))
             {
                 exists = query.Count == 1;
@@ -177,8 +222,7 @@ namespace ITCO.SboAddon.Framework.Services
                 if (name == null)
                     name = sqlKey;
 
-                sql =
-                    $"INSERT INTO [@{UDT_Settings}] ([Code], [Name], [U_{UDF_Setting_Value}]) VALUES ('{sqlKey}', '{name}', {sqlValue})";
+                sql = $"INSERT INTO [@{UDT_Settings}] ([Code], [Name], [U_{UDF_Setting_Value}]) VALUES ('{sqlKey}', '{name}', {sqlValue})";
             }
 
             SboRecordset.NonQuery(sql);

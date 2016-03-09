@@ -36,7 +36,7 @@ namespace ITCO.SboAddon.Framework
             try
             {
                 sboGuiApi.Connect(connectionString);
-                _application = sboGuiApi.GetApplication(-1);
+                _application = sboGuiApi.GetApplication();
 
                 var contextCookie = _diCompany.GetContextCookie();
                 var diCompanyConnectionString = _application.Company.GetConnectionContext(contextCookie);
@@ -54,8 +54,8 @@ namespace ITCO.SboAddon.Framework
             }
             catch (Exception ex)
             {
-                if (_application != null)
-                    _application.StatusBar.SetText(ex.Message, SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Error);
+                _application?.StatusBar.SetText(ex.Message);
+
                 throw ex;
             }
         }
@@ -64,14 +64,15 @@ namespace ITCO.SboAddon.Framework
         /// Connect only DI Api
         /// </summary>
         /// <param name="serverName">SQL Server Name</param>
-        /// <param name="serverType"></param>
+        /// <param name="serverType">Server type</param>
         /// <param name="companyDb"></param>
         /// <param name="dbUsername"></param>
         /// <param name="dbPassword"></param>
-        /// <param name="username"></param>
-        /// <param name="password"></param>
+        /// <param name="username">SBO Username</param>
+        /// <param name="password">SBO Password</param>
+        /// <param name="licenceService">Licence Server</param>
         public static void DiConnect(string serverName, SAPbobsCOM.BoDataServerTypes serverType, string companyDb,
-            string dbUsername = null, string dbPassword = null, string username = null, string password = null)
+            string dbUsername = null, string dbPassword = null, string username = null, string password = null, string licenceService = null)
         {
             _diCompany = new SAPbobsCOM.Company();
 
@@ -80,6 +81,9 @@ namespace ITCO.SboAddon.Framework
                 _diCompany.Server = serverName;
                 _diCompany.DbServerType = serverType;
                 _diCompany.CompanyDB = companyDb;
+
+                if (licenceService != null)
+                    _diCompany.LicenseServer = licenceService;
 
                 if (username == null)
                 {
@@ -152,9 +156,9 @@ namespace ITCO.SboAddon.Framework
             _application.AppEvent += Application_AppEvent;
         }
 
-        private static void Application_AppEvent(SAPbouiCOM.BoAppEventTypes EventType)
+        private static void Application_AppEvent(SAPbouiCOM.BoAppEventTypes eventType)
         {
-            switch (EventType)
+            switch (eventType)
             {
                 case SAPbouiCOM.BoAppEventTypes.aet_ShutDown:
                 case SAPbouiCOM.BoAppEventTypes.aet_CompanyChanged:
