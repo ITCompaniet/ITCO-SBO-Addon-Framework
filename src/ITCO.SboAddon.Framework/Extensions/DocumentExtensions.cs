@@ -1,4 +1,5 @@
-﻿using ITCO.SboAddon.Framework.Helpers;
+﻿using System.Collections.Generic;
+using ITCO.SboAddon.Framework.Helpers;
 using SAPbobsCOM;
 
 namespace ITCO.SboAddon.Framework.Extensions
@@ -28,6 +29,21 @@ namespace ITCO.SboAddon.Framework.Extensions
         {
             var returnCode = documents.Update();
             ErrorHelper.HandleErrorWithException(returnCode, "Could not Update Document");
+        }
+
+        /// <summary>
+        /// Get DocumentLines as Enumerable
+        /// </summary>
+        /// <param name="lines">Document_Lines</param>
+        /// <returns></returns>
+        public static IEnumerable<Document_Lines> AsEnumerable(this Document_Lines lines)
+        {
+            var line = -1;
+            while (++line < lines.Count)
+            {
+                lines.SetCurrentLine(line);
+                yield return lines;
+            }
         }
     }
 }
