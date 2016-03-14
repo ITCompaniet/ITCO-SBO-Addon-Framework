@@ -133,7 +133,7 @@ namespace ITCO.SboAddon.Framework
             var dbPassword = ConfigurationManager.AppSettings["Sbo:DbPassword"];
             var username = ConfigurationManager.AppSettings["Sbo:Username"];
             var password = ConfigurationManager.AppSettings["Sbo:Password"];
-            var licenceServer = ConfigurationManager.AppSettings["Sbo:LicenceService"];
+            var licenceServer = ConfigurationManager.AppSettings["Sbo:LicenceServer"];
 
             DiConnect(serverName, serverType, companyDb, dbUsername, dbPassword, username, password, licenceServer);
         }
