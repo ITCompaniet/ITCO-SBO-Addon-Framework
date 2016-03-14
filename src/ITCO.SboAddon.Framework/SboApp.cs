@@ -30,8 +30,15 @@ namespace ITCO.SboAddon.Framework
         /// Connect UI and DI Api
         /// </summary>
         /// <param name="connectionString"></param>
-        public static void Connect(string connectionString)
+        public static void Connect(string connectionString = null)
         {
+            if (connectionString == null)
+            {
+                connectionString = Environment.GetCommandLineArgs().Length > 1 ? 
+                    Convert.ToString(Environment.GetCommandLineArgs().GetValue(1)) : 
+                    "0030002C0030002C00530041005000420044005F00440061007400650076002C0050004C006F006D0056004900490056";
+            }
+
             var sboGuiApi = new SAPbouiCOM.SboGuiApi();
             _diCompany = new SAPbobsCOM.Company();
 

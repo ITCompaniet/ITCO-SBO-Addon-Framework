@@ -33,19 +33,13 @@ namespace ITCO.SboAddon.Framework
             {
                 var mainAssembly = Assembly.GetEntryAssembly();
 
-                // Debug connection string
-                var connectionString = "0030002C0030002C00530041005000420044005F00440061007400650076002C0050004C006F006D0056004900490056";
-
-                // Get connection string from SBO
-                if (Environment.GetCommandLineArgs().Length > 1)
-                    connectionString = Convert.ToString(Environment.GetCommandLineArgs().GetValue(1));
-
-                SboApp.Connect(connectionString);
+                SboApp.Connect();
 
                 SetupManager.FindAndRunSetups(mainAssembly);
 
                 SboApp.Application.SetFilter(EventFilters());
                 MenuItems();
+                BindEvents();
 
                 var formMenuEvents = MenuHelper.LoadMenuItemsFromFormControllers(mainAssembly);
                 foreach (var item in formMenuEvents)
@@ -61,7 +55,7 @@ namespace ITCO.SboAddon.Framework
                 ExitThread();
             }
         }
-
+        
         #region Events
         private void Application_ApplicationExit(object sender, EventArgs e)
         {
@@ -124,6 +118,12 @@ namespace ITCO.SboAddon.Framework
 
         }
 
+        /// <summary>
+        /// Bind Events
+        /// </summary>
+        public virtual void BindEvents()
+        {
+        }
     }
 
     /// <summary>
