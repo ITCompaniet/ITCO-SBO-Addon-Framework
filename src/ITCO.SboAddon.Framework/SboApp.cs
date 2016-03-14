@@ -1,7 +1,6 @@
 ﻿using ITCO.SboAddon.Framework.Helpers;
 using System;
 using System.Configuration;
-using SAPbobsCOM;
 
 namespace ITCO.SboAddon.Framework
 {
@@ -64,8 +63,7 @@ namespace ITCO.SboAddon.Framework
             catch (Exception ex)
             {
                 _application?.StatusBar.SetText(ex.Message);
-
-                throw ex;
+                throw;
             }
         }
 
@@ -83,37 +81,32 @@ namespace ITCO.SboAddon.Framework
         public static void DiConnect(string serverName, SAPbobsCOM.BoDataServerTypes serverType, string companyDb,
             string dbUsername = null, string dbPassword = null, string username = null, string password = null, string licenceService = null)
         {
-            _diCompany = new SAPbobsCOM.Company();
-
-            try
+            _diCompany = new SAPbobsCOM.Company
             {
-                _diCompany.Server = serverName;
-                _diCompany.DbServerType = serverType;
-                _diCompany.CompanyDB = companyDb;
+                Server = serverName,
+                DbServerType = serverType,
+                CompanyDB = companyDb
+            };
 
-                if (licenceService != null)
-                    _diCompany.LicenseServer = licenceService;
 
-                if (username == null)
-                {
-                    _diCompany.UseTrusted = true;
-                }
-                else
-                {
-                    _diCompany.UseTrusted = false;
-                    _diCompany.UserName = username;
-                    _diCompany.Password = password;
-                    _diCompany.DbUserName = dbUsername;
-                    _diCompany.DbPassword = dbPassword;
-                }
+            if (licenceService != null)
+                _diCompany.LicenseServer = licenceService;
 
-                var connectResponse = _diCompany.Connect();
-                ErrorHelper.HandleErrorWithException(connectResponse, "DI API Could not connect");
-            }
-            catch (Exception ex)
+            if (username == null)
             {
-                throw ex;
+                _diCompany.UseTrusted = true;
             }
+            else
+            {
+                _diCompany.UseTrusted = false;
+                _diCompany.UserName = username;
+                _diCompany.Password = password;
+                _diCompany.DbUserName = dbUsername;
+                _diCompany.DbPassword = dbPassword;
+            }
+
+            var connectResponse = _diCompany.Connect();
+            ErrorHelper.HandleErrorWithException(connectResponse, "DI API Could not connect");
         }
         /// <summary>
         /// Connect only DI Api from app.config
@@ -132,7 +125,7 @@ namespace ITCO.SboAddon.Framework
         {
             var serverName = ConfigurationManager.AppSettings["Sbo:ServerName"];
 
-            BoDataServerTypes serverType;
+            SAPbobsCOM.BoDataServerTypes serverType;
             Enum.TryParse("dst_" + ConfigurationManager.AppSettings["Sbo:ServerType"], out serverType);
 
             var companyDb = ConfigurationManager.AppSettings["Sbo:CompanyDb"];
@@ -148,43 +141,40 @@ namespace ITCO.SboAddon.Framework
         /// <summary>
         /// SBO UI Application Object
         /// </summary>
-        public static SAPbouiCOM.Application Application => _application;
+        public static SAPbouiCOM.Application Application
+        {
+            get
+            {
+                if (!ApplicationConnected)
+                    Connect();
+
+                return _application;
+            }
+        }
 
         /// <summary>
         /// SBO DI Company Object
         /// </summary>
-        public static SAPbobsCOM.Company Company => _diCompany;
+        public static SAPbobsCOM.Company Company
+        {
+            get
+            {
+                if (!DiConnected)
+                    Connect();
+
+                return _diCompany;
+            }
+        }
 
         /// <summary>
         /// Check if SBO UI API is Connected
         /// </summary>
-        public static bool ApplicationConnected
-        {
-            get
-            {
-                if (_application == null)
-                    return false;
-                
-                if (DiConnected)
-                    return true;
-
-                return false;
-            }
-        }
+        public static bool ApplicationConnected => _application != null && DiConnected;
 
         /// <summary>
         /// Check if SBO DI API is Connected
         /// </summary>
-        public static bool DiConnected
-        {
-            get
-            {
-                if (_diCompany != null && _diCompany.Connected)
-                    return true;
-
-                return false;
-            }
-        }
+        public static bool DiConnected => _diCompany != null && _diCompany.Connected;
 
         /// <summary>
         /// Set Default App Events
