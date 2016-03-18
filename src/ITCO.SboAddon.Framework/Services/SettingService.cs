@@ -14,9 +14,9 @@ namespace ITCO.SboAddon.Framework.Services
     /// </summary>
     public static class SettingService
     {
-        private const string UDT_Settings = "ITCO_FW_Settings";
-        private const string UDF_Setting_Value = "ITCO_FW_SValue";
-        private static bool setupOk = false;
+        private const string UdtSettings = "ITCO_FW_Settings";
+        private const string UdfSettingValue = "ITCO_FW_SValue";
+        private static bool _setupOk;
 
         /// <summary>
         /// Initialize Setting Service
@@ -24,27 +24,27 @@ namespace ITCO.SboAddon.Framework.Services
         /// <returns></returns>
         public static bool Init()
         {
-            if (setupOk)
+            if (_setupOk)
                 return true;
             
             try
             {
-                UserDefinedHelper.CreateTable(UDT_Settings, "Settings")
-                    .CreateUDF(UDF_Setting_Value, "Value");
+                UserDefinedHelper.CreateTable(UdtSettings, "Settings")
+                    .CreateUDF(UdfSettingValue, "Value");
 
-                setupOk = true;
+                _setupOk = true;
                 SboApp.Application.StatusBar.SetText("SettingService Init [OK]", 
                     SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success);
             }
             catch (Exception e)
             {
                 SboApp.Application.StatusBar.SetText($"SettingService Init [NOT OK] {e.Message}", 
-                    SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Error);
+                    SAPbouiCOM.BoMessageTime.bmt_Short);
                 
-                setupOk = false;
+                _setupOk = false;
             }
                 
-            return setupOk;
+            return _setupOk;
         }
         /// <summary>
         /// Create Empty Setting if not exists
@@ -82,7 +82,7 @@ namespace ITCO.SboAddon.Framework.Services
             if (userCode != null)
                 sqlKey = $"{sqlKey}[{userCode}]";
 
-            var sql = $"SELECT [U_{UDF_Setting_Value}], [Name] FROM [@{UDT_Settings}] WHERE [Code] = '{sqlKey}'";
+            var sql = $"SELECT [U_{UdfSettingValue}], [Name] FROM [@{UdtSettings}] WHERE [Code] = '{sqlKey}'";
             using (var query = new SboRecordsetQuery(sql))
             {
                 if (query.Count == 0)
@@ -170,7 +170,7 @@ namespace ITCO.SboAddon.Framework.Services
         private static string GetSettingTitle(string key)
         {
             var sqlKey = key.Trim().ToLowerInvariant();
-            var sql = $"SELECT [Name] FROM [@{UDT_Settings}] WHERE [Code] = '{sqlKey}'";
+            var sql = $"SELECT [Name] FROM [@{UdtSettings}] WHERE [Code] = '{sqlKey}'";
 
             using (var query = new SboRecordsetQuery(sql))
             {
@@ -201,7 +201,7 @@ namespace ITCO.SboAddon.Framework.Services
             if (userCode != null)
                 sqlKey = $"{key}[{userCode}]";
 
-            var sql = $"SELECT [U_{UDF_Setting_Value}], [Name] FROM [@{UDT_Settings}] WHERE [Code] = '{sqlKey}'";
+            var sql = $"SELECT [U_{UdfSettingValue}], [Name] FROM [@{UdtSettings}] WHERE [Code] = '{sqlKey}'";
             
             bool exists;
             using (var query = new SboRecordsetQuery(sql))
@@ -215,14 +215,14 @@ namespace ITCO.SboAddon.Framework.Services
 
             if (exists)
             {
-                sql = $"UPDATE [@{UDT_Settings}] SET [U_{UDF_Setting_Value}] = {sqlValue} WHERE [Code] = '{sqlKey}'";
+                sql = $"UPDATE [@{UdtSettings}] SET [U_{UdfSettingValue}] = {sqlValue} WHERE [Code] = '{sqlKey}'";
             }
             else
             {
                 if (name == null)
                     name = sqlKey;
 
-                sql = $"INSERT INTO [@{UDT_Settings}] ([Code], [Name], [U_{UDF_Setting_Value}]) VALUES ('{sqlKey}', '{name}', {sqlValue})";
+                sql = $"INSERT INTO [@{UdtSettings}] ([Code], [Name], [U_{UdfSettingValue}]) VALUES ('{sqlKey}', '{name}', {sqlValue})";
             }
 
             SboRecordset.NonQuery(sql);
@@ -242,21 +242,21 @@ namespace ITCO.SboAddon.Framework.Services
         /// <returns>The converted value.</returns>
         private static object To(object value, Type destinationType, CultureInfo culture)
         {
-            if (value != null)
-            {
-                var sourceType = value.GetType();
+            if (value == null)
+                return null;
 
-                var destinationConverter = GetTypeConverter(destinationType);
-                var sourceConverter = GetTypeConverter(sourceType);
-                if (destinationConverter != null && destinationConverter.CanConvertFrom(value.GetType()))
-                    return destinationConverter.ConvertFrom(null, culture, value);
-                if (sourceConverter != null && sourceConverter.CanConvertTo(destinationType))
-                    return sourceConverter.ConvertTo(null, culture, value, destinationType);
-                if (destinationType.IsEnum && value is int)
-                    return Enum.ToObject(destinationType, (int)value);
-                if (!destinationType.IsInstanceOfType(value))
-                    return Convert.ChangeType(value, destinationType, culture);
-            }
+            var sourceType = value.GetType();
+
+            var destinationConverter = GetTypeConverter(destinationType);
+            var sourceConverter = GetTypeConverter(sourceType);
+            if (destinationConverter != null && destinationConverter.CanConvertFrom(value.GetType()))
+                return destinationConverter.ConvertFrom(null, culture, value);
+            if (sourceConverter != null && sourceConverter.CanConvertTo(destinationType))
+                return sourceConverter.ConvertTo(null, culture, value, destinationType);
+            if (destinationType.IsEnum && value is int)
+                return Enum.ToObject(destinationType, (int)value);
+            if (!destinationType.IsInstanceOfType(value))
+                return Convert.ChangeType(value, destinationType, culture);
             return value;
         }
 

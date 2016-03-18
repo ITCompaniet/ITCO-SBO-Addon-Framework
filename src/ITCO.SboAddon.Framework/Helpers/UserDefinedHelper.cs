@@ -1,10 +1,26 @@
 ﻿using SAPbobsCOM;
 using System;
+using System.Collections.Generic;
 
 namespace ITCO.SboAddon.Framework.Helpers
 {
+    /// <summary>
+    /// Helper for creating UD objects
+    /// </summary>
     public class UserDefinedHelper
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public Dictionary<string, string> YesNoValiesValues => new Dictionary<string, string>
+        {
+            { "Y", "Yes"},
+            { "N", "No" }
+        };
+
+        /// <summary>
+        /// User defined table object
+        /// </summary>
         public class UserDefinedTable
         {
             public UserDefinedTable(string tableName)
@@ -31,32 +47,35 @@ namespace ITCO.SboAddon.Framework.Helpers
         /// <returns>Success</returns>
         public static UserDefinedTable CreateTable(string tableName, string tableDescription, BoUTBTableType tableType = BoUTBTableType.bott_NoObject)
         {
-            UserTablesMD userTablesMD = null;
-
+            UserTablesMD userTablesMd = null;
+            
             try
             {
-                userTablesMD = SboApp.Company.GetBusinessObject(BoObjectTypes.oUserTables) as UserTablesMD;
+                userTablesMd = SboApp.Company.GetBusinessObject(BoObjectTypes.oUserTables) as UserTablesMD;
 
-                if (!userTablesMD.GetByKey(tableName))
+                if (userTablesMd == null)
+                    throw new NullReferenceException("Failed to get UserTablesMD object");
+
+                if (!userTablesMd.GetByKey(tableName))
                 {
-                    userTablesMD.TableName = tableName;
-                    userTablesMD.TableDescription = tableDescription;
-                    userTablesMD.TableType = tableType;
+                    userTablesMd.TableName = tableName;
+                    userTablesMd.TableDescription = tableDescription;
+                    userTablesMd.TableType = tableType;
 
                     ErrorHelper.HandleErrorWithException(
-                        userTablesMD.Add(),
+                        userTablesMd.Add(),
                         $"Could not create UDT {tableName}");
                 }
             }
             catch (Exception ex)
             {
                 SboApp.Application.MessageBox(ex.Message);
-                throw ex;                
+                throw;                
             }
             finally
             {
-                if (userTablesMD != null)
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTablesMD);
+                if (userTablesMd != null)
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userTablesMd);
             }
 
             return new UserDefinedTable("@" + tableName);
@@ -88,40 +107,57 @@ namespace ITCO.SboAddon.Framework.Helpers
         /// <param name="type"></param>
         /// <param name="size"></param>
         /// <param name="subType"></param>
+        /// <param name="validValues">Dropdown values</param>
+        /// <param name="defaultValue"></param>
         /// <returns></returns>
         public static void CreateField(string tableName, string fieldName, string fieldDescription, 
-            BoFieldTypes type = BoFieldTypes.db_Alpha, int size = 50, BoFldSubTypes subType = BoFldSubTypes.st_None)
+            BoFieldTypes type = BoFieldTypes.db_Alpha, int size = 50, BoFldSubTypes subType = BoFldSubTypes.st_None, 
+            IDictionary<string, string> validValues = null, string defaultValue = null)
         {
-            UserFieldsMD userFieldsMD = null;
+            UserFieldsMD userFieldsMd = null;
 
             try
             {
-                userFieldsMD = SboApp.Company.GetBusinessObject(BoObjectTypes.oUserFields) as UserFieldsMD;
+                userFieldsMd = SboApp.Company.GetBusinessObject(BoObjectTypes.oUserFields) as UserFieldsMD;
+
+                if (userFieldsMd == null)
+                    throw new NullReferenceException("Failed to get UserFieldsMD object");
 
                 var fieldId = GetFieldId(tableName, fieldName);
-                if (fieldId == -1)
+                if (fieldId != -1) return;
+
+                userFieldsMd.TableName = tableName;
+                userFieldsMd.Name = fieldName;
+                userFieldsMd.Description = fieldDescription;
+                userFieldsMd.Type = type;
+                userFieldsMd.SubType = subType;
+                userFieldsMd.Size = size;
+                userFieldsMd.EditSize = size;
+                userFieldsMd.DefaultValue = defaultValue;
+
+                if (validValues != null)
                 {
-                    userFieldsMD.TableName = tableName;
-                    userFieldsMD.Name = fieldName;
-                    userFieldsMD.Description = fieldDescription;
-                    userFieldsMD.Type = type;
-                    userFieldsMD.SubType = subType;
-                    userFieldsMD.Size = size;
-                    userFieldsMD.EditSize = size;
-                    ErrorHelper.HandleErrorWithException(
-                        userFieldsMD.Add(),
-                        $"Could not create {fieldName} on {tableName}");
+                    foreach (var validValue in validValues)
+                    {
+                        userFieldsMd.ValidValues.Value = validValue.Key;
+                        userFieldsMd.ValidValues.Description = validValue.Value;
+                        userFieldsMd.ValidValues.Add();
+                    }
                 }
+
+                ErrorHelper.HandleErrorWithException(
+                    userFieldsMd.Add(),
+                    $"Could not create {fieldName} on {tableName}");
             }
             catch (Exception ex)
             {
                 SboApp.Application.MessageBox(ex.Message);
-                throw ex;
+                throw;
             }
             finally
             {
-                if (userFieldsMD != null)
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userFieldsMD);
+                if (userFieldsMd != null)
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userFieldsMd);
             }
         }
 
@@ -134,6 +170,9 @@ namespace ITCO.SboAddon.Framework.Helpers
         public static int GetFieldId(string tableName, string fieldAlias)
         {
             var recordSet = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;
+
+            if (recordSet == null)
+                throw new NullReferenceException("Failed to get Recordset object");
 
             try
             {

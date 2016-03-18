@@ -22,7 +22,7 @@ namespace ITCO.SboAddon.Framework.Tester
 
                 //Test_Form();
                 //Test_MenuCreate();
-                Test_GetString();
+                //Test_GetString();
                 //Test_Setting();
                 //Test_SettingAsk();
    
