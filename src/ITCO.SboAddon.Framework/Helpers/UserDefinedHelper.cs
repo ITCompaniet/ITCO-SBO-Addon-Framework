@@ -7,12 +7,12 @@ namespace ITCO.SboAddon.Framework.Helpers
     /// <summary>
     /// Helper for creating UD objects
     /// </summary>
-    public class UserDefinedHelper
+    public static class UserDefinedHelper
     {
         /// <summary>
         /// 
         /// </summary>
-        public Dictionary<string, string> YesNoValiesValues => new Dictionary<string, string>
+        public static Dictionary<string, string> YesNoValiesValues => new Dictionary<string, string>
         {
             { "Y", "Yes"},
             { "N", "No" }

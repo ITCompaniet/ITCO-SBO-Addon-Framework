@@ -2,7 +2,6 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using SAPbouiCOM;
 
 namespace ITCO.SboAddon.Framework.Setup
@@ -28,10 +27,9 @@ namespace ITCO.SboAddon.Framework.Setup
 
             SettingService.Init();
 
-            foreach (var setup in setups)
+            foreach (var setupInstance in setups.Select(setup => Activator.CreateInstance(setup) as ISetup))
             {
-                var setupInstance = Activator.CreateInstance(setup) as ISetup;
-                RunSetup(setupInstance, true);
+                RunSetup(setupInstance);
             }
         }
 
@@ -40,8 +38,7 @@ namespace ITCO.SboAddon.Framework.Setup
         /// </summary>
         /// <typeparam name="TSetup"></typeparam>
         /// <param name="setupInstance"></param>
-        /// <param name="showApplicationMessages"></param>
-        public static void RunSetup<TSetup>(TSetup setupInstance, bool showApplicationMessages = false) where TSetup : ISetup
+        public static void RunSetup<TSetup>(TSetup setupInstance) where TSetup : ISetup
         {
             var setup = setupInstance.GetType();
             var key = $"setup.lastversion.{setup.Name.Replace("Setup", string.Empty)}";
@@ -51,7 +48,7 @@ namespace ITCO.SboAddon.Framework.Setup
             {
                 try
                 {
-                    if (showApplicationMessages)
+                    if (SboApp.ApplicationConnected)
                         SboApp.Application.StatusBar.SetText($"Running setup for {setup.Name}, current version is {lastVersionInstalled}, new version is {setupInstance.Version})"
                             ,BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Warning);
 
@@ -60,14 +57,14 @@ namespace ITCO.SboAddon.Framework.Setup
                 }
                 catch (Exception ex)
                 {
-                    if (showApplicationMessages)
+                    if (SboApp.ApplicationConnected)
                         SboApp.Application.MessageBox($"Setup error in {setup.Name}: {ex.Message}");
                     else
                         throw;
                 }
             }
 
-            if (showApplicationMessages)
+            if (SboApp.ApplicationConnected)
                 SboApp.Application.StatusBar.SetText($"Setup for {setup.Name} is up-to-date! (v.{lastVersionInstalled})", 
                     BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success);
         }

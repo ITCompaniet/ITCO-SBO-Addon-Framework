@@ -33,14 +33,18 @@ namespace ITCO.SboAddon.Framework.Services
                     .CreateUDF(UdfSettingValue, "Value");
 
                 _setupOk = true;
-                SboApp.Application.StatusBar.SetText("SettingService Init [OK]", 
-                    SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success);
+
+                if (SboApp.ApplicationConnected)
+                    SboApp.Application.StatusBar.SetText("SettingService Init [OK]", 
+                        SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success);
             }
             catch (Exception e)
             {
-                SboApp.Application.StatusBar.SetText($"SettingService Init [NOT OK] {e.Message}", 
-                    SAPbouiCOM.BoMessageTime.bmt_Short);
-                
+                if (SboApp.ApplicationConnected)
+                    SboApp.Application.StatusBar.SetText($"SettingService Init [NOT OK] {e.Message}", SAPbouiCOM.BoMessageTime.bmt_Short);
+                else
+                    throw;
+
                 _setupOk = false;
             }
                 
@@ -56,9 +60,7 @@ namespace ITCO.SboAddon.Framework.Services
         public static void InitSetting<T>(string key, string name, T defaultValue = default(T))
         {
             if (GetSettingAsString(key) == null)
-            {
                 SaveSetting(key, defaultValue, name: name);
-            }
         }
 
         /// <summary>
@@ -124,45 +126,44 @@ namespace ITCO.SboAddon.Framework.Services
             }
             catch (Exception e)
             {
-                SboApp.Application.StatusBar.SetText($"SettingService Error: {e.Message}",
-                    SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Warning);
+                if (SboApp.ApplicationConnected)
+                    SboApp.Application.StatusBar.SetText($"SettingService Error: {e.Message}",
+                        SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Warning);
+
                 return returnValue;
             }
 
-            if (notFound)
+            if (!notFound || !askIfNotFound)
+                return returnValue;
+
+            var name = GetSettingTitle(key);
+            var inputTitle = $"Insert setting {name}";
+            if (userCode != null)
+                inputTitle += $" for {userCode}";
+
+            var input = new TextDialogInput("setting", name, required: true) as IDialogInput;
+
+            if (typeof (T) == typeof (bool))
+                input = new CheckboxDialogInput("setting", name);
+
+            if (typeof (T) == typeof (DateTime))
+                input = new DateDialogInput("setting", name, required: true);
+
+            if (typeof (T) == typeof (int))
+                input = new IntegerDialogInput("setting", name, required: true);
+
+            if (typeof (T) == typeof (decimal))
+                input = new DecimalDialogInput("setting", name, required: true);
+
+            var result = InputHelper.GetInputs(inputTitle, new List<IDialogInput>()
             {
-                if (askIfNotFound)
-                {
-                    var name = GetSettingTitle(key);
-                    var inputTitle = $"Insert setting {name}";
-                    if (userCode != null)
-                        inputTitle += $" for {userCode}";
+                input
+            });
 
-                    IDialogInput input = new TextDialogInput("setting", name, required: true);
+            var newSetting = result.First().Value;
+            SaveSetting(key, newSetting, userCode);
 
-                    if (typeof (T) == typeof (bool))
-                        input = new CheckboxDialogInput("setting", name);
-
-                    if (typeof (T) == typeof (DateTime))
-                        input = new DateDialogInput("setting", name, required: true);
-
-                    if (typeof (T) == typeof (int))
-                        input = new IntegerDialogInput("setting", name, required: true);
-
-                    if (typeof (T) == typeof (decimal))
-                        input = new DecimalDialogInput("setting", name, required: true);
-
-                    var result = InputHelper.GetInputs(inputTitle, new List<IDialogInput>()
-                    {
-                        input
-                    });
-
-                    var newSetting = result.First().Value;
-                    SaveSetting(key, newSetting, userCode);
-
-                    returnValue = To<T>(newSetting);
-                }
-            }
+            returnValue = To<T>(newSetting);
 
             return returnValue;
         }
