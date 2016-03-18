@@ -1,6 +1,7 @@
 ﻿using ITCO.SboAddon.Framework.Helpers;
 using System;
 using System.Configuration;
+using Common.Logging;
 
 namespace ITCO.SboAddon.Framework
 {
@@ -11,6 +12,11 @@ namespace ITCO.SboAddon.Framework
     {
         private static SAPbouiCOM.Application _application;
         private static SAPbobsCOM.Company _diCompany;
+
+        /// <summary>
+        /// Common Logger
+        /// </summary>
+        internal static ILog Logger => LogManager.GetLogger<SboApp>();
 
         /// <summary>
         /// Set existing DI and/or UI Api Connection
@@ -58,10 +64,13 @@ namespace ITCO.SboAddon.Framework
                 var assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
                 _application.StatusBar.SetText($"{assemblyName} connected to SBO", SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success);
 
+                Logger.Info($"{assemblyName} connected to SBO");
+
                 SetAppEvents();
             }
             catch (Exception ex)
             {
+                Logger.Error("SboApp Connect Error", ex);
                 _application?.StatusBar.SetText(ex.Message);
                 throw;
             }

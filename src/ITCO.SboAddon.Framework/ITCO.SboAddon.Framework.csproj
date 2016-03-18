@@ -33,6 +33,14 @@
     <DocumentationFile>bin\Release\ITCO.SboAddon.Framework.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Common.Logging, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.3.1\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="SAPBusinessOneSDK, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c7c3cb60e45d119f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\SAPBusinessOneSDK-90-9.10.190\SAPBusinessOneSDK.dll</HintPath>
@@ -53,7 +61,7 @@
     <Compile Include="Extensions\DocumentExtensions.cs" />
     <Compile Include="Forms\IFormMenuItem.cs" />
     <Compile Include="Helpers\SboTransaction.cs" />
-    <Compile Include="Logger.cs" />
+    <Compile Include="SboAppLogger.cs" />
     <Compile Include="SboAddonContext.cs" />
     <Compile Include="Constants\SboDocumentItem.cs" />
     <Compile Include="Constants\SboForm.cs" />
@@ -85,6 +93,9 @@
     <Compile Include="Services\SettingService.cs" />
     <Compile Include="Setup\ISetup.cs" />
     <Compile Include="Setup\SetupManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
