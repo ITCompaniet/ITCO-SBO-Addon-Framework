@@ -11,19 +11,12 @@ Create an Windows Application Project and run SboAddonContext() from Main.
 
 Connection to SBO will be made automatically.
 ```C#
-using ITCO.SboAddon.Framework;
-using System;
-using System.Windows.Forms;
-
-namespace ITCO.OCR
+static class Program
 {
-    static class Program
+    [STAThread]
+    static void Main()
     {
-        [STAThread]
-        static void Main()
-        {
-            Application.Run(new SboAddonContext());
-        }
+        Application.Run(new SboAddonContext());
     }
 }
 ```
@@ -42,10 +35,17 @@ MyFormController will automaticly load Forms.MyForm.srf and create an menu item.
 ## Usage DI API
 ### Connect
 ```C#
-// From app.config
-SboApp.DiConnectFromAppConfig();
+static class Program
+{
+    static void Main()
+    {
+        // From app.config
+        SboApp.DiConnectFromAppConfig();
+    }
+}
 ```
-```
+
+```XML
   <appSettings>
     <add key="Sbo:ServerName" value="SAP-SERVER"/>
     <add key="Sbo:ServerType" value="MSSQL2014"/>
