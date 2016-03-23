@@ -6,7 +6,7 @@ Framework for SAP Business One SDK Addons
 
 
 
-## Usage
+## Usage UI API
 Create an Windows Application Project and run SboAddonContext() from Main.
 
 Connection to SBO will be made automatically.
@@ -28,7 +28,38 @@ namespace ITCO.OCR
 }
 ```
 
+### Form Controller
+MyFormController will automaticly load Forms.MyForm.srf and create an menu item.
+
+```C#
+    public class MyFormController : FormController, IFormMenuItem
+    {
+        public string MenuItemTitle => "My Form";
+        public string ParentMenuItemId => SboMenuItem.Finance;
+    }
+```
+
+## Usage DI API
+### Connect
+```C#
+// From app.config
+SboApp.DiConnectFromAppConfig();
+```
+```
+  <appSettings>
+    <add key="Sbo:ServerName" value="SAP-SERVER"/>
+    <add key="Sbo:ServerType" value="MSSQL2014"/>
+    <add key="Sbo:CompanyDb" value="SBODemo"/>
+    <add key="Sbo:DbUsername" value="sa"/>
+    <add key="Sbo:DbPassword" value=""/>
+    <add key="Sbo:Username" value="manager"/>
+    <add key="Sbo:Password" value=""/>
+    <add key="Sbo:LicenceService" value="SAP-SERVER:30000"/>
+  </appSettings>
+```
+
 ### Setup Class
+
 ```C#
     public class MySetup : ISetup
     {
@@ -36,10 +67,7 @@ namespace ITCO.OCR
         public const string UDF_CardCode = "CardCode";
         public const string UDF_Amount = "Amount";
 
-        public int Version
-        {
-            get { return 1; }
-        }
+        public int Version => 1;
 
         public void Run()
         {
@@ -47,26 +75,41 @@ namespace ITCO.OCR
                 .CreateUDF(UDF_CardCode, "CardCode", BoFieldTypes.db_Alpha, 30)
                 .CreateUDF(UDF_Amount, "Amount", BoFieldTypes.db_Float, 30, BoFldSubTypes.st_Price);
 
-            SettingService.InitSetting<string>("my.setting.1", "My Setting 1");
-            SettingService.InitSetting<string>("my.setting.2", "My Setting 2");
+            SettingService.InitSetting<string>("my.setting.1", "My Setting 1", "value123");
+            SettingService.InitSetting<int>("my.setting.2", "My Setting 2", 0);
         }
     }
 ```
 
-### Form Controller
-MyFormController will automaticly load Forms.MyForm.srf and create an menu item.
-
+#### Run setup
 ```C#
-    public class MyFormController : FormController, IFormMenuItem
-    {
-        public string MenuItemTitle
-        {
-            get { return "My Form"; }
-        }
+// Finds and run all ISetup classes
+SetupManager.FindAndRunSetups(GetType().Assembly);
+// or run manually
+SetupManager.RunSetup(new MySetup());
+```
 
-        public string ParentMenuItemId
-        {
-            get { return SboMenuItem.Finance; }
-        }
+### Settings Service
+```C#
+var mySetting = SettingService.GetSettingByKey("itco.mysetting", 0);
+```
+
+### Recordset Query
+```C#
+using (var query = new SboRecordsetQuery("SELECT [DocNum] FROM [ORDR]"))
+{
+    if (query.Count == 0)
+        SboApp.Application.MessageBox("No Matches!");
+
+    foreach (var row in query.Result)
+    {
+        var docNum = row.Item("DocNum").Value;
     }
+}
+```
+
+### Misc Helpers
+```C#
+var combobox = Form.GetComboBox("MyCombo");
+combobox.AddComboBoxValues("SELECT CardCode, Cardname FROM OCRD");
 ```
