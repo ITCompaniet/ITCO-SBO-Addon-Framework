@@ -123,7 +123,7 @@ namespace ITCO.SboAddon.Framework
                 Logger.Debug($"Servername={serverName}, CompanyDb={companyDb}, ServerType={serverType}" +
                              $"DbUsername={dbUsername}, DbPassword={dbPassword}" +
                              $"SboUsername={username}, SboPassword={password}" +
-                             $"LicenceService={licenceServer}");
+                             $"LicenceServer={licenceServer}");
 
                 throw new Exception($"DI Connect Error: {errCode} {errMsg}");
             }
