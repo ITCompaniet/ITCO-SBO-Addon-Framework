@@ -69,7 +69,7 @@ namespace ITCO.SboAddon.Framework.Helpers
             }
             catch (Exception ex)
             {
-                SboApp.Application.MessageBox(ex.Message);
+                SboApp.Logger.Error($"UDT Create Error: {ex.Message}", ex);
                 throw;                
             }
             finally
@@ -145,13 +145,11 @@ namespace ITCO.SboAddon.Framework.Helpers
                     }
                 }
 
-                ErrorHelper.HandleErrorWithException(
-                    userFieldsMd.Add(),
-                    $"Could not create {fieldName} on {tableName}");
+                ErrorHelper.HandleErrorWithException(userFieldsMd.Add(), "Could not create field");
             }
             catch (Exception ex)
             {
-                SboApp.Application.MessageBox(ex.Message);
+                SboApp.Logger.Error($"Create Field {tableName}.{fieldName} Error: {ex.Message}", ex);
                 throw;
             }
             finally

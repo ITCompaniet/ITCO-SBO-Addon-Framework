@@ -2,7 +2,6 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using SAPbouiCOM;
 
 namespace ITCO.SboAddon.Framework.Setup
 {
@@ -48,25 +47,19 @@ namespace ITCO.SboAddon.Framework.Setup
             {
                 try
                 {
-                    if (SboApp.ApplicationConnected)
-                        SboApp.Application.StatusBar.SetText($"Running setup for {setup.Name}, current version is {lastVersionInstalled}, new version is {setupInstance.Version})"
-                            ,BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Warning);
+                    SboApp.Logger.Info($"Running setup for {setup.Name}, current version is {lastVersionInstalled}, new version is {setupInstance.Version})");
 
                     setupInstance.Run();
                     SettingService.SaveSetting(key, setupInstance.Version);
                 }
                 catch (Exception ex)
                 {
-                    if (SboApp.ApplicationConnected)
-                        SboApp.Application.MessageBox($"Setup error in {setup.Name}: {ex.Message}");
-                    else
-                        throw;
+                    SboApp.Logger.Error($"Setup error in {setup.Name}: {ex.Message}", ex);
+                    throw;
                 }
             }
 
-            if (SboApp.ApplicationConnected)
-                SboApp.Application.StatusBar.SetText($"Setup for {setup.Name} is up-to-date! (v.{lastVersionInstalled})", 
-                    BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success);
+            SboApp.Logger.Info($"Setup for {setup.Name} is up-to-date! (v.{lastVersionInstalled})");
         }
     }
 }

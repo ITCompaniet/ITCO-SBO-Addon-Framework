@@ -34,18 +34,13 @@ namespace ITCO.SboAddon.Framework.Services
 
                 _setupOk = true;
 
-                if (SboApp.ApplicationConnected)
-                    SboApp.Application.StatusBar.SetText("SettingService Init [OK]", 
-                        SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success);
+                SboApp.Logger.Info("SettingService Init [OK]");
             }
             catch (Exception e)
             {
-                if (SboApp.ApplicationConnected)
-                    SboApp.Application.StatusBar.SetText($"SettingService Init [NOT OK] {e.Message}", SAPbouiCOM.BoMessageTime.bmt_Short);
-                else
-                    throw;
-
+                SboApp.Logger.Error($"SettingService Init [NOT OK] {e.Message}", e);
                 _setupOk = false;
+                throw;
             }
                 
             return _setupOk;
@@ -126,10 +121,7 @@ namespace ITCO.SboAddon.Framework.Services
             }
             catch (Exception e)
             {
-                if (SboApp.ApplicationConnected)
-                    SboApp.Application.StatusBar.SetText($"SettingService Error: {e.Message}",
-                        SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Warning);
-
+                SboApp.Logger.Error($"SettingService Error: {e.Message}", e);
                 return returnValue;
             }
 

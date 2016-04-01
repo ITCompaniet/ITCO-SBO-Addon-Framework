@@ -70,8 +70,7 @@ namespace ITCO.SboAddon.Framework
             }
             catch (Exception ex)
             {
-                Logger.Error("SboApp Connect Error", ex);
-                _application?.StatusBar.SetText(ex.Message);
+                Logger.Error($"SboApp UI Connect Error: {ex.Message}", ex);
                 throw;
             }
         }
@@ -96,8 +95,7 @@ namespace ITCO.SboAddon.Framework
                 DbServerType = serverType,
                 CompanyDB = companyDb
             };
-
-
+            
             if (licenceService != null)
                 _diCompany.LicenseServer = licenceService;
 
@@ -155,7 +153,7 @@ namespace ITCO.SboAddon.Framework
             get
             {
                 if (!ApplicationConnected)
-                    Connect();
+                    throw new Exception("SBO UI API Not Connected");
 
                 return _application;
             }
@@ -169,7 +167,7 @@ namespace ITCO.SboAddon.Framework
             get
             {
                 if (!DiConnected)
-                    Connect();
+                    throw new Exception("SBO DI API Not Connected");
 
                 return _diCompany;
             }

@@ -2,6 +2,7 @@
 using ITCO.SboAddon.Framework.Constants;
 using ITCO.SboAddon.Framework.Extensions;
 using ITCO.SboAddon.Framework.Forms;
+using ITCO.SboAddon.Framework.Setup;
 using SAPbouiCOM;
 
 namespace ITCO.SboAddon.Framework.Tester
@@ -21,6 +22,7 @@ namespace ITCO.SboAddon.Framework.Tester
             {
                 
             }
+            SetupManager.RunSetup(new TestSetup());
         }
 
         #region IFormMenuItem
