@@ -85,9 +85,9 @@ namespace ITCO.SboAddon.Framework
         /// <param name="dbPassword"></param>
         /// <param name="username">SBO Username</param>
         /// <param name="password">SBO Password</param>
-        /// <param name="licenceService">Licence Server</param>
+        /// <param name="licenceServer">Licence Server</param>
         public static void DiConnect(string serverName, SAPbobsCOM.BoDataServerTypes serverType, string companyDb,
-            string dbUsername = null, string dbPassword = null, string username = null, string password = null, string licenceService = null)
+            string dbUsername = null, string dbPassword = null, string username = null, string password = null, string licenceServer = null)
         {
             _diCompany = new SAPbobsCOM.Company
             {
@@ -96,8 +96,8 @@ namespace ITCO.SboAddon.Framework
                 CompanyDB = companyDb
             };
             
-            if (licenceService != null)
-                _diCompany.LicenseServer = licenceService;
+            if (licenceServer != null)
+                _diCompany.LicenseServer = licenceServer;
 
             if (username == null)
             {
@@ -113,7 +113,20 @@ namespace ITCO.SboAddon.Framework
             }
 
             var connectResponse = _diCompany.Connect();
-            ErrorHelper.HandleErrorWithException(connectResponse, "DI API Could not connect");
+
+            if (connectResponse != 0)
+            {
+                int errCode;
+                string errMsg;
+                _diCompany.GetLastError(out errCode, out errMsg);
+
+                Logger.Debug($"Servername={serverName}, CompanyDb={companyDb}, ServerType={serverType}" +
+                             $"DbUsername={dbUsername}, DbPassword={dbPassword}" +
+                             $"SboUsername={username}, SboPassword={password}" +
+                             $"LicenceService={licenceServer}");
+
+                throw new Exception($"DI Connect Error: {errCode} {errMsg}");
+            }
         }
         /// <summary>
         /// Connect only DI Api from app.config
