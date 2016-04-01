@@ -120,9 +120,9 @@ namespace ITCO.SboAddon.Framework
                 string errMsg;
                 _diCompany.GetLastError(out errCode, out errMsg);
 
-                Logger.Debug($"Servername={serverName}, CompanyDb={companyDb}, ServerType={serverType}" +
-                             $"DbUsername={dbUsername}, DbPassword={dbPassword}" +
-                             $"SboUsername={username}, SboPassword={password}" +
+                Logger.Debug($"Servername={serverName}, CompanyDb={companyDb}, ServerType={serverType}, " +
+                             $"DbUsername={dbUsername}, DbPassword={dbPassword}, " +
+                             $"SboUsername={username}, SboPassword={password}, " +
                              $"LicenceServer={licenceServer}");
 
                 throw new Exception($"DI Connect Error: {errCode} {errMsg}");
