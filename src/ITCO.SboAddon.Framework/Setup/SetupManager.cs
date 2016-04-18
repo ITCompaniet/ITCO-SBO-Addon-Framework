@@ -59,7 +59,7 @@ namespace ITCO.SboAddon.Framework.Setup
                 }
             }
 
-            SboApp.Logger.Info($"Setup for {setup.Name} is up-to-date! (v.{lastVersionInstalled})");
+            SboApp.Logger.Info($"Setup for {setup.Name} is up-to-date! (v.{setupInstance.Version})");
         }
     }
 }
