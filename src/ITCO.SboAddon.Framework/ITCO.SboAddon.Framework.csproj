@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="Extensions\BusinessObjectInfoExtentions.cs" />
     <Compile Include="Extensions\DocumentExtensions.cs" />
+    <Compile Include="Extensions\TransactionExtensions.cs" />
     <Compile Include="Forms\IFormMenuItem.cs" />
     <Compile Include="Helpers\SboTransaction.cs" />
     <Compile Include="SboAppLogger.cs" />
