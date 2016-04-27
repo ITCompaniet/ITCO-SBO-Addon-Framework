@@ -61,5 +61,20 @@ namespace ITCO.SboAddon.Framework.Extensions
                 yield return lines;
             }
         }
+
+        /// <summary>
+        /// Search Document
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="table"></param>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public static bool Search(this IDocuments document, string table, string where)
+        {
+            var recordSet = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;
+            recordSet.DoQuery($"SELECT * FROM [{table}] WHERE {where}");
+            document.Browser.Recordset = recordSet;
+            return recordSet.RecordCount != 0;
+        }
     }
 }
