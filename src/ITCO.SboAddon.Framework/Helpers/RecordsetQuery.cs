@@ -83,7 +83,11 @@ namespace ITCO.SboAddon.Framework.Helpers
             if (_recordSetObject != null)
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(_recordSetObject);
 
+            if (_businessObject != null)
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(_businessObject);
+
             _recordSetObject = null;
+            _businessObject = null;
         }
     }
 
@@ -94,12 +98,17 @@ namespace ITCO.SboAddon.Framework.Helpers
         /// Executes SQL without result set
         /// </summary>
         /// <param name="sql">SQL query</param>
+        /// <param name="args">SQL Argument</param>
         /// <returns>Affected rows</returns>
         public static int NonQuery(string sql, params object[] args)
         {
             var recordSetObject = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;
             recordSetObject.DoQuery(string.Format(sql, args));
-            return recordSetObject.RecordCount;
+            var recordCount = recordSetObject.RecordCount;
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(recordSetObject);
+            recordSetObject = null;
+
+            return recordCount;
         }
     }
 }
