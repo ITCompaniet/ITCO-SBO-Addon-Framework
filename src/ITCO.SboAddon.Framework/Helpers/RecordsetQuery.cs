@@ -1,6 +1,8 @@
 ﻿using SAPbobsCOM;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 
 namespace ITCO.SboAddon.Framework.Helpers
 {
@@ -109,6 +111,44 @@ namespace ITCO.SboAddon.Framework.Helpers
             recordSetObject = null;
 
             return recordCount;
+        }
+    }
+
+    public class SboSqlConnection : IDisposable
+    {
+        private readonly SqlConnection _sqlConnection;
+        private readonly SqlDataReader _reader;
+
+        public SboSqlConnection(string query = null)
+        {
+            var dbPassword = ConfigurationManager.AppSettings["Sbo:DbPassword"];
+            var connectionString = $"Server={SboApp.Company.Server};Initial Catalog={SboApp.Company.CompanyDB};User ID={SboApp.Company.DbUserName};Password={dbPassword}";
+            _sqlConnection = new SqlConnection(connectionString);
+
+            if (query == null) return;
+
+            var command = new SqlCommand(query, _sqlConnection);
+            _sqlConnection.Open();
+            _reader = command.ExecuteReader();
+        }
+
+        public SqlConnection SqlConnection => _sqlConnection;
+        public bool HasRows => _reader.HasRows;
+
+        public IEnumerable<SqlDataReader> Result
+        {
+            get
+            {
+                while (_reader.Read())
+                    yield return _reader;
+
+                _reader.Close();
+            }
+        }
+
+        public void Dispose()
+        {
+            _sqlConnection.Close();
         }
     }
 }
