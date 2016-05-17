@@ -26,7 +26,7 @@ namespace ITCO.SboAddon.Framework.Helpers
 
         public void Dispose()
         {
-            if (!transactionEnded)
+            if (!transactionEnded && _company.InTransaction)
                 _company.EndTransaction(BoWfTransOpt.wf_Commit);
         }
     }
