@@ -64,6 +64,8 @@ namespace ITCO.SboAddon.Framework.Helpers
 
         public int Count => _recordSetObject.RecordCount;
 
+        public T BusinessObject => _businessObject;
+
         /// <summary>
         /// Note that T is COM object reference
         /// so you can only access data in loop!
