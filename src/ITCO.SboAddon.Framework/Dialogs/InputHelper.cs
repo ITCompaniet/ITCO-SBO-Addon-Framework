@@ -6,54 +6,68 @@ using System.Threading;
 
 namespace ITCO.SboAddon.Framework.Dialogs
 {
+    /// <summary>
+    /// Generate SBO Input Dialog
+    /// </summary>
     public class InputHelper
     {
-        /// <summary>
-        /// Generate SBO Dialog
-        /// </summary>
-        /// <param name="title">Form Title</param>
-        /// <param name="dialogInputs">Inputs</param>
-        /// <returns>Result</returns>
-        public static IDictionary<string, object> GetInputs(string title, ICollection<IDialogInput> dialogInputs)
+        private static Form _form;
+        private static int _yPos;
+        private readonly IList<IDialogInput> _dialogInputs = new List<IDialogInput>();
+        
+        public static InputHelper GetInputs(string title)
         {
             var formCreator = SboApp.Application.CreateObject(BoCreatableObjectType.cot_FormCreationParams) as FormCreationParams;
-            formCreator.FormType = "ITCO_FW_GetString";
-            var form = SboApp.Application.Forms.AddEx(formCreator);
-            form.Title = title;
-            form.Height = 100 + (dialogInputs.Count() * 15);
-            form.Width = 250;
+            formCreator.FormType = "ITCO_FW_Dialog";
+            _form = SboApp.Application.Forms.AddEx(formCreator);
+            _form.Title = title;
+            _form.Height = 300;
+            _form.Width = 250;
 
-            var top = 5;
+            _yPos = 5;
 
-            foreach (var dialogInput in dialogInputs)
+            return new InputHelper();
+        }
+        
+        public InputHelper AddInput(IDialogInput input)
+        {
+            _dialogInputs.Add(input);
+            return this;
+        }
+
+        public IDictionary<string, object> Result()
+        {
+            _form.Height = 100 + (_dialogInputs.Count() * 15);
+
+            foreach (var dialogInput in _dialogInputs)
             {
-                top += 15;
+                _yPos += 15;
                 // Caption
-                var titleText = form.Items.Add($"T{dialogInput.Id}", BoFormItemTypes.it_STATIC).Specific as StaticText;
-                titleText.Item.Top = top;
+                var titleText = _form.Items.Add($"T{dialogInput.Id}", BoFormItemTypes.it_STATIC).Specific as StaticText;
+                titleText.Item.Top = _yPos;
                 titleText.Item.Left = 10;
                 titleText.Item.Width = 100;
                 titleText.Caption = dialogInput.Title;
 
                 // Datasource
-                form.DataSources.UserDataSources.Add(dialogInput.Id, dialogInput.DataType, dialogInput.Length);
+                _form.DataSources.UserDataSources.Add(dialogInput.Id, dialogInput.DataType, dialogInput.Length);
 
                 // Input
-                var item = form.Items.Add(dialogInput.Id, dialogInput.ItemType);
-                item.Top = top;
+                var item = _form.Items.Add(dialogInput.Id, dialogInput.ItemType);
+                item.Top = _yPos;
                 item.Left = 100;
                 dialogInput.Item = item;
             }
 
-            top += 20;
+            _yPos += 20;
 
-            var okButton = form.Items.Add("okButton", BoFormItemTypes.it_BUTTON).Specific as Button;
+            var okButton = _form.Items.Add("okButton", BoFormItemTypes.it_BUTTON).Specific as Button;
             okButton.Caption = "Ok";
-            okButton.Item.Top = top;
+            okButton.Item.Top = _yPos;
             okButton.Item.Left = 100;
 
-            form.DefButton = "okButton";
-            form.Visible = true;
+            _form.DefButton = "okButton";
+            _form.Visible = true;
 
             var wait = new ManualResetEvent(false);
             okButton.PressedAfter += (o, e) =>
@@ -61,24 +75,25 @@ namespace ITCO.SboAddon.Framework.Dialogs
                 wait.Set();
             };
 
-            var validated = false;
-            while (!validated)
+            wait.WaitOne();
+            wait.Reset();
+
+            while (_dialogInputs.Any(d => !d.Validated))
             {
+                var invalidInputMessage = "Missing values in: " + string.Join(", ", _dialogInputs.Where(d => !d.Validated).Select(i => i.Title));
+                SboApp.Application.StatusBar.SetText(invalidInputMessage);
+
                 wait.WaitOne();
                 wait.Reset();
-                validated = dialogInputs.Count(d => !d.Validated) == 0;
             }
+            
+            var resultDict = _dialogInputs.ToDictionary(
+                dialogInput => dialogInput.Id, 
+                dialogInput => dialogInput.GetValue());
 
-            var resultDict = new Dictionary<string, object>();
-            foreach (var dialogInput in dialogInputs)
-            {
-                resultDict.Add(dialogInput.Id, dialogInput.GetValue());
-            }
-
-            form.Close();
+            _form.Close();
 
             return resultDict;
         }
-
     }
 }

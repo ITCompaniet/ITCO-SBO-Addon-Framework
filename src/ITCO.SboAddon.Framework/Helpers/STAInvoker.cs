@@ -10,10 +10,10 @@ namespace ITCO.SboAddon.Framework.Helpers
     /// <typeparam name="TReturn">Return type</typeparam>
     public class STAInvoker<T, TReturn>
     {
-        private Thread _invokeThread;
-        private Func<T, TReturn> _invoker;
+        private readonly Thread _invokeThread;
+        private readonly Func<T, TReturn> _invoker;
         private TReturn _result;
-        private T _statObject;
+        private readonly T _statObject;
 
         /// <summary>
         /// Initialize Invoker with objec and invoice method
@@ -24,8 +24,7 @@ namespace ITCO.SboAddon.Framework.Helpers
         {
             _statObject = staTreadObject;
             _invoker = invoker;
-            _invokeThread = new Thread(InvokeMethod);
-            _invokeThread.IsBackground = true;
+            _invokeThread = new Thread(InvokeMethod) {IsBackground = true};
             _invokeThread.SetApartmentState(ApartmentState.STA);
         }
         /// <summary>

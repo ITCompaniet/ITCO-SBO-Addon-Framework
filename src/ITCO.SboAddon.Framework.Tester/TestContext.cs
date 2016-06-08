@@ -22,7 +22,7 @@ namespace ITCO.SboAddon.Framework.Tester
 
                 //Test_Form();
                 //Test_MenuCreate();
-                //Test_GetString();
+                Test_GetString();
                 //Test_Setting();
                 //Test_SettingAsk();
    
@@ -82,11 +82,38 @@ namespace ITCO.SboAddon.Framework.Tester
 
         private void Test_GetString()
         {
+            var dialog = InputHelper.GetInputs("My Inputs")
+                .AddText("t1", "Title 1")
+                .AddInput(new TextDialogInput("t2", "Title 2", "def 2"))
+                .AddInput(new TextDialogInput("t3", "Title 3 Req", null, true))
+                .AddInput(new DateDialogInput("t4", "Date 1"))
+                .AddInput(new DecimalDialogInput("d1", "Decimal 1", 5.5m))
+                .AddInput(new IntegerDialogInput("i1", "Integer 1", 1))
+                .AddInput(new CheckboxDialogInput("t5", "Check On", true))
+                .AddInput(new CheckboxDialogInput("t6", "Check off", false))
+                .AddInput(new DropdownDialogInput("t7", "Dropdown 1", new Dictionary<string, string>() {
+                    { "o1", "Option 1" },
+                    { "o2", "Option 2" }
+                }, "o2", true));
+            //.Result();
+
+            var result = dialog.Result();
+
+            foreach (var o in result)
+            {
+                
+            }
+            //var result = new STAInvoker<InputHelper, IDictionary<string, object>>
+            //    (dialog, (x) => x.Result()).Invoke();
+
+            /*
             IDictionary<string, object> result = InputHelper.GetInputs("Test", new List<IDialogInput>() {
                 new TextDialogInput("t1", "Title 1"),
                 new TextDialogInput("t2", "Title 2", "def 2"),
                 new TextDialogInput("t3", "Title 3 Req", null, true),
                 new DateDialogInput("t4", "Date 1"),
+                new DecimalDialogInput("d1", "Decimal 1", 5.5m),
+                new IntegerDialogInput("i1", "Integer 1", 1),
                 new CheckboxDialogInput("t5", "Check On", true),
                 new CheckboxDialogInput("t6", "Check off", false),
                 new DropdownDialogInput("t7", "Dropdown 1", new Dictionary<string, string>() {
@@ -94,6 +121,12 @@ namespace ITCO.SboAddon.Framework.Tester
                     { "o2", "Option 2" }
                 }, "o2", true)
             });
+            */
         }
+    }
+
+    public class MyDialog
+    {
+        
     }
 }

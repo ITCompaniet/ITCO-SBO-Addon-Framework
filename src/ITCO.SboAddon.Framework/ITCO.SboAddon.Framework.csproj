@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dialogs\Inputs\InputExtensions.cs" />
     <Compile Include="Extensions\BusinessObjectInfoExtentions.cs" />
     <Compile Include="Extensions\DocumentExtensions.cs" />
     <Compile Include="Extensions\TransactionExtensions.cs" />

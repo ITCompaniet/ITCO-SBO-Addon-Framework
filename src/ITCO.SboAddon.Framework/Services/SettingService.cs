@@ -147,10 +147,8 @@ namespace ITCO.SboAddon.Framework.Services
             if (typeof (T) == typeof (decimal))
                 input = new DecimalDialogInput("setting", name, required: true);
 
-            var result = InputHelper.GetInputs(inputTitle, new List<IDialogInput>()
-            {
-                input
-            });
+            var result = InputHelper.GetInputs(inputTitle)
+                .AddInput(input).Result();
 
             var newSetting = result.First().Value;
             SaveSetting(key, newSetting, userCode);
