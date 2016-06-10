@@ -112,10 +112,12 @@ namespace ITCO.SboAddon.Framework.Services
             try
             {
                 var value = GetSettingAsString(key, userCode);
+
+                if (value != null)
+                    notFound = false;
+
                 if (value == "")
                     value = null;
-                else
-                    notFound = false;
 
                 returnValue = To<T>(value);
             }
