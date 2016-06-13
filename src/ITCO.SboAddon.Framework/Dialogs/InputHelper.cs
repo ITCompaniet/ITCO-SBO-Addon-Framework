@@ -37,7 +37,7 @@ namespace ITCO.SboAddon.Framework.Dialogs
 
         public IDictionary<string, object> Result()
         {
-            _form.Height = 100 + (_dialogInputs.Count() * 15);
+            _form.Height = 100 + (_dialogInputs.Count()*15);
 
             foreach (var dialogInput in _dialogInputs)
             {
@@ -51,6 +51,9 @@ namespace ITCO.SboAddon.Framework.Dialogs
 
                 // Datasource
                 _form.DataSources.UserDataSources.Add(dialogInput.Id, dialogInput.DataType, dialogInput.Length);
+
+                if (dialogInput.DefaultValue != null)
+                    _form.DataSources.UserDataSources.Item(dialogInput.Id).ValueEx = dialogInput.DefaultValue;
 
                 // Input
                 var item = _form.Items.Add(dialogInput.Id, dialogInput.ItemType);
@@ -68,7 +71,7 @@ namespace ITCO.SboAddon.Framework.Dialogs
 
             _form.DefButton = "okButton";
             _form.Visible = true;
-
+            
             var wait = new ManualResetEvent(false);
             okButton.PressedAfter += (o, e) =>
             {
@@ -86,9 +89,9 @@ namespace ITCO.SboAddon.Framework.Dialogs
                 wait.WaitOne();
                 wait.Reset();
             }
-            
+
             var resultDict = _dialogInputs.ToDictionary(
-                dialogInput => dialogInput.Id, 
+                dialogInput => dialogInput.Id,
                 dialogInput => dialogInput.GetValue());
 
             _form.Close();

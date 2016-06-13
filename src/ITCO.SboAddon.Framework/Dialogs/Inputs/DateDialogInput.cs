@@ -57,6 +57,8 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
 
         public int Length => 0;
 
+        public string DefaultValue => _defaultValue?.ToString("yyyyMMdd");
+
         public object GetValue()
         {
             if (_editText.Value.Length != 8)

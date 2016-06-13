@@ -55,6 +55,8 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
 
         public int Length => 20;
 
+        public string DefaultValue => null;
+
         public object GetValue()
         {
             return _comboBox.Selected.Value;

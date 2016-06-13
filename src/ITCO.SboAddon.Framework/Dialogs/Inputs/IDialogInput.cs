@@ -12,6 +12,7 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
         BoDataType DataType { get; }
         bool Validated { get; }
         int Length { get; }
+        string DefaultValue { get; }
 
         object GetValue();
     }

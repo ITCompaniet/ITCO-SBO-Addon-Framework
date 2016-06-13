@@ -1,4 +1,6 @@
-﻿using SAPbouiCOM;
+﻿using System;
+using System.Globalization;
+using SAPbouiCOM;
 
 namespace ITCO.SboAddon.Framework.Dialogs.Inputs
 {
@@ -58,6 +60,8 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
         public BoDataType DataType => BoDataType.dt_LONG_NUMBER;
 
         public int Length => 0;
+
+        public string DefaultValue => _defaultValue == null ? null : Convert.ToString(_defaultValue, CultureInfo.InvariantCulture);
 
         public object GetValue()
         {

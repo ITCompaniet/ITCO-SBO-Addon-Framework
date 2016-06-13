@@ -43,6 +43,8 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
 
         public int Length => 1;
 
+        public string DefaultValue => null;
+
         public object GetValue()
         {
             return _checkBox.Checked;

@@ -1,4 +1,5 @@
-﻿using SAPbouiCOM;
+﻿using System;
+using SAPbouiCOM;
 
 namespace ITCO.SboAddon.Framework.Dialogs.Inputs
 {
@@ -51,9 +52,11 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
             }
         }
 
-        public BoDataType DataType => BoDataType.dt_SHORT_TEXT;
+        public BoDataType DataType => BoDataType.dt_LONG_TEXT;
 
         public int Length => _length;
+
+        public string DefaultValue => _defaultValue;
 
         public object GetValue()
         {
