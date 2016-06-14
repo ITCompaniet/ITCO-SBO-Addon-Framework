@@ -128,5 +128,21 @@ namespace ITCO.SboAddon.Framework.Extensions
                 return targetDocument.DocEntry;
             }
         }
+
+        /// <summary>
+        /// Get Line weight in mg
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns></returns>
+        public static decimal GetWeightInMg(this Document_Lines line)
+        {
+            using (var weightMeasures = SboApp.Company.GetBusinessObject<WeightMeasures>(BoObjectTypes.oWeightMeasures))
+            {
+                if (weightMeasures.Object.GetByKey(line.Weight1Unit))
+                    return (decimal) (line.Weight1 * weightMeasures.Object.UnitWeightinmg);
+
+                return 0;
+            }
+        }
     }
 }
