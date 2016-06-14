@@ -1,6 +1,7 @@
 ﻿using System;
 using Common.Logging;
 using Common.Logging.Configuration;
+using ITCO.SboAddon.Framework.Services;
 using SAPbouiCOM;
 
 #pragma warning disable 1591
@@ -22,7 +23,7 @@ namespace ITCO.SboAddon.Framework
             }
         }
 
-        public bool IsDebugEnabled => true;
+        public bool IsDebugEnabled => SettingService.GetSettingByKey("log.debug", false);
 
         public bool IsErrorEnabled => true;
 
@@ -30,7 +31,7 @@ namespace ITCO.SboAddon.Framework
 
         public bool IsInfoEnabled => true;
 
-        public bool IsTraceEnabled => true;
+        public bool IsTraceEnabled => SettingService.GetSettingByKey("log.trace", false);
 
         public bool IsWarnEnabled => true;
 
@@ -49,7 +50,8 @@ namespace ITCO.SboAddon.Framework
 
         public void Debug(object message)
         {
-            
+            SboApp.Application.StatusBar.SetText(message.ToString(), BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Success);
+            SboApp.Application.StatusBar.SetText(null, Type: BoStatusBarMessageType.smt_None);
         }
 
         public void Debug(Action<FormatMessageHandler> formatMessageCallback, Exception exception)
@@ -64,7 +66,7 @@ namespace ITCO.SboAddon.Framework
 
         public void Debug(object message, Exception exception)
         {
-
+            SboApp.Application.StatusBar.SetText(message.ToString(), BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Success);
         }
 
         public void Debug(IFormatProvider formatProvider, Action<FormatMessageHandler> formatMessageCallback, Exception exception)
@@ -74,22 +76,22 @@ namespace ITCO.SboAddon.Framework
 
         public void DebugFormat(string format, params object[] args)
         {
-            
+            SboApp.Application.StatusBar.SetText(string.Format(format, args), BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Success);
         }
 
         public void DebugFormat(IFormatProvider formatProvider, string format, params object[] args)
         {
-            
+            SboApp.Application.StatusBar.SetText(string.Format(format, args), BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Success);
         }
 
         public void DebugFormat(string format, Exception exception, params object[] args)
         {
-            
+            SboApp.Application.StatusBar.SetText(string.Format(format, args), BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Success);
         }
 
         public void DebugFormat(IFormatProvider formatProvider, string format, Exception exception, params object[] args)
         {
-            
+            SboApp.Application.StatusBar.SetText(string.Format(formatProvider, format, args), BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Success);
         }
 
         public void Error(Action<FormatMessageHandler> formatMessageCallback)
@@ -124,22 +126,22 @@ namespace ITCO.SboAddon.Framework
 
         public void ErrorFormat(string format, params object[] args)
         {
-            
+            SboApp.Application.StatusBar.SetText(string.Format(format, args), BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Error);
         }
 
         public void ErrorFormat(IFormatProvider formatProvider, string format, params object[] args)
         {
-            
+            SboApp.Application.StatusBar.SetText(string.Format(formatProvider, format, args), BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Error);
         }
 
         public void ErrorFormat(string format, Exception exception, params object[] args)
         {
-            
+            SboApp.Application.StatusBar.SetText(string.Format(format, args), BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Error);
         }
 
         public void ErrorFormat(IFormatProvider formatProvider, string format, Exception exception, params object[] args)
         {
-            
+            SboApp.Application.StatusBar.SetText(string.Format(formatProvider, format, args), BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Error);
         }
 
         public void Fatal(Action<FormatMessageHandler> formatMessageCallback)
@@ -199,7 +201,7 @@ namespace ITCO.SboAddon.Framework
 
         public void Info(object message)
         {
-            SboApp.Application.StatusBar.SetText(message.ToString(), BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_None);
+            SboApp.Application.StatusBar.SetText(message.ToString(), BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success);
         }
 
         public void Info(Action<FormatMessageHandler> formatMessageCallback, Exception exception)
@@ -214,7 +216,7 @@ namespace ITCO.SboAddon.Framework
 
         public void Info(object message, Exception exception)
         {
-            SboApp.Application.StatusBar.SetText(message.ToString(), BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_None);
+            SboApp.Application.StatusBar.SetText(message.ToString(), BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success);
         }
 
         public void Info(IFormatProvider formatProvider, Action<FormatMessageHandler> formatMessageCallback, Exception exception)
@@ -249,7 +251,7 @@ namespace ITCO.SboAddon.Framework
 
         public void Trace(object message)
         {
-            
+            SboApp.Application.StatusBar.SetText(message.ToString(), BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success);
         }
 
         public void Trace(Action<FormatMessageHandler> formatMessageCallback, Exception exception)
@@ -264,7 +266,7 @@ namespace ITCO.SboAddon.Framework
 
         public void Trace(object message, Exception exception)
         {
-            
+            SboApp.Application.StatusBar.SetText(message.ToString(), BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success);
         }
 
         public void Trace(IFormatProvider formatProvider, Action<FormatMessageHandler> formatMessageCallback, Exception exception)

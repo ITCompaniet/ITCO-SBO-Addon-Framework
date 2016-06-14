@@ -236,7 +236,7 @@ namespace ITCO.SboAddon.Framework.Services
         private static object To(object value, Type destinationType, CultureInfo culture)
         {
             if (value == null)
-                return null;
+                return Activator.CreateInstance(destinationType);
 
             var sourceType = value.GetType();
 

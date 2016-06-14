@@ -34,8 +34,9 @@ namespace ITCO.SboAddon.Framework
         /// <summary>
         /// Connect UI and DI Api
         /// </summary>
-        /// <param name="connectionString"></param>
-        public static void Connect(string connectionString = null)
+        /// <param name="connectionString">Connection String from SBO Main Application</param>
+        /// <param name="loggingEnabled">Is SBO Common Logging enabled</param>
+        public static void Connect(string connectionString = null, bool loggingEnabled = true)
         {
             if (connectionString == null)
             {
@@ -61,10 +62,11 @@ namespace ITCO.SboAddon.Framework
                 var connectResponse = _diCompany.Connect();
                 ErrorHelper.HandleErrorWithException(connectResponse, "DI API Could not connect");
 
-                var assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
-                _application.StatusBar.SetText($"{assemblyName} connected to SBO", SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success);
+                if (loggingEnabled)
+                    SboAppLogger.Enable();
 
-                Logger.Info($"{assemblyName} connected to SBO");
+                var assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+                Logger.Info($"{assemblyName} connected");
 
                 SetAppEvents();
             }
