@@ -1,4 +1,7 @@
-﻿namespace ITCO.SboAddon.Framework.Constants
+﻿// ReSharper disable InconsistentNaming
+#pragma warning disable 1591
+
+namespace ITCO.SboAddon.Framework.Constants
 {
     public class SboForm
     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using Common.Logging;
+using Common.Logging.Configuration;
 using SAPbouiCOM;
 
 #pragma warning disable 1591
@@ -8,6 +9,11 @@ namespace ITCO.SboAddon.Framework
 {
     public class SboAppLogger : ILog
     {
+        public static void Enable()
+        {
+            LogManager.Adapter = new SboAppLoggingAdapter(new NameValueCollection());
+        }
+
         public IVariablesContext GlobalVariablesContext
         {
             get
@@ -334,6 +340,23 @@ namespace ITCO.SboAddon.Framework
         public void WarnFormat(IFormatProvider formatProvider, string format, Exception exception, params object[] args)
         {
             
+        }
+    }
+
+    internal class SboAppLoggingAdapter : ILoggerFactoryAdapter
+    {
+        public SboAppLoggingAdapter(NameValueCollection properties)
+        {
+        }
+
+        public ILog GetLogger(string key)
+        {
+            return new SboAppLogger();
+        }
+
+        public ILog GetLogger(Type type)
+        {
+            return new SboAppLogger();
         }
     }
 }

@@ -11,14 +11,16 @@ namespace ITCO.SboAddon.Framework.Dialogs
     /// </summary>
     public class InputHelper
     {
-        private static Form _form;
-        private static int _yPos;
-        private readonly IList<IDialogInput> _dialogInputs = new List<IDialogInput>();
-        
-        public static InputHelper GetInputs(string title)
+        public const string FormType = "ITCO_FW_Dialog";
+
+        private Form _form;
+        private int _yPos;
+        private readonly List<IDialogInput> _dialogInputs = new List<IDialogInput>();
+
+        public InputHelper(string title, params IDialogInput[] dialogs)
         {
             var formCreator = SboApp.Application.CreateObject(BoCreatableObjectType.cot_FormCreationParams) as FormCreationParams;
-            formCreator.FormType = "ITCO_FW_Dialog";
+            formCreator.FormType = FormType;
             _form = SboApp.Application.Forms.AddEx(formCreator);
             _form.Title = title;
             _form.Height = 300;
@@ -26,7 +28,13 @@ namespace ITCO.SboAddon.Framework.Dialogs
 
             _yPos = 5;
 
-            return new InputHelper();
+            if (dialogs != null)
+                _dialogInputs.AddRange(dialogs);
+        }
+
+        public static InputHelper GetInputs(string title, params IDialogInput[] dialogs)
+        {
+            return new InputHelper(title, dialogs);
         }
         
         public InputHelper AddInput(IDialogInput input)
@@ -46,7 +54,7 @@ namespace ITCO.SboAddon.Framework.Dialogs
                 var titleText = _form.Items.Add($"T{dialogInput.Id}", BoFormItemTypes.it_STATIC).Specific as StaticText;
                 titleText.Item.Top = _yPos;
                 titleText.Item.Left = 10;
-                titleText.Item.Width = 100;
+                titleText.Item.Width = 150;
                 titleText.Caption = dialogInput.Title;
 
                 // Datasource
@@ -58,7 +66,7 @@ namespace ITCO.SboAddon.Framework.Dialogs
                 // Input
                 var item = _form.Items.Add(dialogInput.Id, dialogInput.ItemType);
                 item.Top = _yPos;
-                item.Left = 100;
+                item.Left = 150;
                 dialogInput.Item = item;
             }
 
