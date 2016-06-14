@@ -1,4 +1,5 @@
-﻿using ITCO.SboAddon.Framework.Dialogs.Inputs;
+﻿using System;
+using ITCO.SboAddon.Framework.Dialogs.Inputs;
 using SAPbouiCOM;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +17,15 @@ namespace ITCO.SboAddon.Framework.Dialogs
         private Form _form;
         private int _yPos;
         private readonly List<IDialogInput> _dialogInputs = new List<IDialogInput>();
+        private bool _canceled;
+        private ManualResetEvent _formWait = new ManualResetEvent(false);
 
         public InputHelper(string title, params IDialogInput[] dialogs)
         {
             var formCreator = SboApp.Application.CreateObject(BoCreatableObjectType.cot_FormCreationParams) as FormCreationParams;
             formCreator.FormType = FormType;
+            formCreator.BorderStyle = BoFormBorderStyle.fbs_Fixed;
+
             _form = SboApp.Application.Forms.AddEx(formCreator);
             _form.Title = title;
             _form.Height = 300;
@@ -37,12 +42,22 @@ namespace ITCO.SboAddon.Framework.Dialogs
             return new InputHelper(title, dialogs);
         }
         
+        /// <summary>
+        /// Add Dialog Input
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public InputHelper AddInput(IDialogInput input)
         {
             _dialogInputs.Add(input);
             return this;
         }
 
+        /// <summary>
+        /// Wait for Dialog result
+        /// </summary>
+        /// <returns>Result</returns>
+        /// <exception cref="DialogCanceledException">Dialog in canceled</exception>
         public IDictionary<string, object> Result()
         {
             _form.Height = 100 + (_dialogInputs.Count()*15);
@@ -80,31 +95,59 @@ namespace ITCO.SboAddon.Framework.Dialogs
             _form.DefButton = "okButton";
             _form.Visible = true;
             
-            var wait = new ManualResetEvent(false);
             okButton.PressedAfter += (o, e) =>
             {
-                wait.Set();
+                _formWait.Set();
             };
 
-            wait.WaitOne();
-            wait.Reset();
+            SboApp.Application.ItemEvent += ApplicationOnItemEvent;
 
-            while (_dialogInputs.Any(d => !d.Validated))
+            _formWait.WaitOne();
+            _formWait.Reset();
+
+            try
             {
-                var invalidInputMessage = "Missing values in: " + string.Join(", ", _dialogInputs.Where(d => !d.Validated).Select(i => i.Title));
-                SboApp.Application.StatusBar.SetText(invalidInputMessage);
+                if (_canceled)
+                    throw new DialogCanceledException();
 
-                wait.WaitOne();
-                wait.Reset();
+                while (_dialogInputs.Any(d => !d.Validated))
+                {
+                    var invalidInputMessage = "Missing values in: " +
+                                              string.Join(", ",
+                                                  _dialogInputs.Where(d => !d.Validated).Select(i => i.Title));
+                    SboApp.Application.StatusBar.SetText(invalidInputMessage);
+
+                    _formWait.WaitOne();
+                    _formWait.Reset();
+
+                    if (_canceled)
+                        throw new DialogCanceledException();
+                }
+
+                var resultDict = _dialogInputs.ToDictionary(
+                    dialogInput => dialogInput.Id,
+                    dialogInput => dialogInput.GetValue());
+
+                _form.Close();
+                return resultDict;
             }
+            finally
+            {
+                SboApp.Application.ItemEvent -= ApplicationOnItemEvent;
+            }
+        }
 
-            var resultDict = _dialogInputs.ToDictionary(
-                dialogInput => dialogInput.Id,
-                dialogInput => dialogInput.GetValue());
-
-            _form.Close();
-
-            return resultDict;
+        private void ApplicationOnItemEvent(string formUid, ref ItemEvent pVal, out bool bubbleEvent)
+        {
+            bubbleEvent = true;
+            if (pVal.EventType == BoEventTypes.et_FORM_UNLOAD
+                && pVal.FormTypeEx == FormType
+                && pVal.FormUID == _form.UniqueID
+                && !pVal.BeforeAction)
+            {
+                _canceled = true;
+                _formWait.Set();
+            }
         }
     }
 }
