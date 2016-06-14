@@ -63,6 +63,21 @@ namespace ITCO.SboAddon.Framework.Extensions
         }
 
         /// <summary>
+        /// Get Expenses as Enumerable
+        /// </summary>
+        /// <param name="expenses"></param>
+        /// <returns></returns>
+        public static IEnumerable<DocumentsAdditionalExpenses> AsEnumerable(this DocumentsAdditionalExpenses expenses)
+        {
+            var line = -1;
+            while (++line < expenses.Count)
+            {
+                expenses.SetCurrentLine(line);
+                yield return expenses;
+            }
+        }
+
+        /// <summary>
         /// Search Document
         /// </summary>
         /// <param name="document"></param>
@@ -75,6 +90,43 @@ namespace ITCO.SboAddon.Framework.Extensions
             recordSet.DoQuery($"SELECT * FROM [{table}] WHERE {where}");
             document.Browser.Recordset = recordSet;
             return recordSet.RecordCount != 0;
+        }
+
+        /// <summary>
+        /// Copy document
+        /// </summary>
+        /// <param name="sourceDocument"></param>
+        /// <param name="copyToType"></param>
+        /// <param name="copyExpenses"></param>
+        /// <returns>Target DocEntry</returns>
+        public static int CopyTo(this IDocuments sourceDocument, BoObjectTypes copyToType, bool copyExpenses = true)
+        {
+            using (var copyTo = SboApp.Company.GetBusinessObject<Documents>(copyToType))
+            {
+                var targetDocument = copyTo.Object;
+
+                targetDocument.CardCode = sourceDocument.CardCode;
+
+                foreach (var sourceLine in sourceDocument.Lines.AsEnumerable())
+                {
+                    targetDocument.Lines.BaseEntry = sourceLine.DocEntry;
+                    targetDocument.Lines.BaseLine = sourceLine.LineNum;
+                    targetDocument.Lines.BaseType = (int) sourceDocument.DocObjectCode;
+                    targetDocument.Lines.Add();
+                }
+
+                foreach (var sourceExpense in sourceDocument.Expenses.AsEnumerable())
+                {
+                    targetDocument.Expenses.BaseDocEntry = sourceDocument.DocEntry;
+                    targetDocument.Expenses.BaseDocLine = sourceExpense.LineNum;
+                    targetDocument.Expenses.BaseDocType = (int) sourceDocument.DocObjectCode;
+                    targetDocument.Expenses.Add();
+                }
+
+                targetDocument.AddAndLoadEx();
+
+                return targetDocument.DocEntry;
+            }
         }
     }
 }
