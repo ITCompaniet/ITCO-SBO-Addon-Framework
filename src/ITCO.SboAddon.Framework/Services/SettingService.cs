@@ -72,6 +72,18 @@ namespace ITCO.SboAddon.Framework.Services
             return GetSettingByKey(key, defaultValue , userCode, askIfNotFound);
         }
 
+        /// <summary>
+        /// Save Settings for Current User
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public static void SaveCurrentUserSetting<T>(string key, T value)
+        {
+            var userCode = SboApp.Company.UserName;
+            SaveSetting(key, value, userCode);
+        }
+
         private static string GetSettingAsString(string key, string userCode = null)
         {
             var sqlKey = key.Trim().ToLowerInvariant();
@@ -236,7 +248,12 @@ namespace ITCO.SboAddon.Framework.Services
         private static object To(object value, Type destinationType, CultureInfo culture)
         {
             if (value == null)
-                return Activator.CreateInstance(destinationType);
+            {
+                if (destinationType.GetConstructor(Type.EmptyTypes) != null && !destinationType.IsAbstract)
+                    return Activator.CreateInstance(destinationType);
+
+                return null;
+            }
 
             var sourceType = value.GetType();
 
