@@ -248,12 +248,7 @@ namespace ITCO.SboAddon.Framework.Services
         private static object To(object value, Type destinationType, CultureInfo culture)
         {
             if (value == null)
-            {
-                if (destinationType.GetConstructor(Type.EmptyTypes) != null && !destinationType.IsAbstract)
-                    return Activator.CreateInstance(destinationType);
-
-                return null;
-            }
+                return destinationType.IsValueType ? Activator.CreateInstance(destinationType) : null;
 
             var sourceType = value.GetType();
 
