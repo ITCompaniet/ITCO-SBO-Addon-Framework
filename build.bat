@@ -10,7 +10,7 @@ if not "%PackageVersion%" == "" (
 )
 
 REM Package restore
-call %NuGet% restore "src\ITCO.SboAddon.Framework\packages.config" -OutputDirectory %cd%\packages -NonInteractive
+call %NuGet% restore "src\ITCO.SboAddon.Framework\packages.config" -OutputDirectory %cd%\src\packages -NonInteractive
 
 REM Build
 "%programfiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe" "src\ITCO.SboAddon.Framework.sln" /p:Configuration="%config%" /m /v:M /fl /flp:LogFile=msbuild.log;Verbosity=Normal /nr:false
