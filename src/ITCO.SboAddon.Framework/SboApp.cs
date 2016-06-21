@@ -14,6 +14,12 @@ namespace ITCO.SboAddon.Framework
         private static SAPbobsCOM.Company _diCompany;
 
         /// <summary>
+        /// Debug Connection String
+        /// </summary>
+        public const string DebugConnectionString =
+            "0030002C0030002C00530041005000420044005F00440061007400650076002C0050004C006F006D0056004900490056";
+
+        /// <summary>
         /// Common Logger
         /// </summary>
         internal static ILog Logger => LogManager.GetLogger<SboApp>();
@@ -42,7 +48,7 @@ namespace ITCO.SboAddon.Framework
             {
                 connectionString = Environment.GetCommandLineArgs().Length > 1 ? 
                     Convert.ToString(Environment.GetCommandLineArgs().GetValue(1)) : 
-                    "0030002C0030002C00530041005000420044005F00440061007400650076002C0050004C006F006D0056004900490056";
+                    "";
             }
 
             var sboGuiApi = new SAPbouiCOM.SboGuiApi();
