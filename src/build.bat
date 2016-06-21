@@ -15,7 +15,7 @@ if not "%errorlevel%"=="0" goto failure
 
 REM Package
 mkdir Build
-call %nuget% pack "ITCO.SboAddon.Framework\ITCO.SboAddon.Framework.csproj" -symbols -o Build -p Configuration=%config% %version%
+call %nuget% pack "src\ITCO.SboAddon.Framework\ITCO.SboAddon.Framework.csproj" -symbols -o Build -p Configuration=%config% %version%
 if not "%errorlevel%"=="0" goto failure
 
 :success
