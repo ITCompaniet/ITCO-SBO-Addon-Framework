@@ -9,8 +9,11 @@ if not "%PackageVersion%" == "" (
    set version=-Version %PackageVersion%
 )
 
+REM Package restore
+call %NuGet% restore "src\ITCO.SboAddon.Framework\packages.config" -OutputDirectory %cd%\packages -NonInteractive
+
 REM Build
-"%programfiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe" ITCO.SboAddon.Framework.sln /p:Configuration="%config%" /m /v:M /fl /flp:LogFile=msbuild.log;Verbosity=Normal /nr:false
+"%programfiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe" "src\ITCO.SboAddon.Framework.sln" /p:Configuration="%config%" /m /v:M /fl /flp:LogFile=msbuild.log;Verbosity=Normal /nr:false
 if not "%errorlevel%"=="0" goto failure
 
 REM Package
