@@ -135,7 +135,7 @@ namespace ITCO.SboAddon.Framework.Services
             }
             catch (Exception e)
             {
-                SboApp.Logger.Error($"SettingService Error: {e.Message}", e);
+                SboApp.Logger.Error($"SettingService Error: {e.Message} (Key={key}, UserCode={userCode})", e);
                 return returnValue;
             }
 
