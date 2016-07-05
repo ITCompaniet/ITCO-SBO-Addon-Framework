@@ -13,15 +13,59 @@ namespace ITCO.SboAddon.Framework.Helpers
     /// </summary>
     public static class MenuHelper
     {
+        private static readonly List<AddonMenuEvent> AddonMenuEvents = new List<AddonMenuEvent>();
+
+        #region Events
+        private static void Application_ApplicationExit(object sender, EventArgs e)
+        {
+            foreach (var item in AddonMenuEvents)
+            {
+                // TODO: Remove menu items
+            }
+        }
+
+        private static void Application_MenuEvent(ref MenuEvent pVal, out bool bubbleEvent)
+        {
+            bubbleEvent = true;
+
+            if (pVal.BeforeAction)
+                return;
+
+            var menuId = pVal.MenuUID;
+            var menuEvent = AddonMenuEvents.FirstOrDefault(e => e.MenuId == menuId);
+
+            menuEvent?.Action();
+        }
+        #endregion
+
+        /// <summary>
+        /// Add Menu Item with action
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="menuId"></param>
+        /// <param name="parentMenuId"></param>
+        /// <param name="action"></param>
+        /// <param name="position"></param>
+        public static void AddMenuItemEvent(string title, string menuId, string parentMenuId, Action action, int position = -1)
+        {
+            AddonMenuEvents.Add(new AddonMenuEvent
+            {
+                MenuId = menuId,
+                ParentMenuId = parentMenuId,
+                Action = action,
+                Position = position
+            });
+
+            AddItem(title, menuId, parentMenuId, position);
+        }
+
         /// <summary>
         /// Get Menu Items Events from Form Controller Classes
         /// </summary>
         /// <param name="assembly"></param>
         /// <returns></returns>
-        public static ICollection<AddonMenuEvent> LoadMenuItemsFromFormControllers(Assembly assembly)
+        public static void LoadAndAddMenuItemsFromFormControllers(Assembly assembly)
         {
-            var addonMenuEvents = new List<AddonMenuEvent>();
-
             var formControllers = (from t in assembly.GetTypes()
                                    where t.IsClass && !t.IsAbstract
                                    && t.IsSubclassOf(typeof(FormController))
@@ -42,10 +86,15 @@ namespace ITCO.SboAddon.Framework.Helpers
                         ((FormController)Activator.CreateInstance(formController)).Start();
                     }
                 };
-                addonMenuEvents.Add(item);
+                AddMenuItemEvent(item.Title, item.MenuId, item.ParentMenuId, item.Action, item.Position);
             }
 
-            return addonMenuEvents;
+            // Bind Events only once
+            System.Windows.Forms.Application.ApplicationExit -= Application_ApplicationExit;
+            System.Windows.Forms.Application.ApplicationExit += Application_ApplicationExit;
+
+            SboApp.Application.MenuEvent -= Application_MenuEvent;
+            SboApp.Application.MenuEvent += Application_MenuEvent;
         }
 
         /// <summary>
@@ -168,5 +217,36 @@ namespace ITCO.SboAddon.Framework.Helpers
                 throw new Exception($"Menu {itemId} not found in {parentMenuItem.UID}", e);
             }
         }
+    }
+
+    /// <summary>
+    /// Menu Item Event
+    /// </summary>
+    public class AddonMenuEvent
+    {
+        /// <summary>
+        /// Parent Menu Id
+        /// </summary>
+        public string ParentMenuId { get; set; }
+
+        /// <summary>
+        /// Menu ID
+        /// </summary>
+        public string MenuId { get; set; }
+
+        /// <summary>
+        /// Action when clicking the menu item
+        /// </summary>
+        public Action Action { get; set; }
+
+        /// <summary>
+        /// Title
+        /// </summary>
+        public string Title { get; set; }
+
+        /// <summary>
+        /// Position, -1 = Last
+        /// </summary>
+        public int Position { get; set; }
     }
 }

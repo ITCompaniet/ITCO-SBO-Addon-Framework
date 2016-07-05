@@ -1,4 +1,5 @@
-﻿namespace ITCO.SboAddon.Framework.Constants
+﻿#pragma warning disable 1591
+namespace ITCO.SboAddon.Framework.Constants
 {
     public class SboMenuItem
     {
