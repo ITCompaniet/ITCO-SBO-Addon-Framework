@@ -34,7 +34,7 @@ namespace ITCO.SboAddon.Framework.Forms
         /// <summary>
         /// Create new Form
         /// </summary>        
-        public FormController(bool autoStart = true)
+        public FormController(bool autoStart = false)
         {
             if (autoStart)
                 Start();
