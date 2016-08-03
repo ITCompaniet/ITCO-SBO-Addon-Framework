@@ -39,7 +39,7 @@ namespace ITCO.SboAddon.Framework.Extensions
             }
 
             if (formatToSqlParams)
-                userQuery = Regex.Replace(userQuery, @"\[%([0-9])\]", "@p$1");
+                userQuery = Regex.Replace(userQuery, @"'?\[%([0-9])\]'?", "@p$1");
 
             return userQuery;
         }
