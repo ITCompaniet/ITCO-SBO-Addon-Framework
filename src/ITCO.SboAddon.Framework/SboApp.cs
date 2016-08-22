@@ -29,12 +29,17 @@ namespace ITCO.SboAddon.Framework
         /// </summary>
         /// <param name="diCompany">SAPbobsCOM.Company</param>
         /// <param name="application">SAPbouiCOM.Application</param>
+        /// <param name="loggingEnabled">Is SBO Common Logging enabled</param>
         public static void SetApiConnection(
-            SAPbobsCOM.Company diCompany, SAPbouiCOM.Application application = null)
+            SAPbobsCOM.Company diCompany, SAPbouiCOM.Application application = null, bool loggingEnabled = true)
         {
             _diCompany = diCompany;
+
             if (application != null)
                 _application = application;
+
+            if (loggingEnabled)
+                SboAppLogger.Enable();
         }
 
         /// <summary>
