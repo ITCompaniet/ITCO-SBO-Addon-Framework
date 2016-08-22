@@ -19,6 +19,8 @@ namespace ITCO.SboAddon.Framework.Helpers
 
         public int Count => _recordSetObject.RecordCount;
 
+        public Recordset Recordset => _recordSetObject;
+
         /// <summary>
         /// Note that Fields is COM object reference
         /// so you can only access data in loop!
@@ -65,6 +67,7 @@ namespace ITCO.SboAddon.Framework.Helpers
         public int Count => _recordSetObject.RecordCount;
 
         public T BusinessObject => _businessObject;
+        public Recordset Recordset => _recordSetObject;
 
         /// <summary>
         /// Note that T is COM object reference
