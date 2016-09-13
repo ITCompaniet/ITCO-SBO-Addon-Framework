@@ -15,6 +15,30 @@ namespace ITCO.SboAddon.Framework.Helpers
     {
         private static readonly List<AddonMenuEvent> AddonMenuEvents = new List<AddonMenuEvent>();
 
+        private static bool _isInitialized;
+
+        private static void Init()
+        {
+            if (!_isInitialized)
+            {
+                BindEvents();
+                SboApp.Logger.Debug("MenuHelper.Initialized");
+            }
+
+            _isInitialized = true;
+        }
+
+        private static void BindEvents()
+        {
+            SboApp.Logger.Trace("MenuHelper.BindEvents");
+            // Bind Events only once
+            System.Windows.Forms.Application.ApplicationExit -= Application_ApplicationExit;
+            System.Windows.Forms.Application.ApplicationExit += Application_ApplicationExit;
+
+            SboApp.Application.MenuEvent -= Application_MenuEvent;
+            SboApp.Application.MenuEvent += Application_MenuEvent;
+        }
+
         #region Events
         private static void Application_ApplicationExit(object sender, EventArgs e)
         {
@@ -57,6 +81,8 @@ namespace ITCO.SboAddon.Framework.Helpers
             });
 
             AddItem(title, menuId, parentMenuId, position);
+
+            BindEvents();
         }
 
         /// <summary>
@@ -89,12 +115,7 @@ namespace ITCO.SboAddon.Framework.Helpers
                 AddMenuItemEvent(item.Title, item.MenuId, item.ParentMenuId, item.Action, item.Position);
             }
 
-            // Bind Events only once
-            System.Windows.Forms.Application.ApplicationExit -= Application_ApplicationExit;
-            System.Windows.Forms.Application.ApplicationExit += Application_ApplicationExit;
-
-            SboApp.Application.MenuEvent -= Application_MenuEvent;
-            SboApp.Application.MenuEvent += Application_MenuEvent;
+            BindEvents();
         }
 
         /// <summary>
@@ -186,6 +207,8 @@ namespace ITCO.SboAddon.Framework.Helpers
         {
             try
             {
+                Init();
+
                 if (!parentMenuItem.SubMenus.Exists(itemId))
                 {
                     var creationPackage = SboApp.Application.CreateObject(BoCreatableObjectType.cot_MenuCreationParams) as MenuCreationParams;
