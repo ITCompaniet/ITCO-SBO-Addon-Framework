@@ -15,5 +15,6 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
         string DefaultValue { get; }
 
         object GetValue();
+        void Extras(Form form, int yPos);
     }
 }

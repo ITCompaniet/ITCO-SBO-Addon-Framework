@@ -118,6 +118,10 @@ namespace ITCO.SboAddon.Framework.Tester
                     .AddInput(new IntegerDialogInput("i1", "Integer 1", 1))
                     .AddInput(new CheckboxDialogInput("t5", "Check On", true))
                     .AddInput(new CheckboxDialogInput("t6", "Check off", false))
+                    .AddInput(new FolderDialogInput("dir1", "Choose dir 1", @"c:\temp"))
+                    .AddInput(new FolderDialogInput("dir2", "Choose dir 2", ""))
+                    .AddInput(new SaveFileDialogInput("file1", "Save file 1", @"c:\temp\test.txt"))
+                    .AddInput(new OpenFileDialogInput("file2", "Open file 2", ""))
                     .AddInput(new DropdownDialogInput("t7", "Dropdown 1", new Dictionary<string, string>()
                     {
                         {"o1", "Option 1"},

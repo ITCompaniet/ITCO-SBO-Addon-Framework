@@ -61,5 +61,9 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
         {
             return _comboBox.Selected.Value;
         }
+
+        public void Extras(Form form, int yPos)
+        {
+        }
     }
 }

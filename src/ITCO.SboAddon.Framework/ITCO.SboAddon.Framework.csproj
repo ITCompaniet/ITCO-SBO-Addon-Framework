@@ -57,7 +57,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dialogs\Inputs\OpenFileDialogInput.cs" />
+    <Compile Include="Dialogs\Inputs\SaveFileDialogInput.cs" />
     <Compile Include="Dialogs\Inputs\InputExtensions.cs" />
+    <Compile Include="Dialogs\Inputs\FolderDialogInput.cs" />
     <Compile Include="Extensions\BusinessObjectInfoExtentions.cs" />
     <Compile Include="Extensions\DocumentExtensions.cs" />
     <Compile Include="Extensions\TransactionExtensions.cs" />

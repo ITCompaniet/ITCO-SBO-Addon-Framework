@@ -1,4 +1,5 @@
-﻿using SAPbouiCOM;
+﻿using System;
+using SAPbouiCOM;
 
 namespace ITCO.SboAddon.Framework.Dialogs.Inputs
 {
@@ -48,6 +49,10 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
         public object GetValue()
         {
             return _checkBox.Checked;
+        }
+
+        public void Extras(Form form, int yPos)
+        {
         }
     }
 }

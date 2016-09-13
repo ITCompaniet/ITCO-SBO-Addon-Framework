@@ -67,5 +67,9 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
         {
             return int.Parse(_editText.Value);
         }
+
+        public void Extras(Form form, int yPos)
+        {
+        }
     }
 }

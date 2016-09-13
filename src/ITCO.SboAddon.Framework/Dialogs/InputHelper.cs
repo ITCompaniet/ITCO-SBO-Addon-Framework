@@ -29,7 +29,7 @@ namespace ITCO.SboAddon.Framework.Dialogs
             _form = SboApp.Application.Forms.AddEx(formCreator);
             _form.Title = title;
             _form.Height = 300;
-            _form.Width = 250;
+            _form.Width = 300;
 
             _yPos = 5;
 
@@ -83,6 +83,8 @@ namespace ITCO.SboAddon.Framework.Dialogs
                 item.Top = _yPos;
                 item.Left = 150;
                 dialogInput.Item = item;
+
+                dialogInput.Extras(_form, _yPos);
             }
 
             _yPos += 20;

@@ -66,5 +66,9 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
             
             return DateTime.ParseExact(_editText.Value, "yyyyMMdd", CultureInfo.InvariantCulture);
         }
+
+        public void Extras(Form form, int yPos)
+        {
+        }
     }
 }

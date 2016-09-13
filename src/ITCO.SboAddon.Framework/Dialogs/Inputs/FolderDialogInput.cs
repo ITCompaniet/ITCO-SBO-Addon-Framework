@@ -1,19 +1,18 @@
 ﻿using System;
 using SAPbouiCOM;
-using System.Globalization;
 
 namespace ITCO.SboAddon.Framework.Dialogs.Inputs
 {
-    public class DecimalDialogInput : IDialogInput
+    public class FolderDialogInput : IDialogInput
     {
         private readonly string _id;
-        private decimal? _defaultValue;
+        private string _defaultValue;
         private bool _required;
         private string _title;
         private Item _item;
         private EditText _editText;
 
-        public DecimalDialogInput(string id, string title, decimal? defaultValue = null, bool required = false)
+        public FolderDialogInput(string id, string title, string defaultValue = null, bool required = false)
         {
             _id = id;
             _title = title;
@@ -33,9 +32,7 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
             {
                 _item = value;
                 _editText = _item.Specific as EditText;
-                if (_defaultValue.HasValue)
-                    _editText.Value = _defaultValue.Value.ToString();
-
+                _editText.Value = _defaultValue;
                 _editText.DataBind.SetBound(true, "", _id);
             }
         }
@@ -46,30 +43,42 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
         {
             get
             {
-                if (string.IsNullOrEmpty(_editText.Value) && _required)
-                    return false;
-
-                decimal decimalValue = 0;
-                if (!decimal.TryParse(_editText.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out decimalValue))
-                    return false;
+                if (string.IsNullOrEmpty(_editText.Value) && _required)                
+                    return false;                
 
                 return true;
             }
         }
 
-        public BoDataType DataType => BoDataType.dt_QUANTITY;
+        public BoDataType DataType => BoDataType.dt_LONG_TEXT;
 
-        public int Length => 0;
+        public int Length => 255;
 
-        public string DefaultValue => _defaultValue == null ? null : Convert.ToString(_defaultValue, CultureInfo.InvariantCulture);
+        public string DefaultValue => _defaultValue;
 
         public object GetValue()
         {
-            return decimal.Parse(_editText.Value, NumberStyles.Any, CultureInfo.InvariantCulture);
+            return _editText.Value;
         }
 
         public void Extras(Form form, int yPos)
         {
+            form.CreateDirButton(_id, yPos, FolderBrowser);
+        }
+
+        private void FolderBrowser()
+        {
+            try
+            {
+                _editText.Value = FileDialogHelper.FolderBrowser(_editText.Value);
+            }
+            catch (DialogCanceledException)
+            {
+            }
+            catch (Exception e)
+            {
+                SboApp.Logger.Error(e.Message);
+            }
         }
     }
 }
