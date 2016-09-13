@@ -19,6 +19,7 @@ namespace ITCO.SboAddon.Framework.Dialogs
         private readonly List<IDialogInput> _dialogInputs = new List<IDialogInput>();
         private bool _canceled;
         private ManualResetEvent _formWait = new ManualResetEvent(false);
+        private string _infoText;
 
         public InputHelper(string title, params IDialogInput[] dialogs)
         {
@@ -54,6 +55,17 @@ namespace ITCO.SboAddon.Framework.Dialogs
         }
 
         /// <summary>
+        /// Set info text
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public InputHelper SetInfoText(string text)
+        {
+            _infoText = text;
+            return this;
+        }
+
+        /// <summary>
         /// Wait for Dialog result
         /// </summary>
         /// <returns>Result</returns>
@@ -61,6 +73,19 @@ namespace ITCO.SboAddon.Framework.Dialogs
         public IDictionary<string, object> Result()
         {
             _form.Height = 100 + (_dialogInputs.Count()*15);
+
+            if (_infoText != null)
+            {
+                _yPos += 15;
+
+                var titleText = _form.Items.Add("IT", BoFormItemTypes.it_STATIC).Specific as StaticText;
+                titleText.Item.Top = _yPos;
+                titleText.Item.Left = 10;
+                titleText.Item.Width = 250;
+                titleText.Caption = _infoText;
+
+                _yPos += 15;
+            }
 
             foreach (var dialogInput in _dialogInputs)
             {

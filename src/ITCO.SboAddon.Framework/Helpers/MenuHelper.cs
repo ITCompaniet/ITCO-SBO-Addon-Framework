@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Xml;
 
 namespace ITCO.SboAddon.Framework.Helpers
@@ -58,7 +59,21 @@ namespace ITCO.SboAddon.Framework.Helpers
             var menuId = pVal.MenuUID;
             var menuEvent = AddonMenuEvents.FirstOrDefault(e => e.MenuId == menuId);
 
-            menuEvent?.Action();
+            if (menuEvent == null)
+                return;
+
+            if (menuEvent.ThreadedAction)
+            {
+                var thread = new Thread(() => menuEvent.Action())
+                { Name = menuEvent.MenuId, IsBackground = true };
+
+                thread.SetApartmentState(ApartmentState.STA);
+                thread.Start();
+            }
+            else
+            {
+                menuEvent.Action();
+            }
         }
         #endregion
 
@@ -70,13 +85,15 @@ namespace ITCO.SboAddon.Framework.Helpers
         /// <param name="parentMenuId"></param>
         /// <param name="action"></param>
         /// <param name="position"></param>
-        public static void AddMenuItemEvent(string title, string menuId, string parentMenuId, Action action, int position = -1)
+        /// <param name="threadedAction"></param>
+        public static void AddMenuItemEvent(string title, string menuId, string parentMenuId, Action action, int position = -1, bool threadedAction = true)
         {
             AddonMenuEvents.Add(new AddonMenuEvent
             {
                 MenuId = menuId,
                 ParentMenuId = parentMenuId,
                 Action = action,
+                ThreadedAction = threadedAction,
                 Position = position
             });
 
@@ -247,6 +264,8 @@ namespace ITCO.SboAddon.Framework.Helpers
     /// </summary>
     public class AddonMenuEvent
     {
+        public bool ThreadedAction { get; set; }
+
         /// <summary>
         /// Parent Menu Id
         /// </summary>

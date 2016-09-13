@@ -110,6 +110,7 @@ namespace ITCO.SboAddon.Framework.Tester
             try
             {
                 var dialog = InputHelper.GetInputs("My Inputs")
+                    .SetInfoText("My testing text, long and smooth text is this, yes realy long.")
                     .AddText("t1", "Title 1")
                     .AddInput(new TextDialogInput("t2", "Title 2", "def 2"))
                     .AddInput(new TextDialogInput("t3", "Title 3 Req", null, true))
