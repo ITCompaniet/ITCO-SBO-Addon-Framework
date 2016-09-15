@@ -86,7 +86,7 @@ namespace ITCO.SboAddon.Framework.Helpers
         /// <param name="action"></param>
         /// <param name="position"></param>
         /// <param name="threadedAction"></param>
-        public static void AddMenuItemEvent(string title, string menuId, string parentMenuId, Action action, int position = -1, bool threadedAction = true)
+        public static void AddMenuItemEvent(string title, string menuId, string parentMenuId, Action action, int position = -1, bool threadedAction = false)
         {
             AddonMenuEvents.Add(new AddonMenuEvent
             {
@@ -127,7 +127,8 @@ namespace ITCO.SboAddon.Framework.Helpers
                     Action = () =>
                     {
                         ((FormController)Activator.CreateInstance(formController)).Start();
-                    }
+                    },
+                    ThreadedAction = false
                 };
                 AddMenuItemEvent(item.Title, item.MenuId, item.ParentMenuId, item.Action, item.Position);
             }
