@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using SAPbobsCOM;
 
 namespace ITCO.SboAddon.Framework.Services
 {
@@ -30,7 +31,7 @@ namespace ITCO.SboAddon.Framework.Services
             try
             {
                 UserDefinedHelper.CreateTable(UdtSettings, "Settings")
-                    .CreateUDF(UdfSettingValue, "Value");
+                    .CreateUDF(UdfSettingValue, "Value", size: 254);
 
                 _setupOk = true;
 
