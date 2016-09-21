@@ -97,8 +97,7 @@ namespace ITCO.SboAddon.Framework.Helpers
             _businessObject = null;
         }
     }
-
-
+    
     public static class SboRecordset
     {
         /// <summary>
@@ -110,15 +109,30 @@ namespace ITCO.SboAddon.Framework.Helpers
         public static int NonQuery(string sql, params object[] args)
         {
             var recordSetObject = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;
-            recordSetObject.DoQuery(string.Format(sql, args));
-            var recordCount = recordSetObject.RecordCount;
-            System.Runtime.InteropServices.Marshal.ReleaseComObject(recordSetObject);
-            recordSetObject = null;
+            try
+            {
+                if (recordSetObject == null)
+                    throw new Exception("Failed to get Recordset Object");
 
-            return recordCount;
+                recordSetObject.DoQuery(string.Format(sql, args));
+                return recordSetObject.RecordCount;
+            }
+            catch (Exception e)
+            {
+                SboApp.Logger.Debug($"NonQuery Error: {e.Message}, SQL={sql}");
+                throw;
+            }
+            finally
+            {
+                if (recordSetObject != null)
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(recordSetObject);
+            }
         }
     }
 
+    /// <summary>
+    /// System SQL Connection for faster queries
+    /// </summary>
     public class SboSqlConnection : IDisposable
     {
         private readonly SqlConnection _sqlConnection;
@@ -140,6 +154,9 @@ namespace ITCO.SboAddon.Framework.Helpers
         public SqlConnection SqlConnection => _sqlConnection;
         public bool HasRows => _reader.HasRows;
 
+        /// <summary>
+        /// Result
+        /// </summary>
         public IEnumerable<SqlDataReader> Result
         {
             get
@@ -151,9 +168,9 @@ namespace ITCO.SboAddon.Framework.Helpers
             }
         }
 
-        public void Dispose()
-        {
-            _sqlConnection.Close();
-        }
+        /// <summary>
+        /// Dispose
+        /// </summary>
+        public void Dispose() => _sqlConnection.Close();
     }
 }
