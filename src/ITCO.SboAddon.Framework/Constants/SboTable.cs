@@ -8,8 +8,16 @@ namespace ITCO.SboAddon.Framework.Constants
         public const string Invoice = "OINV";
         public const string Order = "ORDR";
         public const string DeliveryNote = "ODLN";
-        public const string DeliveryNotePackages = "DLN7";
-        public const string PaymentTerms = "OCTG";
-        public const string ShippingTypes = "OSHP";
+        public const string DeliveryNotePackage = "DLN7";
+        public const string PaymentTerm = "OCTG";
+        public const string ShippingType = "OSHP";
+        /// <summary>
+        /// Non EU Taxes
+        /// </summary>
+        public const string SalesTax = "OSTC";
+        /// <summary>
+        /// EU Taxes
+        /// </summary>
+        public const string VatGroup = "OVTG";
     }
 }
