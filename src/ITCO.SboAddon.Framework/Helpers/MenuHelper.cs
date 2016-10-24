@@ -126,7 +126,7 @@ namespace ITCO.SboAddon.Framework.Helpers
                     Title = formMenuItem.MenuItemTitle,
                     Action = () =>
                     {
-                        ((FormController)Activator.CreateInstance(formController)).Start();
+                        CreateOrStartController(formController);
                     },
                     ThreadedAction = false
                 };
@@ -135,6 +135,23 @@ namespace ITCO.SboAddon.Framework.Helpers
 
             BindEvents();
         }
+
+        private static void CreateOrStartController(Type formControllerType)
+        {
+            // Clean up disposed Form Controllers
+            FormControllerIntances.RemoveAll(i => i.Form == null);
+            GC.Collect();
+
+            var formController = FormControllerIntances.FirstOrDefault(i => i.GetType() == formControllerType && i.Unique);
+            if (formController == null)
+            {
+                formController = (FormController) Activator.CreateInstance(formControllerType);
+                FormControllerIntances.Add(formController);
+            }
+            formController.Start();
+        }
+
+        private static readonly List<FormController> FormControllerIntances = new List<FormController>();
 
         /// <summary>
         /// Load Menu from XML

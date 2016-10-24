@@ -9,10 +9,30 @@ namespace ITCO.SboAddon.Framework.Forms
     /// </summary>
     public abstract class FormController
     {
+        private IForm _form;
+
         /// <summary>
         /// Form Object
         /// </summary>
-        protected IForm Form;
+        public IForm Form
+        {
+            get
+            {
+                try
+                {
+                    var dummy = _form?.VisibleEx;
+                }
+                catch
+                {
+                    _form = null;
+                }
+                return _form;
+            }
+            set
+            {
+                _form = value;
+            }
+        }
 
         /// <summary>
         /// Embeded resources name
@@ -29,7 +49,7 @@ namespace ITCO.SboAddon.Framework.Forms
         /// <summary>
         /// Open only once
         /// </summary>
-        public virtual bool Unique { get; set; }
+        public virtual bool Unique => true;
 
         /// <summary>
         /// Create new Form
@@ -41,32 +61,29 @@ namespace ITCO.SboAddon.Framework.Forms
         }
 
         /// <summary>
+        /// Destructor
+        /// </summary>
+        ~FormController()
+        {
+            SboApp.Logger.Debug("FormController.Destruct");
+        }
+
+        /// <summary>
         /// Initalize and show form
         /// </summary>
         public void Start()
         {
             if (Form != null)
-                return;
-
-            if (!Unique)
             {
-                // Try get existing form
-                try
-                {
-                    var form = SboApp.Application.Forms.Item(FormType);
-                    form.Select();
-                    //SboApp.Application.MessageBox($"Form {FormType} already open");
-                }
-                catch
-                {
-                    // ignored
-                }
+                Form.Select();
+                return;
             }
-
+            
             try
             {
                 var assembly = GetType().Assembly;
-                Form = FormHelper.CreateFormFromResource(FormResource, FormType, Unique ? null : FormType, assembly);
+                Form = FormHelper.CreateFormFromResource(FormResource, FormType, null, assembly);
+                SboApp.Logger.Debug($"Form created: Type={Form.Type}, UID={Form.UniqueID}");
 
                 try
                 {
@@ -91,7 +108,7 @@ namespace ITCO.SboAddon.Framework.Forms
             catch (Exception e)
             {
                 SboApp.Application.MessageBox($"Failed to open form {FormType}: {e.Message}");
-            }      
+            }
         }
 
         /// <summary>
@@ -127,6 +144,7 @@ namespace ITCO.SboAddon.Framework.Forms
         /// Menu position, -1 = Last
         /// </summary>
         public int MenuItemPosition => -1;
+        
         #endregion
     }
 }

@@ -25,7 +25,10 @@ namespace ITCO.SboAddon.Framework.Tester
             SetupManager.RunSetup(new TestSetup());
         }
 
+        public override bool Unique => false;
+
         #region IFormMenuItem
+
         public string MenuItemTitle => "My Test Form";
 
         public string ParentMenuItemId => SboMenuItem.Inventory;
