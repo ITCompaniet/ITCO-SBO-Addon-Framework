@@ -97,15 +97,18 @@ namespace ITCO.SboAddon.Framework.Extensions
         /// </summary>
         /// <param name="sourceDocument"></param>
         /// <param name="copyToType"></param>
-        /// <param name="copyExpenses"></param>
-        /// <returns>Target DocEntry</returns>
-        public static int CopyTo(this IDocuments sourceDocument, BoObjectTypes copyToType, bool copyExpenses = true)
+        /// <param name="copyExpenses">Copy Expenses</param>
+        /// <param name="setObjectProperties">Set extra target document properties</param>
+        /// <returns>DocEntry</returns>
+        public static int CopyTo(this IDocuments sourceDocument, BoObjectTypes copyToType, bool copyExpenses = true, Action<Documents> setObjectProperties = null)
         {
             using (var copyTo = SboApp.Company.GetBusinessObject<Documents>(copyToType))
             {
                 var targetDocument = copyTo.Object;
 
                 targetDocument.CardCode = sourceDocument.CardCode;
+
+                setObjectProperties?.Invoke(targetDocument);
 
                 foreach (var sourceLine in sourceDocument.Lines.AsEnumerable())
                 {
