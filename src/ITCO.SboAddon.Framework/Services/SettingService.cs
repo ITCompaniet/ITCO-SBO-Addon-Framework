@@ -225,8 +225,13 @@ namespace ITCO.SboAddon.Framework.Services
             }
             else
             {
+                if (sqlValue.Length > 30)
+                    throw new Exception($"SaveSetting sqlValue '{sqlValue}' key is to long (max 30) ");
+
                 if (name == null)
                     name = sqlKey;
+
+                name = name.Substring(30); // Max Length is 30
 
                 sql = $"INSERT INTO [@{UdtSettings}] ([Code], [Name], [U_{UdfSettingValue}]) VALUES ('{sqlKey}', '{name}', {sqlValue})";
             }
