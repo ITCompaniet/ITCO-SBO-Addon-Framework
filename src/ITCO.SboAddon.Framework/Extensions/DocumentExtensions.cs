@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using ITCO.SboAddon.Framework.Helpers;
-using SAPbobsCOM;
-
-namespace ITCO.SboAddon.Framework.Extensions
+﻿namespace ITCO.SboAddon.Framework.Extensions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Helpers;
+    using SAPbobsCOM;
+
     public static class DocumentExtensions
     {
         /// <summary>
@@ -120,7 +121,7 @@ namespace ITCO.SboAddon.Framework.Extensions
 
                 if (copyExpenses)
                 {
-                    foreach (var sourceExpense in sourceDocument.Expenses.AsEnumerable())
+                    foreach (var sourceExpense in sourceDocument.Expenses.AsEnumerable().Where(e => e.LineTotal > 0))
                     {
                         targetDocument.Expenses.BaseDocEntry = sourceDocument.DocEntry;
                         targetDocument.Expenses.BaseDocLine = sourceExpense.LineNum;
