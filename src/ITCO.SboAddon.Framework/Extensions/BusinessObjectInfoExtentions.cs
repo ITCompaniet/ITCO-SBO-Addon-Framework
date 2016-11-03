@@ -7,11 +7,28 @@ namespace ITCO.SboAddon.Framework.Extensions
 {
     public static class BusinessObjectInfoExtentions
     {
+        /// <summary>
+        /// Get DocEntry from BusinessObjectInfo
+        /// </summary>
+        /// <param name="businessObjectInfo"></param>
+        /// <returns>DocEntry</returns>
         public static int GetDocEntry(this BusinessObjectInfo businessObjectInfo)
         {
             var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(businessObjectInfo.ObjectKey);
             return int.Parse(xmlDoc.SelectSingleNode("/DocumentParams/DocEntry").InnerText);
+        }
+
+        /// <summary>
+        /// Get Document By DocNum
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="businessObject"></param>
+        /// <param name="docNum">DocNum</param>
+        /// <returns></returns>
+        public static bool GetByDocNum<T>(this BusinessObject<T> businessObject, int docNum) where T : Documents
+        {
+            return businessObject.Object.Search(businessObject.BoObjectType.GetTableName(), $"[DocNum]={docNum}");
         }
 
         /// <summary>
@@ -22,7 +39,7 @@ namespace ITCO.SboAddon.Framework.Extensions
         /// <param name="boObjectTypes"></param>
         /// <returns></returns>
         /// <example>
-        /// using (var sboIncomingPaymentBo = SboApp.Company.GetBusinessObject<Payments>(BoObjectTypes.oIncomingPayments))
+        /// using (var sboIncomingPaymentBo = SboApp.Company.GetBusinessObject&lt;Payments&gt;(BoObjectTypes.oIncomingPayments))
         /// {
         ///     // Code here
         /// }
@@ -39,19 +56,19 @@ namespace ITCO.SboAddon.Framework.Extensions
     /// <typeparam name="T"></typeparam>
     public class BusinessObject<T> : IDisposable
     {
-        private readonly T _businessObject;
+        public readonly BoObjectTypes BoObjectType;
+        public readonly T Object;
 
-        public BusinessObject(SAPbobsCOM.Company company, BoObjectTypes boObjectTypes)
+        public BusinessObject(SAPbobsCOM.Company company, BoObjectTypes boObjectType)
         {
-            _businessObject = (T)company.GetBusinessObject(boObjectTypes);
+            BoObjectType = boObjectType;
+            Object = (T)company.GetBusinessObject(BoObjectType);
         }
-
-        public T Object => _businessObject;
-
+        
         public void Dispose()
         {
-            if (_businessObject != null)
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(_businessObject);
+            if (Object != null)
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(Object);
         }
     }
 }

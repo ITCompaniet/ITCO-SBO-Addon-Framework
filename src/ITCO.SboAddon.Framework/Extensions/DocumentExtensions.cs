@@ -163,5 +163,28 @@ namespace ITCO.SboAddon.Framework.Extensions
                 return 0;
             }
         }
+
+        /// <summary>
+        /// Get table name from BoObjectTypes
+        /// </summary>
+        /// <param name="boObjectType"></param>
+        /// <returns>Table name</returns>
+        public static string GetTableName(this BoObjectTypes boObjectType)
+        {
+            switch (boObjectType)
+            {
+                case BoObjectTypes.oBusinessPartners:
+                    return "OCRD";
+                case BoObjectTypes.oItems:
+                    return "OITM";
+                case BoObjectTypes.oInvoices:
+                    return "OINV";
+                case BoObjectTypes.oDeliveryNotes:
+                    return "ODLN";
+                case BoObjectTypes.oOrders:
+                    return "ORDR";
+            }
+            throw new NotImplementedException($"I dont know the table for {boObjectType} yet :(");
+        }
     }
 }
