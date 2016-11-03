@@ -118,12 +118,15 @@ namespace ITCO.SboAddon.Framework.Extensions
                     targetDocument.Lines.Add();
                 }
 
-                foreach (var sourceExpense in sourceDocument.Expenses.AsEnumerable())
+                if (copyExpenses)
                 {
-                    targetDocument.Expenses.BaseDocEntry = sourceDocument.DocEntry;
-                    targetDocument.Expenses.BaseDocLine = sourceExpense.LineNum;
-                    targetDocument.Expenses.BaseDocType = (int) sourceDocument.DocObjectCode;
-                    targetDocument.Expenses.Add();
+                    foreach (var sourceExpense in sourceDocument.Expenses.AsEnumerable())
+                    {
+                        targetDocument.Expenses.BaseDocEntry = sourceDocument.DocEntry;
+                        targetDocument.Expenses.BaseDocLine = sourceExpense.LineNum;
+                        targetDocument.Expenses.BaseDocType = (int) sourceDocument.DocObjectCode;
+                        targetDocument.Expenses.Add();
+                    }
                 }
 
                 targetDocument.AddAndLoadEx();
