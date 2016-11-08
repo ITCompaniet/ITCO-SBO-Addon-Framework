@@ -62,6 +62,7 @@
     <Compile Include="Dialogs\Inputs\InputExtensions.cs" />
     <Compile Include="Dialogs\Inputs\FolderDialogInput.cs" />
     <Compile Include="Extensions\BusinessObjectInfoExtentions.cs" />
+    <Compile Include="Extensions\BusinessPartnerExtensions.cs" />
     <Compile Include="Extensions\DocumentExtensions.cs" />
     <Compile Include="Extensions\TransactionExtensions.cs" />
     <Compile Include="Extensions\UserQueryExtensions.cs" />
@@ -99,6 +100,8 @@
     <Compile Include="Services\SettingService.cs" />
     <Compile Include="Setup\ISetup.cs" />
     <Compile Include="Setup\SetupManager.cs" />
+    <Compile Include="UserDefinitions\UserDefinedTable.cs" />
+    <Compile Include="UserDefinitions\UserDefiniedField.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

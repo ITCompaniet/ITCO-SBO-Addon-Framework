@@ -6,8 +6,11 @@ using ITCO.SboAddon.Framework.Services;
 
 namespace ITCO.SboAddon.Framework.Tests
 {
+    using Extensions;
+    using SAPbobsCOM;
+
     [TestClass]
-    public class SettingServiceTests
+    public class SboTests
     {
         [ClassInitialize]
         public static void Init(TestContext textContext)
@@ -37,5 +40,24 @@ namespace ITCO.SboAddon.Framework.Tests
             Assert.AreEqual(null, userStringValue);
 
         }
+
+        [TestMethod]
+        public void SetContactEmployeesLineByContact_Test()
+        {
+            using (var bpObj = SboApp.Company.GetBusinessObject<BusinessPartners>(BoObjectTypes.oBusinessPartners))
+            {
+                bpObj.Object.GetByKey("V30000");
+
+                Assert.AreEqual(true, bpObj.Object.SetContactEmployeesLineByContactId("Michael Schultz"));
+                Assert.AreEqual("Michael Schultz", bpObj.Object.ContactEmployees.Name);
+
+                Assert.AreEqual(true, bpObj.Object.SetContactEmployeesLineByContactCode(26));
+                Assert.AreEqual("Sarina Hanschke", bpObj.Object.ContactEmployees.Name);
+
+                Assert.AreEqual(false, bpObj.Object.SetContactEmployeesLineByContactCode(999999));
+            }
+
+        }
+
     }
 }
