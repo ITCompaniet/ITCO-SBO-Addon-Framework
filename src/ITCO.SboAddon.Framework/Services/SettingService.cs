@@ -231,7 +231,8 @@ namespace ITCO.SboAddon.Framework.Services
                 if (name == null)
                     name = sqlKey;
 
-                name = name.Substring(30); // Max Length is 30
+                if (name.Length > 30)
+                    name = name.Substring(0, 30); // Max Length is 30
 
                 sql = $"INSERT INTO [@{UdtSettings}] ([Code], [Name], [U_{UdfSettingValue}]) VALUES ('{sqlKey}', '{name}', {sqlValue})";
             }
