@@ -190,5 +190,32 @@
             }
             throw new NotImplementedException($"I dont know the table for {boObjectType} yet :(");
         }
+
+        /// <summary>
+        /// Add Comment to document
+        /// </summary>
+        /// <param name="documents">IDocuments object</param>
+        /// <param name="comment">Comment text</param>
+        public static void AddComment(this IDocuments documents, string comment)
+        {
+            documents.Comments = documents.Comments.AddNewLine(comment);
+        }
+
+        /// <summary>
+        /// Add new line of text
+        /// </summary>
+        /// <param name="existingText"></param>
+        /// <param name="newLine"></param>
+        /// <returns></returns>
+        public static string AddNewLine(this string existingText, string newLine)
+        {
+            var lines = existingText.Split(new[] { "\n" }, StringSplitOptions.None);
+            if (lines[lines.Length - 1] != "")
+                existingText += $"\n{newLine}\n";
+            else
+                existingText += $"{newLine}\n";
+
+            return existingText;
+        }
     }
 }
