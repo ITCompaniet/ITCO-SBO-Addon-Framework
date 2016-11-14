@@ -31,9 +31,10 @@ namespace ITCO.SboAddon.Framework.Helpers
 
             // Floud API
             public UserDefinedTable CreateUDF(string fieldName, string fieldDescription,
-            BoFieldTypes type = BoFieldTypes.db_Alpha, int size = 50, BoFldSubTypes subType = BoFldSubTypes.st_None)
+            BoFieldTypes type = BoFieldTypes.db_Alpha, int size = 50, BoFldSubTypes subType = BoFldSubTypes.st_None,
+            IDictionary<string, string> validValues = null, string defaultValue = null)
             {
-                CreateField(TableName, fieldName, fieldDescription, type, size, subType);            
+                CreateField(TableName, fieldName, fieldDescription, type, size, subType, validValues, defaultValue);            
                 return this;
             }
         }
