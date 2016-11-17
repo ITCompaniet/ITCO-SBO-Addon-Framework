@@ -217,5 +217,20 @@
 
             return existingText;
         }
+
+        /// <summary>
+        /// Get DocEntry from DocNum
+        /// </summary>
+        /// <param name="docNum">DocNum</param>
+        /// <param name="table">SBO Table</param>
+        /// <returns>DocEntry</returns>
+        public static int? GetDocEntry(this int docNum, string table)
+        {
+            using (var query = new SboRecordsetQuery($"SELECT [DocEntry] FROM [{table}] WHERE [DocNum]={docNum}"))
+            {
+                if (query.Count == 0) return null;
+                return int.Parse(query.Result.First().Item("DocEntry").Value.ToString());
+            }
+        }
     }
 }
