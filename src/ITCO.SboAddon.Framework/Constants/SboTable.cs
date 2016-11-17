@@ -12,12 +12,14 @@ namespace ITCO.SboAddon.Framework.Constants
         public const string PaymentTerm = "OCTG";
         public const string ShippingType = "OSHP";
         /// <summary>
-        /// Non EU Taxes
+        /// Sales Tax. Non EU Taxes
         /// </summary>
         public const string SalesTax = "OSTC";
         /// <summary>
-        /// EU Taxes
+        /// VAT Group. EU Taxes
         /// </summary>
         public const string VatGroup = "OVTG";
+        public const string Item = "OITM";
+        public const string ItemGroup = "OITB";
     }
 }
