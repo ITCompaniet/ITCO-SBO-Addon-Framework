@@ -47,7 +47,7 @@
         {
             using (var query = new SboRecordsetQuery(
                 "SELECT DISTINCT [U_ITCO_CT_Key] AS [Key], CAST([Code] AS int) AS [Timestamp] FROM [@ITCO_CHANGETRACKER] " +
-                $"WHERE [U_ITCO_CT_Obj] = {timeStamp} AND CAST([Code] AS int) > {(int) objectType} " +
+                $"WHERE [U_ITCO_CT_Obj] = {(int) objectType} AND CAST([Code] AS int) > {timeStamp} " +
                 "ORDER BY CAST([Code] AS int) ASC"))
             {
                 if (query.Count == 0)
