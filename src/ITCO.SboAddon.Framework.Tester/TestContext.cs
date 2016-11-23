@@ -30,10 +30,12 @@ namespace ITCO.SboAddon.Framework.Tester
 
                 //Test_Form();
                 //Test_MenuCreate();
-                Test_GetString();
+                //Test_GetString();
                 //Test_Setting();
                 //Test_SettingAsk();
                 //Test_FileDialogs();
+                Test_SendMessage();
+
 
             }
             catch (Exception e)
@@ -43,12 +45,17 @@ namespace ITCO.SboAddon.Framework.Tester
             }
         }
 
+        private void Test_SendMessage()
+        {
+            MessageHelper.SendMessage("Testing!", "Hi there", new [] {"manager", "alex" });
+        }
+
         private void Test_CopyTo()
         {
             using (var delivery = SboApp.Company.GetBusinessObject<Documents>(BoObjectTypes.oDeliveryNotes))
             {
                 delivery.Object.GetByKey(564);
-                var invoice = delivery.Object.CopyTo(BoObjectTypes.oInvoices);
+                var invoice = delivery.Object.CopyTo(BoObjectTypes.oInvoices, setObjectProperties:documents => {});
             }
 
         }
@@ -60,7 +67,7 @@ namespace ITCO.SboAddon.Framework.Tester
 
         private void Test_SettingAsk()
         {
-            var setting_ask = SettingService.GetSettingByKey<string>("test.ask", askIfNotFound: true);
+            var setting_ask = SettingService.Instance.GetSettingByKey<string>("test.ask", askIfNotFound: true);
         }
 
         private void Test_Form()
@@ -90,18 +97,18 @@ namespace ITCO.SboAddon.Framework.Tester
         private void Test_Setting()
         {
             // Skapar blankt setting värde med Titel
-            SettingService.InitSetting<string>("test.init", "My Setting");
-            SettingService.InitSetting<int>("test.init-int", "My Setting Int");
+            SettingService.Instance.InitSetting<string>("test.init", "My Setting");
+            SettingService.Instance.InitSetting<int>("test.init-int", "My Setting Int");
 
             // Hämta värde, om det är blank får man en fråga att fylla i
-            var setting_init = SettingService.GetSettingByKey<string>("test.init", askIfNotFound: true);
+            var setting_init = SettingService.Instance.GetSettingByKey<string>("test.init", askIfNotFound: true);
 
-            string setting_str = SettingService.GetSettingByKey<string>("test.string", askIfNotFound: true);
-            int setting_int = SettingService.GetSettingByKey<int>("test.int", askIfNotFound: true);
-            decimal setting_dec = SettingService.GetSettingByKey<decimal>("test.decimal", askIfNotFound: true);
-            DateTime setting_date = SettingService.GetSettingByKey<DateTime>("test.date", askIfNotFound: true);
-            bool setting_bool = SettingService.GetSettingByKey<bool>("test.bool", askIfNotFound: true);
-            string setting_user = SettingService.GetCurrentUserSettingByKey<string>("test.user", askIfNotFound: true);
+            string setting_str = SettingService.Instance.GetSettingByKey<string>("test.string", askIfNotFound: true);
+            int setting_int = SettingService.Instance.GetSettingByKey<int>("test.int", askIfNotFound: true);
+            decimal setting_dec = SettingService.Instance.GetSettingByKey<decimal>("test.decimal", askIfNotFound: true);
+            DateTime setting_date = SettingService.Instance.GetSettingByKey<DateTime>("test.date", askIfNotFound: true);
+            bool setting_bool = SettingService.Instance.GetSettingByKey<bool>("test.bool", askIfNotFound: true);
+            string setting_user = SettingService.Instance.GetCurrentUserSettingByKey<string>("test.user", askIfNotFound: true);
         }
 
         private void Test_GetString()

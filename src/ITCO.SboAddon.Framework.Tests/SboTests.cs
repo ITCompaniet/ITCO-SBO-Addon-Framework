@@ -23,13 +23,13 @@ namespace ITCO.SboAddon.Framework.Tests
         [TestMethod]
         public void TestNoSettings()
         {
-            var stringValue = SettingService.GetSettingByKey<string>("test.string");
-            var intValue = SettingService.GetSettingByKey<int>("test.int");
-            var nullintValue = SettingService.GetSettingByKey<int?>("test.int");
-            var decimalValue = SettingService.GetSettingByKey<decimal>("test.decimal");
-            var datetimeValue = SettingService.GetSettingByKey<DateTime>("test.date");
-            var boolValue = SettingService.GetSettingByKey<bool>("test.bool");
-            var userStringValue = SettingService.GetCurrentUserSettingByKey<string>("test.user");
+            var stringValue = SettingService.Instance.GetSettingByKey<string>("test.string");
+            var intValue = SettingService.Instance.GetSettingByKey<int>("test.int");
+            var nullintValue = SettingService.Instance.GetSettingByKey<int?>("test.int");
+            var decimalValue = SettingService.Instance.GetSettingByKey<decimal>("test.decimal");
+            var datetimeValue = SettingService.Instance.GetSettingByKey<DateTime>("test.date");
+            var boolValue = SettingService.Instance.GetSettingByKey<bool>("test.bool");
+            var userStringValue = SettingService.Instance.GetCurrentUserSettingByKey<string>("test.user");
 
             Assert.AreEqual(null, stringValue);
             Assert.AreEqual(0, intValue);
@@ -56,8 +56,20 @@ namespace ITCO.SboAddon.Framework.Tests
 
                 Assert.AreEqual(false, bpObj.Object.SetContactEmployeesLineByContactCode(999999));
             }
-
         }
+        
+        [TestMethod]
+        public void SetAddress_Test()
+        {
+            using (var bpObj = SboApp.Company.GetBusinessObject<BusinessPartners>(BoObjectTypes.oBusinessPartners))
+            {
+                bpObj.Object.GetByKey("C30000");
+
+                //bpObj.Object.Addresses.SetCurrentLine();
+
+            }
+        }
+
 
     }
 }
