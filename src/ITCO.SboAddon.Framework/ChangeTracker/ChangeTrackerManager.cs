@@ -7,10 +7,31 @@
     using Setup;
 
     /// <summary>
+    /// Interface for Change Tracker Manager
+    /// </summary>
+    public interface IChangeTrackerManager
+    {
+        /// <summary>
+        /// Get Changed Items for object since timestamp
+        /// </summary>
+        /// <param name="timeStamp">Timestamp (secounds from a given startpoint)</param>
+        /// <param name="objectType">BoObject Type</param>
+        /// <returns>Collection of Key and timestamp for updated objects</returns>
+        ICollection<KeyAndTimeStampModel> GetChanged(int timeStamp, BoObjectTypes objectType);
+    }
+
+    /// <summary>
     /// Change Tracker Manager
     /// </summary>
-    public static class ChangeTrackerManager
+    public class ChangeTrackerManager : IChangeTrackerManager
     {
+        private static ChangeTrackerManager _instance;
+
+        /// <summary>
+        /// Get static instance of ChangeTrackerManager
+        /// </summary>
+        public static ChangeTrackerManager Instance => _instance ?? (_instance = new ChangeTrackerManager());
+
         /// <summary>
         /// Run Setup via SetupManager
         /// </summary>
@@ -22,7 +43,7 @@
         /// <param name="timeStamp">Timestamp (secounds from a given startpoint)</param>
         /// <param name="objectType">BoObject Type</param>
         /// <returns>Collection of Key and timestamp for updated objects</returns>
-        public static ICollection<KeyAndTimeStampModel> GetChanged(int timeStamp, BoObjectTypes objectType)
+        public ICollection<KeyAndTimeStampModel> GetChanged(int timeStamp, BoObjectTypes objectType)
         {
             using (var query = new SboRecordsetQuery(
                 "SELECT DISTINCT [U_ITCO_CT_Key] AS [Key], CAST([Code] AS int) AS [Timestamp] FROM [@ITCO_CHANGETRACKER] " +
