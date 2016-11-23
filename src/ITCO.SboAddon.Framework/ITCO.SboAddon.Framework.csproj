@@ -57,6 +57,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChangeTracker\ChangeTrackerManager.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerSetup.cs" />
+    <Content Include="ChangeTracker\SBO_SP_PostTransactionNotice_MOD.sql" />
     <Compile Include="Dialogs\Inputs\OpenFileDialogInput.cs" />
     <Compile Include="Dialogs\Inputs\SaveFileDialogInput.cs" />
     <Compile Include="Dialogs\Inputs\InputExtensions.cs" />
