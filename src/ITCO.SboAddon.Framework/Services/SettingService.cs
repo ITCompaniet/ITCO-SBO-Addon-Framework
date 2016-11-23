@@ -1,15 +1,13 @@
-﻿using ITCO.SboAddon.Framework.Dialogs;
-using ITCO.SboAddon.Framework.Dialogs.Inputs;
-using ITCO.SboAddon.Framework.Helpers;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
-using System.Linq;
-using SAPbobsCOM;
-
-namespace ITCO.SboAddon.Framework.Services
+﻿namespace ITCO.SboAddon.Framework.Services
 {
+    using System;
+    using System.ComponentModel;
+    using System.Globalization;
+    using System.Linq;
+    using Dialogs;
+    using Dialogs.Inputs;
+    using Helpers;
+
     /// <summary>
     /// Generic Setting Service
     /// </summary>
@@ -206,6 +204,9 @@ namespace ITCO.SboAddon.Framework.Services
 
             if (userCode != null)
                 sqlKey = $"{key}[{userCode}]";
+            
+            if (sqlKey.Length > 30)
+                throw new Exception($"SQL Key '{sqlKey}' for Setting is to long (Max 30, Actual {sqlKey.Length})");
 
             var sql = $"SELECT [U_{UdfSettingValue}], [Name] FROM [@{UdtSettings}] WHERE [Code] = '{sqlKey}'";
             

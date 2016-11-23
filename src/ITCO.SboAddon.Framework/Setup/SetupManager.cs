@@ -1,10 +1,11 @@
-﻿using ITCO.SboAddon.Framework.Services;
-using System;
-using System.Linq;
-using System.Reflection;
-
-namespace ITCO.SboAddon.Framework.Setup
+﻿namespace ITCO.SboAddon.Framework.Setup
 {
+    using System;
+    using System.Linq;
+    using System.Reflection;
+    using Extensions;
+    using Services;
+
     /// <summary>
     /// Setup Manager
     /// Uses setup version for faster startup
@@ -40,7 +41,14 @@ namespace ITCO.SboAddon.Framework.Setup
         public static void RunSetup<TSetup>(TSetup setupInstance) where TSetup : ISetup
         {
             var setup = setupInstance.GetType();
-            var key = $"setup.lastversion.{setup.Name.Replace("Setup", string.Empty)}";
+            var setupClassName = setup.Name.Replace("Setup", string.Empty);
+            var key = $"setup.lv.{setupClassName}";
+
+            if (key.Length > 30)
+                SboApp.Logger.Warn($"Setup Class '{setupClassName}' Name is to long (Max 21, Actual {setupClassName.Length})");
+
+            key = key.Truncate(30);
+
             var lastVersionInstalled = SettingService.GetSettingByKey(key, 0);
 
             if (lastVersionInstalled < setupInstance.Version)
