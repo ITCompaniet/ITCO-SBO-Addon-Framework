@@ -4,12 +4,18 @@
     using System.Linq;
     using Helpers;
     using SAPbobsCOM;
+    using Setup;
 
     /// <summary>
     /// Change Tracker Manager
     /// </summary>
     public static class ChangeTrackerManager
     {
+        /// <summary>
+        /// Run Setup via SetupManager
+        /// </summary>
+        public static void RunSetup() => SetupManager.RunSetup(new ChangeTrackerSetup());
+
         /// <summary>
         /// Get Changed Items for object since timestamp
         /// </summary>
