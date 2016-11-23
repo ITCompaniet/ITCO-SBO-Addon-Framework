@@ -8,20 +8,92 @@
     using Dialogs.Inputs;
     using Helpers;
 
+    #region Interface
+
+    /// <summary>
+    /// Interface for Setting Service
+    /// </summary>
+    public interface ISettingService
+    {
+        /// <summary>
+        /// Create Empty Setting if not exists
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="name"></param>
+        /// <param name="defaultValue">Default Value</param>
+        void InitSetting<T>(string key, string name, T defaultValue = default(T));
+
+        /// <summary>
+        /// Get Setting for Current User
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        /// <param name="askIfNotFound"></param>
+        /// <returns></returns>
+        T GetCurrentUserSettingByKey<T>(string key, T defaultValue = default(T), bool askIfNotFound = false);
+
+        /// <summary>
+        /// Save Settings for Current User
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        void SaveCurrentUserSetting<T>(string key, T value);
+
+        /// <summary>
+        /// Get Setting
+        /// </summary>
+        /// <typeparam name="T">Return Type</typeparam>
+        /// <param name="key">Setting Key</param>
+        /// <param name="defaultValue">Default Value</param>
+        /// <param name="userCode">User Code</param>
+        /// <param name="askIfNotFound">Ask for value if not found</param>
+        /// <returns>Setting Value</returns>
+        T GetSettingByKey<T>(string key, T defaultValue = default(T), string userCode = null, bool askIfNotFound = false);
+
+        /// <summary>
+        /// Save Setting
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <param name="userCode"></param>
+        /// <param name="name"></param>
+        void SaveSetting<T>(string key, T value = default(T), string userCode = null, string name = null);
+    }
+
+    #endregion
+
     /// <summary>
     /// Generic Setting Service
     /// </summary>
-    public static class SettingService
+    public class SettingService : ISettingService
     {
         private const string UdtSettings = "ITCO_FW_Settings";
         private const string UdfSettingValue = "ITCO_FW_SValue";
-        private static bool _setupOk;
+        private bool _setupOk;
+        private static SettingService _instance;
+
+        /// <summary>
+        /// Static instance of SettingService
+        /// </summary>
+        public static SettingService Instance => _instance ?? (_instance = new SettingService());
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public SettingService()
+        {
+            Init();
+        }
 
         /// <summary>
         /// Initialize Setting Service
         /// </summary>
         /// <returns></returns>
-        public static bool Init()
+        private bool Init()
         {
             if (_setupOk)
                 return true;
@@ -44,6 +116,7 @@
                 
             return _setupOk;
         }
+
         /// <summary>
         /// Create Empty Setting if not exists
         /// </summary>
@@ -51,7 +124,7 @@
         /// <param name="key"></param>
         /// <param name="name"></param>
         /// <param name="defaultValue">Default Value</param>
-        public static void InitSetting<T>(string key, string name, T defaultValue = default(T))
+        public void InitSetting<T>(string key, string name, T defaultValue = default(T))
         {
             if (GetSettingAsString(key) == null)
                 SaveSetting(key, defaultValue, name: name);
@@ -65,7 +138,7 @@
         /// <param name="defaultValue"></param>
         /// <param name="askIfNotFound"></param>
         /// <returns></returns>
-        public static T GetCurrentUserSettingByKey<T>(string key, T defaultValue = default(T), bool askIfNotFound = false)
+        public T GetCurrentUserSettingByKey<T>(string key, T defaultValue = default(T), bool askIfNotFound = false)
         {
             var userCode = SboApp.Company.UserName;
             return GetSettingByKey(key, defaultValue , userCode, askIfNotFound);
@@ -77,13 +150,13 @@
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public static void SaveCurrentUserSetting<T>(string key, T value)
+        public void SaveCurrentUserSetting<T>(string key, T value)
         {
             var userCode = SboApp.Company.UserName;
             SaveSetting(key, value, userCode);
         }
 
-        private static string GetSettingAsString(string key, string userCode = null)
+        private string GetSettingAsString(string key, string userCode = null)
         {
             var sqlKey = key.Trim().ToLowerInvariant();
 
@@ -110,7 +183,7 @@
         /// <param name="userCode">User Code</param>
         /// <param name="askIfNotFound">Ask for value if not found</param>
         /// <returns>Setting Value</returns>
-        public static T GetSettingByKey<T>(string key, T defaultValue = default(T), string userCode = null, bool askIfNotFound = false)
+        public T GetSettingByKey<T>(string key, T defaultValue = default(T), string userCode = null, bool askIfNotFound = false)
         {
             Init();
 
@@ -170,24 +243,7 @@
 
             return returnValue;
         }
-
-        private static string GetSettingTitle(string key)
-        {
-            var sqlKey = key.Trim().ToLowerInvariant();
-            var sql = $"SELECT [Name] FROM [@{UdtSettings}] WHERE [Code] = '{sqlKey}'";
-
-            using (var query = new SboRecordsetQuery(sql))
-            {
-                if (query.Count == 0)
-                    return key;
-
-                var result = query.Result.First();
-                var name = result.Item(0).Value as string;
-
-                return string.IsNullOrEmpty(name) ? key : name;
-            }
-        }
-
+        
         /// <summary>
         /// Save Setting
         /// </summary>
@@ -196,7 +252,7 @@
         /// <param name="value"></param>
         /// <param name="userCode"></param>
         /// <param name="name"></param>
-        public static void SaveSetting<T>(string key, T value = default(T), string userCode = null, string name = null)
+        public void SaveSetting<T>(string key, T value = default(T), string userCode = null, string name = null)
         {
             Init();
 
@@ -288,6 +344,23 @@
         private static TypeConverter GetTypeConverter(Type type)
         {
             return TypeDescriptor.GetConverter(type);
+        }
+
+        private static string GetSettingTitle(string key)
+        {
+            var sqlKey = key.Trim().ToLowerInvariant();
+            var sql = $"SELECT [Name] FROM [@{UdtSettings}] WHERE [Code] = '{sqlKey}'";
+
+            using (var query = new SboRecordsetQuery(sql))
+            {
+                if (query.Count == 0)
+                    return key;
+
+                var result = query.Result.First();
+                var name = result.Item(0).Value as string;
+
+                return string.IsNullOrEmpty(name) ? key : name;
+            }
         }
     }
 }

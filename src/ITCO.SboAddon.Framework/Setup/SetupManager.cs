@@ -25,7 +25,7 @@
             if (!setups.Any())
                 return;
 
-            SettingService.Init();
+            var instance = SettingService.Instance;
 
             foreach (var setupInstance in setups.Select(setup => Activator.CreateInstance(setup) as ISetup))
             {
@@ -49,7 +49,7 @@
 
             key = key.Truncate(30);
 
-            var lastVersionInstalled = SettingService.GetSettingByKey(key, 0);
+            var lastVersionInstalled = SettingService.Instance.GetSettingByKey(key, 0);
 
             if (lastVersionInstalled < setupInstance.Version)
             {
@@ -58,7 +58,7 @@
                     SboApp.Logger.Info($"Running setup for {setup.Name}, current version is {lastVersionInstalled}, new version is {setupInstance.Version})");
 
                     setupInstance.Run();
-                    SettingService.SaveSetting(key, setupInstance.Version);
+                    SettingService.Instance.SaveSetting(key, setupInstance.Version);
                 }
                 catch (Exception ex)
                 {

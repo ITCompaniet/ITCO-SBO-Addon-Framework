@@ -103,6 +103,7 @@
     <Compile Include="Helpers\UserDefinedHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SboApp.cs" />
+    <Compile Include="Services\Mockups\MockupSettingService.cs" />
     <Compile Include="Services\SettingService.cs" />
     <Compile Include="Setup\ISetup.cs" />
     <Compile Include="Setup\SetupManager.cs" />

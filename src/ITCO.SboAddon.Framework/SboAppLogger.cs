@@ -23,7 +23,7 @@ namespace ITCO.SboAddon.Framework
             }
         }
 
-        public bool IsDebugEnabled => SettingService.GetSettingByKey("log.debug", false);
+        public bool IsDebugEnabled => SettingService.Instance.GetSettingByKey("log.debug", false);
 
         public bool IsErrorEnabled => true;
 
@@ -31,7 +31,7 @@ namespace ITCO.SboAddon.Framework
 
         public bool IsInfoEnabled => true;
 
-        public bool IsTraceEnabled => SettingService.GetSettingByKey("log.trace", false);
+        public bool IsTraceEnabled => SettingService.Instance.GetSettingByKey("log.trace", false);
 
         public bool IsWarnEnabled => true;
 
