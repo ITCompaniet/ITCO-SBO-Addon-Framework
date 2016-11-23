@@ -70,6 +70,7 @@
     <Compile Include="Extensions\TransactionExtensions.cs" />
     <Compile Include="Extensions\UserQueryExtensions.cs" />
     <Compile Include="Forms\IFormMenuItem.cs" />
+    <Compile Include="Helpers\DocumentSeriesHelper.cs" />
     <Compile Include="Helpers\MessageHelper.cs" />
     <Compile Include="Helpers\SboTransaction.cs" />
     <Compile Include="SboAppLogger.cs" />

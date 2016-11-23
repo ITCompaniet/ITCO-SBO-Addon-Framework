@@ -58,5 +58,17 @@
                 return true;
             }
         }
+
+        /// <summary>
+        /// Set Next Card Code
+        /// </summary>
+        /// <param name="card">BusinessPartners object</param>
+        /// <param name="serieId">NNM1 Serie Id</param>
+        public static void SetNextCardCode(this BusinessPartners card, int? serieId = null)
+        {
+            var response = DocumentSeriesHelper.GetNextNumber(BoObjectTypes.oBusinessPartners, "C", serieId);
+            card.CardCode = response.NextNumber;
+            card.Series = response.Series;
+        }
     }
 }
