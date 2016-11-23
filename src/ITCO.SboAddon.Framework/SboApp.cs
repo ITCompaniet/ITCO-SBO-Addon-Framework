@@ -221,15 +221,27 @@ namespace ITCO.SboAddon.Framework
         {
             switch (eventType)
             {
-                case SAPbouiCOM.BoAppEventTypes.aet_ShutDown:
                 case SAPbouiCOM.BoAppEventTypes.aet_CompanyChanged:
                 case SAPbouiCOM.BoAppEventTypes.aet_LanguageChanged:
+                case SAPbouiCOM.BoAppEventTypes.aet_ShutDown:
                 case SAPbouiCOM.BoAppEventTypes.aet_ServerTerminition:
-                    if (_diCompany.Connected)
-                        _diCompany.Disconnect();
-
+                    Disconnect();
                     System.Windows.Forms.Application.Exit();
                     break;
+            }
+        }
+
+        private static void Disconnect()
+        {
+            try
+            {
+                if (_diCompany.Connected)
+                    _diCompany.Disconnect();
+            }
+            finally
+            {
+                _diCompany = null;
+                _application = null;
             }
         }
     }
