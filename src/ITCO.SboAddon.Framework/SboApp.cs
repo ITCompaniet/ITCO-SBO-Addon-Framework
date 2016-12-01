@@ -22,7 +22,7 @@ namespace ITCO.SboAddon.Framework
         /// <summary>
         /// Common Logger
         /// </summary>
-        internal static ILog Logger => LogManager.GetLogger<SboApp>();
+        internal static ILog Logger = LogManager.GetLogger<SboApp>();
 
         /// <summary>
         /// Set existing DI and/or UI Api Connection

@@ -113,6 +113,7 @@
 
                 foreach (var sourceLine in sourceDocument.Lines.AsEnumerable())
                 {
+                    SboApp.Logger.Debug($"CopyTo.Line: DocEntry={sourceLine.DocEntry}, LineNum={sourceLine.LineNum}, DocObjectCode={sourceDocument.DocObjectCode}");
                     targetDocument.Lines.BaseEntry = sourceLine.DocEntry;
                     targetDocument.Lines.BaseLine = sourceLine.LineNum;
                     targetDocument.Lines.BaseType = (int) sourceDocument.DocObjectCode;
@@ -123,6 +124,7 @@
                 {
                     foreach (var sourceExpense in sourceDocument.Expenses.AsEnumerable().Where(e => e.LineTotal > 0))
                     {
+                        SboApp.Logger.Debug($"CopyTo.Expense: DocEntry={sourceDocument.DocEntry}, LineNum={sourceExpense.LineNum}, DocObjectCode={sourceDocument.DocObjectCode}");
                         targetDocument.Expenses.BaseDocEntry = sourceDocument.DocEntry;
                         targetDocument.Expenses.BaseDocLine = sourceExpense.LineNum;
                         targetDocument.Expenses.BaseDocType = (int) sourceDocument.DocObjectCode;
