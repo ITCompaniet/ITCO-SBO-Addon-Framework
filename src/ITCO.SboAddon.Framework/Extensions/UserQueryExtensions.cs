@@ -1,11 +1,13 @@
-﻿
-using System.Linq;
-using System.Text.RegularExpressions;
-using ITCO.SboAddon.Framework.Helpers;
-using SAPbobsCOM;
-
-namespace ITCO.SboAddon.Framework.Extensions
+﻿namespace ITCO.SboAddon.Framework.Extensions
 {
+    using System.Linq;
+    using System.Text.RegularExpressions;
+    using Helpers;
+    using SAPbobsCOM;
+
+    /// <summary>
+    /// SBO User Query Helper
+    /// </summary>
     public static class UserQueryExtensions
     {
         /// <summary>
@@ -14,9 +16,9 @@ namespace ITCO.SboAddon.Framework.Extensions
         /// <param name="company">Company Object</param>
         /// <param name="userQueryName">User Query Name</param>
         /// <param name="userQueryDefaultQuery">Query</param>
-        /// <param name="formatToSqlParams">Replace [%0] to @p0</param>
-        /// <returns></returns>
-        public static string GetOrCreateUserQuery(this Company company, string userQueryName, string userQueryDefaultQuery, bool formatToSqlParams = false)
+        /// <param name="parameterFormat">Define parameter format [%0]/@p0/{0}</param>
+        /// <returns>SQL</returns>
+        public static string GetOrCreateUserQuery(this Company company, string userQueryName, string userQueryDefaultQuery, ParameterFormat parameterFormat = ParameterFormat.Sbo)
         {
             var userQuery = userQueryDefaultQuery;
 
@@ -37,11 +39,39 @@ namespace ITCO.SboAddon.Framework.Extensions
                     userQuery = userQueryObject.Result.First().Query;
                 }
             }
-
-            if (formatToSqlParams)
-                userQuery = Regex.Replace(userQuery, @"'?\[%([0-9])\]'?", "@p$1");
+            
+            switch (parameterFormat)
+            {
+                case ParameterFormat.Sql:
+                    userQuery = Regex.Replace(userQuery, @"'?\[%([0-9])\]'?", "@p$1");
+                    break;
+                case ParameterFormat.String:
+                    userQuery = Regex.Replace(userQuery, @"'?\[%([0-9])\]'?", "{$1}");
+                    break;
+            }
 
             return userQuery;
         }
+    }
+
+    /// <summary>
+    /// Query Parameter Format
+    /// </summary>
+    public enum ParameterFormat
+    {
+        /// <summary>
+        /// SBO [%0]
+        /// </summary>
+        Sbo,
+
+        /// <summary>
+        /// SQL @p0
+        /// </summary>
+        Sql,
+
+        /// <summary>
+        /// String {0}
+        /// </summary>
+        String
     }
 }
