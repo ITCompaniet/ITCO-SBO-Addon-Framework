@@ -6,6 +6,9 @@
     using Helpers;
     using SAPbobsCOM;
 
+    /// <summary>
+    /// SBO Document helper methods
+    /// </summary>
     public static class DocumentExtensions
     {
         /// <summary>
@@ -19,7 +22,7 @@
         {
             var returnCode = documents.Add();
             ErrorHelper.HandleErrorWithException(returnCode, "Could not Add Document");
-            
+
             return int.Parse(SboApp.Company.GetNewObjectKey());
         }
 
@@ -29,10 +32,7 @@
         /// <param name="documents"></param>
         public static void AddAndLoadEx(this IDocuments documents)
         {
-            var returnCode = documents.Add();
-            ErrorHelper.HandleErrorWithException(returnCode, "Could not Add Document");
-
-            var documentEntryKey = int.Parse(SboApp.Company.GetNewObjectKey());
+            var documentEntryKey = documents.AddEx();
             if (!documents.GetByKey(documentEntryKey))
                 throw new Exception($"Could not load document with DocEntry {documentEntryKey}");
         }
