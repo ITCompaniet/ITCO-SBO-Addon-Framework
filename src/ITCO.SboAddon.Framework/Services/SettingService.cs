@@ -282,8 +282,8 @@
             }
             else
             {
-                if (sqlValue.Length > 30)
-                    throw new Exception($"SaveSetting sqlValue '{sqlValue}' key is to long (max 30) ");
+                if (sqlValue.Length > 254)
+                    throw new Exception($"SaveSetting sqlValue '{sqlValue}' value is to long (max 254) ");
 
                 if (name == null)
                     name = sqlKey;
