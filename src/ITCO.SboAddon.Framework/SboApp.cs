@@ -159,7 +159,15 @@ namespace ITCO.SboAddon.Framework
             var serverName = ConfigurationManager.AppSettings["Sbo:ServerName"];
 
             SAPbobsCOM.BoDataServerTypes serverType;
-            Enum.TryParse("dst_" + ConfigurationManager.AppSettings["Sbo:ServerType"], out serverType);
+            if (ConfigurationManager.AppSettings["Sbo:ServerType"] == "MSSQL2016")
+            {
+                serverType = SAPbobsCOM.BoDataServerTypes.dst_MSSQL2016;
+            }
+            else if (!Enum.TryParse("dst_" + ConfigurationManager.AppSettings["Sbo:ServerType"], out serverType))
+            {
+                var availableServerTypes = string.Join(",", Enum.GetNames(typeof(SAPbobsCOM.BoDataServerTypes)));
+                throw new Exception($"Could not parse server type from '{ConfigurationManager.AppSettings["Sbo:ServerType"]}'. Available server types {availableServerTypes}");
+            }
 
             var companyDb = ConfigurationManager.AppSettings["Sbo:CompanyDb"];
             var dbUsername = ConfigurationManager.AppSettings["Sbo:DbUsername"];
