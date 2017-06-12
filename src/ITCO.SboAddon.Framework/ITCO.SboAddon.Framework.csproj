@@ -43,7 +43,7 @@
     </Reference>
     <Reference Include="SAPBusinessOneSDK, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c7c3cb60e45d119f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\SAPBusinessOneSDK-90-9.10.190\SAPBusinessOneSDK.dll</HintPath>
+      <HintPath>..\lib\SAPBusinessOneSDK-90-9.20.170\SAPBusinessOneSDK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
