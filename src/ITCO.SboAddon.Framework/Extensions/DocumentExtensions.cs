@@ -189,6 +189,8 @@
                     return "ODLN";
                 case BoObjectTypes.oOrders:
                     return "ORDR";
+                case BoObjectTypes.oCreditNotes:
+                    return "ORIN";
             }
             throw new NotImplementedException($"I dont know the table for {boObjectType} yet :(");
         }
