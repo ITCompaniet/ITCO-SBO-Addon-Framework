@@ -49,7 +49,10 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
                 if (string.IsNullOrEmpty(_editText.Value) && _required)
                     return false;
 
-                int intValue = 0;
+                if (string.IsNullOrEmpty(_editText.Value) && !_required)
+                    return true;
+
+                int intValue;
                 if (!int.TryParse(_editText.Value, out intValue))
                     return false;
 
@@ -65,6 +68,9 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
 
         public object GetValue()
         {
+            if (string.IsNullOrEmpty(_editText.Value))
+                return null;
+
             return int.Parse(_editText.Value);
         }
 
