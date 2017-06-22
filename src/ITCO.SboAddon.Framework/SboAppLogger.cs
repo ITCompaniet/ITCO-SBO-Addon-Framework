@@ -23,7 +23,7 @@ namespace ITCO.SboAddon.Framework
             }
         }
 
-        public bool IsDebugEnabled => SettingService.Instance.GetSettingByKey("log.debug", false);
+        public bool IsDebugEnabled { get; } = SettingService.Instance.GetSettingByKey("log.debug", false);
 
         public bool IsErrorEnabled => true;
 
@@ -31,7 +31,7 @@ namespace ITCO.SboAddon.Framework
 
         public bool IsInfoEnabled => true;
 
-        public bool IsTraceEnabled => SettingService.Instance.GetSettingByKey("log.trace", false);
+        public bool IsTraceEnabled { get; } = SettingService.Instance.GetSettingByKey("log.trace", false);
 
         public bool IsWarnEnabled => true;
 
@@ -43,6 +43,8 @@ namespace ITCO.SboAddon.Framework
             }
         }
 
+        public INestedVariablesContext NestedThreadVariablesContext => throw new NotImplementedException();
+
         public void Debug(Action<FormatMessageHandler> formatMessageCallback)
         {
             
@@ -50,6 +52,8 @@ namespace ITCO.SboAddon.Framework
 
         public void Debug(object message)
         {
+            if (!IsDebugEnabled) return;
+
             SboApp.Application.StatusBar.SetText("DEBUG: " + message, BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Success);
             SboApp.Application.StatusBar.SetText(null, Type: BoStatusBarMessageType.smt_None);
         }
@@ -66,6 +70,7 @@ namespace ITCO.SboAddon.Framework
 
         public void Debug(object message, Exception exception)
         {
+            if (!IsDebugEnabled) return;
             SboApp.Application.StatusBar.SetText("DEBUG: " + message.ToString(), BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Success);
         }
 
@@ -76,21 +81,25 @@ namespace ITCO.SboAddon.Framework
 
         public void DebugFormat(string format, params object[] args)
         {
+            if (!IsDebugEnabled) return;
             SboApp.Application.StatusBar.SetText("DEBUG: " + string.Format(format, args), BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Success);
         }
 
         public void DebugFormat(IFormatProvider formatProvider, string format, params object[] args)
         {
+            if (!IsDebugEnabled) return;
             SboApp.Application.StatusBar.SetText("DEBUG: " + string.Format(format, args), BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Success);
         }
 
         public void DebugFormat(string format, Exception exception, params object[] args)
         {
+            if (!IsDebugEnabled) return;
             SboApp.Application.StatusBar.SetText("DEBUG: " + string.Format(format, args), BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Success);
         }
 
         public void DebugFormat(IFormatProvider formatProvider, string format, Exception exception, params object[] args)
         {
+            if (!IsDebugEnabled) return;
             SboApp.Application.StatusBar.SetText("DEBUG: " + string.Format(formatProvider, format, args), BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Success);
         }
 
@@ -251,6 +260,7 @@ namespace ITCO.SboAddon.Framework
 
         public void Trace(object message)
         {
+            if (!IsTraceEnabled) return;
             SboApp.Application.StatusBar.SetText("TRACE: " + message.ToString(), BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success);
         }
 
@@ -266,6 +276,7 @@ namespace ITCO.SboAddon.Framework
 
         public void Trace(object message, Exception exception)
         {
+            if (!IsTraceEnabled) return;
             SboApp.Application.StatusBar.SetText("TRACE: " + message.ToString(), BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success);
         }
 
