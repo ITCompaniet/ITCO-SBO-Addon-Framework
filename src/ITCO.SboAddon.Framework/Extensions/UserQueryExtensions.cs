@@ -40,16 +40,29 @@
                 }
             }
             
+            userQuery = ReturnParameterStyle(userQuery, parameterFormat);
+
+            return userQuery;
+        }
+
+        /// <summary>
+        /// Replace parameters with requested parameterformat
+        /// </summary>
+        /// <param name="userQuery">SQL Query with SAP parmeters</param>
+        /// <param name="parameterFormat"></param>
+        /// <returns>SQL Query with requsted parameter format</returns>
+        public static string ReturnParameterStyle(string userQuery, ParameterFormat parameterFormat)
+        {
             switch (parameterFormat)
             {
                 case ParameterFormat.Sql:
                     userQuery = Regex.Replace(userQuery, @"'?\[%([0-9])\]'?", "@p$1");
                     break;
                 case ParameterFormat.String:
-                    userQuery = Regex.Replace(userQuery, @"'?\[%([0-9])\]'?", "{$1}");
+                    userQuery = Regex.Replace(userQuery, @"'\[%([0-9])\]'", "'{$1}'");
+                    userQuery = Regex.Replace(userQuery, @"\[%([0-9])\]", "{$1}");
                     break;
             }
-
             return userQuery;
         }
     }
