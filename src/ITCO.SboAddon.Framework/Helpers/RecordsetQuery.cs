@@ -10,11 +10,29 @@ namespace ITCO.SboAddon.Framework.Helpers
     {
         private Recordset _recordSetObject;
 
+        public SboRecordsetQuery()
+        {
+            _recordSetObject = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;
+        }
+
         public SboRecordsetQuery(string sql, params object[] args)
         {
             _recordSetObject = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;
 
             _recordSetObject.DoQuery(string.Format(sql, args));
+        }
+
+        public void DoQuery(string sql, params object[] args)
+        {
+            try
+            {
+                _recordSetObject.DoQuery(string.Format(sql, args));
+                if (_recordSetObject.EoF)
+                    _recordSetObject.MoveFirst();
+            }
+            catch (Exception e)
+            {
+            }
         }
 
         public int Count => _recordSetObject.RecordCount;
@@ -55,6 +73,12 @@ namespace ITCO.SboAddon.Framework.Helpers
         private Recordset _recordSetObject;
         private dynamic _businessObject;
 
+        public SboRecordsetQuery(BoObjectTypes boObjectTypes)
+        {
+            _recordSetObject = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;
+            _businessObject = SboApp.Company.GetBusinessObject(boObjectTypes);
+        }
+
         public SboRecordsetQuery(string sql, BoObjectTypes boObjectTypes, params object[] args)
         {
             _recordSetObject = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;
@@ -68,6 +92,23 @@ namespace ITCO.SboAddon.Framework.Helpers
 
         public T BusinessObject => _businessObject;
         public Recordset Recordset => _recordSetObject;
+
+        public void DoQuery(string sql, params object[] args)
+        {
+            try
+            {
+                _recordSetObject.DoQuery(string.Format(sql, args));
+                if (_recordSetObject.EoF)
+                    _recordSetObject.MoveFirst();
+
+                if (_recordSetObject.RecordCount > 0)
+                    _businessObject.Browser.Recordset = _recordSetObject;
+            }
+            catch (Exception e)
+            {
+                
+            }
+        }
 
         /// <summary>
         /// Note that T is COM object reference
