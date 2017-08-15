@@ -112,7 +112,7 @@ namespace ITCO.SboAddon.Framework
             if (licenceServer != null)
                 _diCompany.LicenseServer = licenceServer;
 
-            if (username == null)
+            if (string.IsNullOrEmpty(username))
             {
                 _diCompany.UseTrusted = true;
             }
@@ -136,6 +136,7 @@ namespace ITCO.SboAddon.Framework
                 Logger.Debug($"Servername={serverName}, CompanyDb={companyDb}, ServerType={serverType}, " +
                              $"DbUsername={dbUsername}, DbPassword={dbPassword}, " +
                              $"SboUsername={username}, SboPassword={password}, " +
+                             $"UseTrusted={_diCompany.UseTrusted}, " +
                              $"LicenceServer={licenceServer}");
 
                 throw new Exception($"DI Connect Error: {errCode} {errMsg}");
