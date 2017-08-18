@@ -20,9 +20,15 @@
             var cardCode = businessPartners.CardCode;
             var contactEmployees = businessPartners.ContactEmployees;
 
+#if HANA
             using (var query = new SboRecordsetQuery(
+                "SELECT \"LineNum\" FROM (SELECT ROW_NUMBER() OVER (ORDER BY \"CntctCode\" ASC) - 1 AS \"LineNum\", \"CntctCode\" FROM \"OCPR\" " +
+                $"WHERE \"CardCode\"='{cardCode}') AS \"T0\" WHERE \"CntctCode\"={contactCode}"))
+#else
+                    using (var query = new SboRecordsetQuery(
                 "SELECT [LineNum] FROM (SELECT ROW_NUMBER() OVER (ORDER BY [CntctCode] ASC) - 1 AS [LineNum], [CntctCode] FROM [OCPR] " +
                 $"WHERE [CardCode]='{cardCode}') AS [T0] WHERE [CntctCode]={contactCode}"))
+#endif
             {
                 if (query.Count == 0) return false;
 
@@ -45,9 +51,15 @@
             var cardCode = businessPartners.CardCode;
             var contactEmployees = businessPartners.ContactEmployees;
 
+#if HANA
             using (var query = new SboRecordsetQuery(
+                "SELECT \"LineNum\" FROM (SELECT ROW_NUMBER() OVER (ORDER BY \"CntctCode\" ASC) - 1 AS \"LineNum\", \"Name\" FROM \"OCPR\" " +
+                $"WHERE \"CardCode\"='{cardCode}') AS \"T0\" WHERE \"Name\"='{contactId}'"))
+#else
+                using (var query = new SboRecordsetQuery(
                 "SELECT [LineNum] FROM (SELECT ROW_NUMBER() OVER (ORDER BY [CntctCode] ASC) - 1 AS [LineNum], [Name] FROM [OCPR] " +
                 $"WHERE [CardCode]='{cardCode}') AS [T0] WHERE [Name]='{contactId}'"))
+#endif
             {
                 if (query.Count == 0) return false;
 

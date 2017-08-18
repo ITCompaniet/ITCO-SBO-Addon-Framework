@@ -23,13 +23,31 @@ namespace ITCO.SboAddon.Framework.Helpers
         /// </summary>
         public class UserDefinedTable
         {
+            /// <summary>
+            /// UserDefinedTable
+            /// </summary>
+            /// <param name="tableName"></param>
             public UserDefinedTable(string tableName)
             {
                 TableName = tableName;
             }
+            /// <summary>
+            /// Get TableName
+            /// </summary>
             public string TableName { get; set; }
 
             // Floud API
+            /// <summary>
+            /// Create UDF
+            /// </summary>
+            /// <param name="fieldName"></param>
+            /// <param name="fieldDescription"></param>
+            /// <param name="type"></param>
+            /// <param name="size"></param>
+            /// <param name="subType"></param>
+            /// <param name="validValues"></param>
+            /// <param name="defaultValue"></param>
+            /// <returns></returns>
             public UserDefinedTable CreateUDF(string fieldName, string fieldDescription,
             BoFieldTypes type = BoFieldTypes.db_Alpha, int size = 50, BoFldSubTypes subType = BoFldSubTypes.st_None,
             IDictionary<string, string> validValues = null, string defaultValue = null)
@@ -62,7 +80,7 @@ namespace ITCO.SboAddon.Framework.Helpers
                     userTablesMd.TableName = tableName;
                     userTablesMd.TableDescription = tableDescription;
                     userTablesMd.TableType = tableType;
-
+                    
                     ErrorHelper.HandleErrorWithException(
                         userTablesMd.Add(),
                         $"Could not create UDT {tableName}");
@@ -77,6 +95,8 @@ namespace ITCO.SboAddon.Framework.Helpers
             {
                 if (userTablesMd != null)
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(userTablesMd);
+                userTablesMd = null;
+                GC.Collect();
             }
 
             return new UserDefinedTable("@" + tableName);
@@ -157,6 +177,8 @@ namespace ITCO.SboAddon.Framework.Helpers
             {
                 if (userFieldsMd != null)
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(userFieldsMd);
+                userFieldsMd = null;
+                GC.Collect();
             }
         }
 
@@ -175,7 +197,12 @@ namespace ITCO.SboAddon.Framework.Helpers
 
             try
             {
+
+#if HANA
+                recordSet.DoQuery($"SELECT \"FieldID\" FROM CUFD WHERE \"TableID\"='{tableName}' AND \"AliasID\"='{fieldAlias}'");
+#else
                 recordSet.DoQuery($"SELECT FieldID FROM CUFD WHERE TableID='{tableName}' AND AliasID='{fieldAlias}'");
+#endif
 
                 if (recordSet.RecordCount == 1)
                 {
@@ -186,8 +213,54 @@ namespace ITCO.SboAddon.Framework.Helpers
             finally
             {
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(recordSet);
+                recordSet = null;
+                GC.Collect();
             }
             return -1;
+        }
+
+        /// <summary>
+        /// Increase UserField Size
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="fieldAlias"></param>
+        /// <param name="size"></param>
+        /// <returns></returns>
+        public static void IncreaseUserFieldSize(string tableName, string fieldAlias, int size)
+        {
+            UserFieldsMD userFieldsMd = null;
+            try
+            {
+                userFieldsMd = SboApp.Company.GetBusinessObject(BoObjectTypes.oUserFields) as UserFieldsMD;
+                if (userFieldsMd != null)
+                {
+                    var fieldId = GetFieldId(tableName, fieldAlias);
+                    if (fieldId != -1)
+                    {
+                        if (userFieldsMd.GetByKey(tableName, fieldId))
+                        {
+                            if (userFieldsMd.Size < size)
+                            {
+                                userFieldsMd.Size = size;
+                                userFieldsMd.EditSize = size;
+                                userFieldsMd.Update();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                SboApp.Logger.Error($"UDT Create Error: {ex.Message}", ex);
+                throw;
+            }
+            finally
+            {
+                if (userFieldsMd != null)
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userFieldsMd);
+                userFieldsMd = null;
+                GC.Collect();
+            }
         }
     }
 }

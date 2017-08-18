@@ -4,6 +4,9 @@ using System.Diagnostics;
 
 namespace ITCO.SboAddon.Framework.Helpers
 {
+    /// <summary>
+    /// ErrorHelper
+    /// </summary>
     public class ErrorHelper
     {
         /// <summary>
@@ -32,7 +35,12 @@ namespace ITCO.SboAddon.Framework.Helpers
             var error = GetLastErrorMessage();
             throw new Exception($"{errorDescription}: {error.Code} {error.Message}");
         }
-
+        /// <summary>
+        /// Handle Return Code
+        /// Shows MessageBox if Return Code != 0
+        /// </summary>
+        /// <param name="returnCode"></param>
+        /// <param name="errorDescription"></param>
         public static bool HandleErrorWithMessageBox(int returnCode, string errorDescription = "Error")
         {
             if (returnCode == 0)
@@ -46,15 +54,29 @@ namespace ITCO.SboAddon.Framework.Helpers
         }
     }
 
+    /// <summary>
+    /// SboError
+    /// </summary>
     [DebuggerDisplay("{Code}: {Message}")]
     public class SboError
     {
+        /// <summary>
+        /// SboError
+        /// </summary>
+        /// <param name="errorCode"></param>
+        /// <param name="errorMessage"></param>
         public SboError(int errorCode, string errorMessage)
         {
             Code = errorCode;
             Message = errorMessage;
         }
+        /// <summary>
+        /// ErrorCode
+        /// </summary>
         public int Code { get; set; }
+        /// <summary>
+        /// ErrorMessage
+        /// </summary>
         public string Message { get; set; }
     }
 }

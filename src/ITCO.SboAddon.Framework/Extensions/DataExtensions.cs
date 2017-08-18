@@ -4,6 +4,9 @@ using System.Globalization;
 
 namespace ITCO.SboAddon.Framework.Extensions
 {
+    /// <summary>
+    /// DataExtension functions
+    /// </summary>
     public static class DataExtensions
     {
         /// <summary>

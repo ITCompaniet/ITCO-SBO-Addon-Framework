@@ -282,6 +282,9 @@ namespace ITCO.SboAddon.Framework.Helpers
     /// </summary>
     public class AddonMenuEvent
     {
+        /// <summary>
+        /// Threaded Action
+        /// </summary>
         public bool ThreadedAction { get; set; }
 
         /// <summary>

@@ -12,6 +12,9 @@ namespace ITCO.SboAddon.Framework.Dialogs
     /// </summary>
     public class InputHelper
     {
+        /// <summary>
+        /// Formtype
+        /// </summary>
         public const string FormType = "ITCO_FW_Dialog";
 
         private Form _form;
@@ -21,6 +24,11 @@ namespace ITCO.SboAddon.Framework.Dialogs
         private ManualResetEvent _formWait = new ManualResetEvent(false);
         private string _infoText;
 
+        /// <summary>
+        /// Creates form with specified input dialogs
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="dialogs"></param>
         public InputHelper(string title, params IDialogInput[] dialogs)
         {
             var formCreator = SboApp.Application.CreateObject(BoCreatableObjectType.cot_FormCreationParams) as FormCreationParams;
@@ -38,6 +46,12 @@ namespace ITCO.SboAddon.Framework.Dialogs
                 _dialogInputs.AddRange(dialogs);
         }
 
+        /// <summary>
+        /// Get InputHelper
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="dialogs"></param>
+        /// <returns></returns>
         public static InputHelper GetInputs(string title, params IDialogInput[] dialogs)
         {
             return new InputHelper(title, dialogs);

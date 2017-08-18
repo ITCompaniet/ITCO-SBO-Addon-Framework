@@ -4,6 +4,9 @@ using System.Reflection;
 
 namespace ITCO.SboAddon.Framework.Helpers
 {
+    /// <summary>
+    /// /FormHelper
+    /// </summary>
     public static class FormHelper
     {
         /// <summary>

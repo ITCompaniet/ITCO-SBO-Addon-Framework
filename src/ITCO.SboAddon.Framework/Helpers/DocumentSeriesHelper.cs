@@ -3,8 +3,18 @@
     using System;
     using SAPbobsCOM;
 
+    /// <summary>
+    /// Document Series Helper
+    /// </summary>
     public static class DocumentSeriesHelper
     {
+        /// <summary>
+        /// Get next number
+        /// </summary>
+        /// <param name="documentType"></param>
+        /// <param name="documentSubType"></param>
+        /// <param name="serieId"></param>
+        /// <returns></returns>
         public static NextNumberResponse GetNextNumber(BoObjectTypes documentType, string documentSubType = null, int? serieId = null)
         {
             var companyService = SboApp.Company.GetCompanyService();
@@ -48,9 +58,18 @@
         }
     }
 
+    /// <summary>
+    /// Next number response
+    /// </summary>
     public class NextNumberResponse
     {
+        /// <summary>
+        /// Next number
+        /// </summary>
         public string NextNumber { get; set; }
+        /// <summary>
+        /// Series
+        /// </summary>
         public int Series { get; set; }
     }
 }

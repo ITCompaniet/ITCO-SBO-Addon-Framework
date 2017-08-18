@@ -4,6 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace ITCO.SboAddon.Framework.Extensions
 {
+    /// <summary>
+    /// Item Extension functions
+    /// </summary>
     public static class ItemExtensions
     {
         /// <summary>
@@ -45,10 +48,18 @@ namespace ITCO.SboAddon.Framework.Extensions
             return 0;
         }
     }
-
+    /// <summary>
+    /// MoneyField
+    /// </summary>
     public class MoneyField
     {
+        /// <summary>
+        ///Get or Set Money 
+        /// </summary>
         public decimal Money { get; set; }
+        /// <summary>
+        /// Get or Set CurrenCode
+        /// </summary>
         public string CurrencyCode { get; set; }
     }
 }

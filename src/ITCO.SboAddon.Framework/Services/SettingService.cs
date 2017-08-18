@@ -71,8 +71,21 @@
     /// </summary>
     public class SettingService : ISettingService
     {
+#if HANA
+        private const string UdtSettings = "ITCO_FW_SETTINGS";
+#else
         private const string UdtSettings = "ITCO_FW_Settings";
+#endif
+
         private const string UdfSettingValue = "ITCO_FW_SValue";
+        /// <summary>
+        /// Max Length of setting value
+        /// </summary>
+        public const int ValueMaxLength = 254;
+        /// <summary>
+        /// Max Length of setting key
+        /// </summary>
+        public const int KeyMaxLength = 50;
         private bool _setupOk;
         private static SettingService _instance;
 
@@ -101,7 +114,8 @@
             try
             {
                 UserDefinedHelper.CreateTable(UdtSettings, "Settings")
-                    .CreateUDF(UdfSettingValue, "Value", size: 254);
+                    .CreateUDF(UdfSettingValue, "Value", size: ValueMaxLength);
+                UserDefinedHelper.IncreaseUserFieldSize($"@{UdtSettings}", UdfSettingValue, ValueMaxLength);
 
                 _setupOk = true;
 
@@ -163,7 +177,12 @@
             if (userCode != null)
                 sqlKey = $"{sqlKey}[{userCode}]";
 
+#if HANA
+            var sql = $"SELECT \"U_{UdfSettingValue}\", \"Name\" FROM \"@{UdtSettings}\" WHERE \"Code\" = '{sqlKey}'";
+#else
             var sql = $"SELECT [U_{UdfSettingValue}], [Name] FROM [@{UdtSettings}] WHERE [Code] = '{sqlKey}'";
+#endif
+
             using (var query = new SboRecordsetQuery(sql))
             {
                 if (query.Count == 0)
@@ -261,10 +280,14 @@
             if (userCode != null)
                 sqlKey = $"{key}[{userCode}]";
             
-            if (sqlKey.Length > 30)
-                throw new Exception($"SQL Key '{sqlKey}' for Setting is to long (Max 30, Actual {sqlKey.Length})");
+            if (sqlKey.Length > KeyMaxLength)
+                throw new Exception($"SQL Key '{sqlKey}' for Setting is to long (Max {KeyMaxLength}, Actual {sqlKey.Length})");
 
+#if HANA
+            var sql = $"SELECT \"U_{UdfSettingValue}\", \"Name\" FROM \"@{UdtSettings}\" WHERE \"Code\" = '{sqlKey}'";
+#else
             var sql = $"SELECT [U_{UdfSettingValue}], [Name] FROM [@{UdtSettings}] WHERE [Code] = '{sqlKey}'";
+#endif
             
             bool exists;
             using (var query = new SboRecordsetQuery(sql))
@@ -278,20 +301,27 @@
 
             if (exists)
             {
+#if HANA
+                sql = $"UPDATE \"@{UdtSettings}\" SET \"U_{UdfSettingValue}\" = {sqlValue} WHERE \"Code\" = '{sqlKey}'";
+#else
                 sql = $"UPDATE [@{UdtSettings}] SET [U_{UdfSettingValue}] = {sqlValue} WHERE [Code] = '{sqlKey}'";
+#endif
             }
             else
             {
-                if (sqlValue.Length > 254)
-                    throw new Exception($"SaveSetting sqlValue '{sqlValue}' value is to long (max 254) ");
+                if (sqlValue.Length > ValueMaxLength)
+                    throw new Exception($"SaveSetting sqlValue '{sqlValue}' value is to long (max {ValueMaxLength}) ");
 
                 if (name == null)
                     name = sqlKey;
 
-                if (name.Length > 30)
-                    name = name.Substring(0, 30); // Max Length is 30
-
+                if (name.Length > KeyMaxLength)
+                    name = name.Substring(0, KeyMaxLength); // Max Length is 50
+#if HANA
+                sql = $"INSERT INTO \"@{UdtSettings}\" (\"Code\", \"Name\", \"U_{UdfSettingValue}\") VALUES ('{sqlKey}', '{name}', {sqlValue})";
+#else
                 sql = $"INSERT INTO [@{UdtSettings}] ([Code], [Name], [U_{UdfSettingValue}]) VALUES ('{sqlKey}', '{name}', {sqlValue})";
+#endif
             }
 
             SboRecordset.NonQuery(sql);
@@ -349,8 +379,12 @@
         private static string GetSettingTitle(string key)
         {
             var sqlKey = key.Trim().ToLowerInvariant();
-            var sql = $"SELECT [Name] FROM [@{UdtSettings}] WHERE [Code] = '{sqlKey}'";
 
+#if HANA
+            var sql = $"SELECT \"Name\" FROM \"@{UdtSettings}\" WHERE \"Code\" = '{sqlKey}'";
+#else
+            var sql = $"SELECT [Name] FROM [@{UdtSettings}] WHERE [Code] = '{sqlKey}'";
+#endif
             using (var query = new SboRecordsetQuery(sql))
             {
                 if (query.Count == 0)

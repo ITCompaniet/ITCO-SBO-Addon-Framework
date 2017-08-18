@@ -5,6 +5,9 @@ using SAPbouiCOM;
 
 namespace ITCO.SboAddon.Framework.Extensions
 {
+    /// <summary>
+    /// Extension functions for BusinessObjects
+    /// </summary>
     public static class BusinessObjectInfoExtentions
     {
         /// <summary>
@@ -28,7 +31,11 @@ namespace ITCO.SboAddon.Framework.Extensions
         /// <returns></returns>
         public static bool GetByDocNum<T>(this BusinessObject<T> businessObject, int docNum) where T : Documents
         {
+#if HANA
+            return businessObject.Object.Search(businessObject.BoObjectType.GetTableName(), $"\"DocNum\"={docNum}");
+#else
             return businessObject.Object.Search(businessObject.BoObjectType.GetTableName(), $"[DocNum]={docNum}");
+#endif
         }
 
         /// <summary>
@@ -56,15 +63,27 @@ namespace ITCO.SboAddon.Framework.Extensions
     /// <typeparam name="T"></typeparam>
     public class BusinessObject<T> : IDisposable
     {
+        /// <summary>
+        /// Business object type
+        /// </summary>
         public readonly BoObjectTypes BoObjectType;
+        /// <summary>
+        /// Business object
+        /// </summary>
         public readonly T Object;
-
+        /// <summary>
+        /// BusinessObject
+        /// </summary>
+        /// <param name="company"></param>
+        /// <param name="boObjectType"></param>
         public BusinessObject(SAPbobsCOM.Company company, BoObjectTypes boObjectType)
         {
             BoObjectType = boObjectType;
             Object = (T)company.GetBusinessObject(BoObjectType);
         }
-        
+        /// <summary>
+        /// Dispose
+        /// </summary>
         public void Dispose()
         {
             if (Object != null)

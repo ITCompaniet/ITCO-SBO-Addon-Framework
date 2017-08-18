@@ -6,6 +6,9 @@ using SAPbobsCOM;
 
 namespace ITCO.SboAddon.Framework.Extensions
 {
+    /// <summary>
+    /// Transaction extension functions
+    /// </summary>
     public static class TransactionExtensions
     {
         /// <summary>
@@ -19,8 +22,15 @@ namespace ITCO.SboAddon.Framework.Extensions
         {
             for (var i = 0; i < tryCount; i++)
             {
+#if HANA
+#warning WaitForOpenTransaction does not work in HANA
+                throw new Exception("WaitForOpenTransactions does not work in HANA!");
+                using (SboRecordsetQuery query = null) //Change to query that works with HANAs
+
+#else
                 using (var query = new SboRecordsetQuery(
                     $"SELECT hostname, loginame FROM sys.sysprocesses WHERE open_tran=1 AND dbid=DB_ID('{company.CompanyDB}')"))
+#endif
                 {
                     if (query.Count == 0)
                         return;
