@@ -43,7 +43,10 @@ namespace ITCO.SboAddon.Framework
             }
         }
 
-        public INestedVariablesContext NestedThreadVariablesContext => throw new NotImplementedException();
+        public INestedVariablesContext NestedThreadVariablesContext
+        {
+            get { throw new NotImplementedException(); }
+        }
 
         public void Debug(Action<FormatMessageHandler> formatMessageCallback)
         {
