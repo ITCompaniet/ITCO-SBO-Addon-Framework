@@ -100,6 +100,17 @@ namespace ITCO.SboAddon.Framework.Extensions
         }
 
         /// <summary>
+        /// Get Grid
+        /// </summary>
+        /// <param name="form"></param>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
+        public static Grid GetGrid(this IForm form, string itemId)
+        {
+            return form.Items.Item(itemId).Specific as Grid;
+        }
+
+        /// <summary>
         /// Add values into Combobox from SQL
         /// </summary>
         /// <param name="comboBox"></param>

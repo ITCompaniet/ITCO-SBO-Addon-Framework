@@ -61,6 +61,7 @@ namespace ITCO.SboAddon.Framework.Helpers
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(_recordSetObject);
 
             _recordSetObject = null;
+            GC.Collect();
         }
     }
 
@@ -166,7 +167,11 @@ namespace ITCO.SboAddon.Framework.Helpers
             finally
             {
                 if (recordSetObject != null)
+                {
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(recordSetObject);
+                }
+                recordSetObject = null;
+                GC.Collect();
             }
         }
     }

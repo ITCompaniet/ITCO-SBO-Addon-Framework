@@ -4,17 +4,54 @@
     using Helpers;
     using SAPbobsCOM;
 
+    /// <summary>
+    /// UserDefinedField
+    /// </summary>
     public class UserDefiniedField
     {
+        /// <summary>
+        /// Get TableName
+        /// </summary>
         public readonly string TableName;
+        /// <summary>
+        /// Get FieldName
+        /// </summary>
         public readonly string FieldName;
+        /// <summary>
+        /// Get Field Description
+        /// </summary>
         public readonly string FieldDescription;
+        /// <summary>
+        /// Get Type
+        /// </summary>
         public readonly BoFieldTypes Type;
+        /// <summary>
+        /// Get Size
+        /// </summary>
         public readonly int Size;
+        /// <summary>
+        /// Get SubType
+        /// </summary>
         public readonly BoFldSubTypes SubType;
+        /// <summary>
+        /// Get ValidValues
+        /// </summary>
         public readonly IDictionary<string, string> ValidValues;
+        /// <summary>
+        /// Get DefaultValue
+        /// </summary>
         public readonly string DefaultValue;
-
+        /// <summary>
+        /// User Defined Field
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="fieldName"></param>
+        /// <param name="fieldDescription"></param>
+        /// <param name="type"></param>
+        /// <param name="size"></param>
+        /// <param name="subType"></param>
+        /// <param name="validValues"></param>
+        /// <param name="defaultValue"></param>
         public UserDefiniedField(string tableName, string fieldName, string fieldDescription,
             BoFieldTypes type = BoFieldTypes.db_Alpha, int size = 50, BoFldSubTypes subType = BoFldSubTypes.st_None,
             IDictionary<string, string> validValues = null, string defaultValue = null)

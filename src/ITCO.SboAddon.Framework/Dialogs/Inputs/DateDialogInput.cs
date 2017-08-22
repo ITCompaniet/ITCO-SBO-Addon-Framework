@@ -4,6 +4,9 @@ using System.Globalization;
 
 namespace ITCO.SboAddon.Framework.Dialogs.Inputs
 {
+    /// <summary>
+    /// DateInputDialog
+    /// </summary>
     public class DateDialogInput : IDialogInput
     {
         private DateTime? _defaultValue;
@@ -12,7 +15,13 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
         private string _title;
         private Item _item;
         private EditText _editText;
-
+        /// <summary>
+        /// DateDialogInput
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="title"></param>
+        /// <param name="defaultValue"></param>
+        /// <param name="required"></param>
         public DateDialogInput(string id, string title, DateTime? defaultValue = null, bool required = false)
         {
             _id = id;
@@ -20,9 +29,13 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
             _defaultValue = defaultValue;
             _required = required;
         }
-
+        /// <summary>
+        /// Get Id
+        /// </summary>
         public string Id => _id;
-
+        /// <summary>
+        /// Set Item
+        /// </summary>
         public Item Item
         {
             set
@@ -35,13 +48,21 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
                 _editText.DataBind.SetBound(true, "", _id);
             }
         }
-
+        /// <summary>
+        /// Get Required
+        /// </summary>
         public bool Required => _required;
-
+        /// <summary>
+        /// Get Title
+        /// </summary>
         public string Title => _title;
-
+        /// <summary>
+        /// Get ItemType
+        /// </summary>
         public BoFormItemTypes ItemType => BoFormItemTypes.it_EDIT;
-
+        /// <summary>
+        /// Get Validated
+        /// </summary>
         public bool Validated
         {
             get
@@ -52,13 +73,22 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
                 return true;
             }
         }
-
+        /// <summary>
+        /// Get DataType
+        /// </summary>
         public BoDataType DataType => BoDataType.dt_DATE;
-
+        /// <summary>
+        /// Get Lenght
+        /// </summary>
         public int Length => 0;
-
+        /// <summary>
+        /// Get DefaultValue
+        /// </summary>
         public string DefaultValue => _defaultValue?.ToString("yyyyMMdd");
-
+        /// <summary>
+        /// Get Value
+        /// </summary>
+        /// <returns></returns>
         public object GetValue()
         {
             if (_editText.Value.Length != 8)
@@ -66,9 +96,14 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
             
             return DateTime.ParseExact(_editText.Value, "yyyyMMdd", CultureInfo.InvariantCulture);
         }
-
+        /// <summary>
+        /// Not Implemented
+        /// </summary>
+        /// <param name="form"></param>
+        /// <param name="yPos"></param>
         public void Extras(Form form, int yPos)
         {
+            throw new NotImplementedException();
         }
     }
 }
