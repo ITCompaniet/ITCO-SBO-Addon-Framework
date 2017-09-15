@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using ITCO.SboAddon.Framework.Helpers;
 using SAPbobsCOM;
+using ITCO.SboAddon.Framework.Queries;
 
 namespace ITCO.SboAddon.Framework.Extensions
 {
@@ -14,23 +15,17 @@ namespace ITCO.SboAddon.Framework.Extensions
         /// <summary>
         /// Wait for open transaction to complete
         /// Useful when using BeginTransaction
+        /// WARNING: Does not work in HANA
         /// </summary>
         /// <param name="company"></param>
         /// <param name="sleep"></param>
         /// <param name="tryCount"></param>
         public static void WaitForOpenTransactions(this Company company, int sleep = 500, int tryCount = 10)
         {
+#warning WaitForOpenTransaction does not work in HANA
             for (var i = 0; i < tryCount; i++)
             {
-#if HANA
-#warning WaitForOpenTransaction does not work in HANA
-                throw new Exception("WaitForOpenTransactions does not work in HANA!");
-                using (SboRecordsetQuery query = null) //Change to query that works with HANAs
-
-#else
-                using (var query = new SboRecordsetQuery(
-                    $"SELECT hostname, loginame FROM sys.sysprocesses WHERE open_tran=1 AND dbid=DB_ID('{company.CompanyDB}')"))
-#endif
+                using (var query = new SboRecordsetQuery(FrameworkQueries.Instance.WaitForOpenTransactionsQuery(company.CompanyDB)))
                 {
                     if (query.Count == 0)
                         return;

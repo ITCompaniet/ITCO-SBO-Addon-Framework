@@ -1,4 +1,5 @@
-﻿using SAPbobsCOM;
+﻿using ITCO.SboAddon.Framework.Queries;
+using SAPbobsCOM;
 using System;
 using System.Collections.Generic;
 
@@ -58,9 +59,9 @@ namespace ITCO.SboAddon.Framework.Helpers
         }
 
         /// <summary>
-        /// Create UDT
+        /// Create UDT (tableName of UserTables will allways become UPPERCASE in HANA)
         /// </summary>
-        /// <param name="tableName">Table name eg: NS_MyTable</param>
+        /// <param name="tableName">Table name eg: NS_MyTable (in UPPERCASE is recommended)</param>
         /// <param name="tableDescription"></param>
         /// <param name="tableType"></param>
         /// <returns>Success</returns>
@@ -198,12 +199,7 @@ namespace ITCO.SboAddon.Framework.Helpers
             try
             {
 
-#if HANA
-                recordSet.DoQuery($"SELECT \"FieldID\" FROM CUFD WHERE \"TableID\"='{tableName}' AND \"AliasID\"='{fieldAlias}'");
-#else
-                recordSet.DoQuery($"SELECT FieldID FROM CUFD WHERE TableID='{tableName}' AND AliasID='{fieldAlias}'");
-#endif
-
+                recordSet.DoQuery(FrameworkQueries.Instance.GetFieldIdQuery(tableName, fieldAlias));
                 if (recordSet.RecordCount == 1)
                 {
                     var fieldId = recordSet.Fields.Item("FieldID").Value as int?;

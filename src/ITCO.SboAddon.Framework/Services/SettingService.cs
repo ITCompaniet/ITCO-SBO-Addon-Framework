@@ -7,6 +7,7 @@
     using Dialogs;
     using Dialogs.Inputs;
     using Helpers;
+    using ITCO.SboAddon.Framework.Queries;
 
     #region Interface
 
@@ -71,13 +72,8 @@
     /// </summary>
     public class SettingService : ISettingService
     {
-#if HANA
-        private const string UdtSettings = "ITCO_FW_SETTINGS";
-#else
-        private const string UdtSettings = "ITCO_FW_Settings";
-#endif
-
-        private const string UdfSettingValue = "ITCO_FW_SValue";
+        public static string UdtSettings = SboApp.Company.DbServerType == SAPbobsCOM.BoDataServerTypes.dst_HANADB ? "ITCO_FW_SETTINGS" : "ITCO_FW_Settings";
+        public const string UdfSettingValue = "ITCO_FW_SValue";
         /// <summary>
         /// Max Length of setting value
         /// </summary>
@@ -177,12 +173,7 @@
             if (userCode != null)
                 sqlKey = $"{sqlKey}[{userCode}]";
 
-#if HANA
-            var sql = $"SELECT \"U_{UdfSettingValue}\", \"Name\" FROM \"@{UdtSettings}\" WHERE \"Code\" = '{sqlKey}'";
-#else
-            var sql = $"SELECT [U_{UdfSettingValue}], [Name] FROM [@{UdtSettings}] WHERE [Code] = '{sqlKey}'";
-#endif
-
+            var sql = FrameworkQueries.Instance.GetSettingAsStringQuery(sqlKey);
             using (var query = new SboRecordsetQuery(sql))
             {
                 if (query.Count == 0)
@@ -283,12 +274,7 @@
             if (sqlKey.Length > KeyMaxLength)
                 throw new Exception($"SQL Key '{sqlKey}' for Setting is to long (Max {KeyMaxLength}, Actual {sqlKey.Length})");
 
-#if HANA
-            var sql = $"SELECT \"U_{UdfSettingValue}\", \"Name\" FROM \"@{UdtSettings}\" WHERE \"Code\" = '{sqlKey}'";
-#else
-            var sql = $"SELECT [U_{UdfSettingValue}], [Name] FROM [@{UdtSettings}] WHERE [Code] = '{sqlKey}'";
-#endif
-            
+            var sql = FrameworkQueries.Instance.SaveSettingExistsQuery(sqlKey);
             bool exists;
             using (var query = new SboRecordsetQuery(sql))
             {
@@ -301,11 +287,7 @@
 
             if (exists)
             {
-#if HANA
-                sql = $"UPDATE \"@{UdtSettings}\" SET \"U_{UdfSettingValue}\" = {sqlValue} WHERE \"Code\" = '{sqlKey}'";
-#else
-                sql = $"UPDATE [@{UdtSettings}] SET [U_{UdfSettingValue}] = {sqlValue} WHERE [Code] = '{sqlKey}'";
-#endif
+                sql = FrameworkQueries.Instance.SaveSettingUpdateQuery(sqlKey, sqlValue);
             }
             else
             {
@@ -317,11 +299,8 @@
 
                 if (name.Length > KeyMaxLength)
                     name = name.Substring(0, KeyMaxLength); // Max Length is 50
-#if HANA
-                sql = $"INSERT INTO \"@{UdtSettings}\" (\"Code\", \"Name\", \"U_{UdfSettingValue}\") VALUES ('{sqlKey}', '{name}', {sqlValue})";
-#else
-                sql = $"INSERT INTO [@{UdtSettings}] ([Code], [Name], [U_{UdfSettingValue}]) VALUES ('{sqlKey}', '{name}', {sqlValue})";
-#endif
+
+                sql = FrameworkQueries.Instance.SaveSettingInsertQuery(sqlKey, name, sqlValue);
             }
 
             SboRecordset.NonQuery(sql);
@@ -379,12 +358,7 @@
         private static string GetSettingTitle(string key)
         {
             var sqlKey = key.Trim().ToLowerInvariant();
-
-#if HANA
-            var sql = $"SELECT \"Name\" FROM \"@{UdtSettings}\" WHERE \"Code\" = '{sqlKey}'";
-#else
-            var sql = $"SELECT [Name] FROM [@{UdtSettings}] WHERE [Code] = '{sqlKey}'";
-#endif
+            var sql = FrameworkQueries.Instance.GetSettingTitleQuery(key);
             using (var query = new SboRecordsetQuery(sql))
             {
                 if (query.Count == 0)
