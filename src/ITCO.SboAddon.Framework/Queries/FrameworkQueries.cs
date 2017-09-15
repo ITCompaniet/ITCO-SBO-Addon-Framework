@@ -50,9 +50,11 @@ namespace ITCO.SboAddon.Framework.Queries
         string GetChangedQuery(int timeStamp, int objectType);
         string GetDocEntryQuery(string table, int docNum);
         string GetFieldIdQuery(string tableName, string fieldAlias);
+        string GetOrCreateQueryCategoryQuery(string queryCategoryName);
         string GetOrCreateUserQueryQuery(string userQueryName);
         string GetSettingAsStringQuery(string key);
         string GetSettingTitleQuery(string key);
+        
         string ProcedureExistsQuery(string DatabaseName, string ProcedureName);
         string SaveSettingExistsQuery(string key);
         string SaveSettingUpdateQuery(string key, string value);

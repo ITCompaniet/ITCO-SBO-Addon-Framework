@@ -33,6 +33,11 @@ namespace ITCO.SboAddon.Framework.Queries
             return $"SELECT \"FieldID\" FROM CUFD WHERE \"TableID\"='{tableName}' AND \"AliasID\"='{fieldAlias}'";
         }
 
+        public string GetOrCreateQueryCategoryQuery(string queryCategoryName)
+        {
+            return  $"SELECT * FROM \"OQCN\" WHERE \"CatName\" = '{queryCategoryName}'";
+        }
+
         public string GetOrCreateUserQueryQuery(string userQueryName)
         {
             return $"SELECT \"IntrnalKey\" FROM \"OUQR\" WHERE \"QName\" = '{userQueryName}'";
