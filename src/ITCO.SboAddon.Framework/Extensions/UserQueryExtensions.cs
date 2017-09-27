@@ -22,13 +22,13 @@
         {
             var userQuery = userQueryDefaultQuery;
 
-#if HANA
-            using (var userQueryObject = new SboRecordsetQuery<UserQueries>(
-                $"SELECT \"IntrnalKey\" FROM \"OUQR\" WHERE \"QName\" = '{userQueryName}'", BoObjectTypes.oUserQueries))
-#else
-            using (var userQueryObject = new SboRecordsetQuery<UserQueries>(
-                $"SELECT [IntrnalKey] FROM [OUQR] WHERE [QName] = '{userQueryName}'", BoObjectTypes.oUserQueries))
-#endif
+            var sql = string.Empty;
+            if (SboApp.IsHana)
+                sql = $"SELECT \"IntrnalKey\" FROM \"OUQR\" WHERE \"QName\" = '{userQueryName}'";
+            else
+                sql = $"SELECT [IntrnalKey] FROM [OUQR] WHERE [QName] = '{userQueryName}'";
+
+            using (var userQueryObject = new SboRecordsetQuery<UserQueries>(sql, BoObjectTypes.oUserQueries))
             {
                 if (userQueryObject.Count == 0)
                 {

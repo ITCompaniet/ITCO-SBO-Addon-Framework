@@ -197,12 +197,10 @@ namespace ITCO.SboAddon.Framework.Helpers
 
             try
             {
-
-#if HANA
-                recordSet.DoQuery($"SELECT \"FieldID\" FROM CUFD WHERE \"TableID\"='{tableName}' AND \"AliasID\"='{fieldAlias}'");
-#else
-                recordSet.DoQuery($"SELECT FieldID FROM CUFD WHERE TableID='{tableName}' AND AliasID='{fieldAlias}'");
-#endif
+                if (SboApp.IsHana)
+                    recordSet.DoQuery($"SELECT \"FieldID\" FROM CUFD WHERE \"TableID\"='{tableName}' AND \"AliasID\"='{fieldAlias}'");
+                else
+                    recordSet.DoQuery($"SELECT FieldID FROM CUFD WHERE TableID='{tableName}' AND AliasID='{fieldAlias}'");
 
                 if (recordSet.RecordCount == 1)
                 {

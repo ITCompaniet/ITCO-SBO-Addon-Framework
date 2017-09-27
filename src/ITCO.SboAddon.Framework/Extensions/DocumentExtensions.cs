@@ -88,11 +88,12 @@
         public static bool Search(this IDocuments document, string table, string where)
         {
             var recordSet = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;
-#if HANA
-            recordSet.DoQuery($"SELECT * FROM \"{table}\" WHERE {where}");
-#else
-            recordSet.DoQuery($"SELECT * FROM [{table}] WHERE {where}");
-#endif
+
+            if (SboApp.IsHana)
+                recordSet.DoQuery($"SELECT * FROM \"{table}\" WHERE {where}");
+            else
+                recordSet.DoQuery($"SELECT * FROM [{table}] WHERE {where}");
+
             document.Browser.Recordset = recordSet;
             return recordSet.RecordCount != 0;
         }
@@ -234,11 +235,13 @@
         /// <returns>DocEntry</returns>
         public static int? GetDocEntry(this int docNum, string table)
         {
-#if HANA
-            using (var query = new SboRecordsetQuery($"SELECT \"DocEntry\" FROM \"{table}\" WHERE \"DocNum\"={docNum}"))
-#else
-            using (var query = new SboRecordsetQuery($"SELECT [DocEntry] FROM [{table}] WHERE [DocNum]={docNum}"))
-#endif
+            var sql = string.Empty;
+            if (SboApp.IsHana)
+                sql = $"SELECT \"DocEntry\" FROM \"{table}\" WHERE \"DocNum\"={docNum}";
+            else
+                sql = $"SELECT [DocEntry] FROM [{table}] WHERE [DocNum]={docNum}";
+
+            using (var query = new SboRecordsetQuery(sql))
             {
                 if (query.Count == 0) return null;
                 return int.Parse(query.Result.First().Item("DocEntry").Value.ToString());

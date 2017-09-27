@@ -219,6 +219,11 @@ namespace ITCO.SboAddon.Framework
         public static bool DiConnected => _diCompany != null && _diCompany.Connected;
 
         /// <summary>
+        /// Is connection aganst HANA DB
+        /// </summary>
+        public static bool IsHana => Company.DbServerType == SAPbobsCOM.BoDataServerTypes.dst_HANADB;
+
+        /// <summary>
         /// Set Default App Events
         /// </summary>
         protected static void SetAppEvents()

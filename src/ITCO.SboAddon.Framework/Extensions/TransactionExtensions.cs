@@ -20,17 +20,12 @@ namespace ITCO.SboAddon.Framework.Extensions
         /// <param name="tryCount"></param>
         public static void WaitForOpenTransactions(this Company company, int sleep = 500, int tryCount = 10)
         {
+            if (SboApp.IsHana)
+                throw new Exception("WaitForOpenTransactions does not work in HANA!");
+
             for (var i = 0; i < tryCount; i++)
             {
-#if HANA
-#warning WaitForOpenTransaction does not work in HANA
-                throw new Exception("WaitForOpenTransactions does not work in HANA!");
-                using (SboRecordsetQuery query = null) //Change to query that works with HANAs
-
-#else
-                using (var query = new SboRecordsetQuery(
-                    $"SELECT hostname, loginame FROM sys.sysprocesses WHERE open_tran=1 AND dbid=DB_ID('{company.CompanyDB}')"))
-#endif
+                using (var query = new SboRecordsetQuery($"SELECT hostname, loginame FROM sys.sysprocesses WHERE open_tran=1 AND dbid=DB_ID('{company.CompanyDB}')"))
                 {
                     if (query.Count == 0)
                         return;

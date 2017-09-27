@@ -32,24 +32,23 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\ITCO.SboAddon.Framework.XML</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug HANA|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug HANA\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;HANA</DefineConstants>
-    <DocumentationFile>bin\Debug HANA\ITCO.SboAddon.Framework.XML</DocumentationFile>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>bin\Debug\ITCO.SboAddon.Framework.XML</DocumentationFile>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release HANA|AnyCPU'">
-    <OutputPath>bin\Release HANA\</OutputPath>
-    <DefineConstants>TRACE;HANA</DefineConstants>
-    <DocumentationFile>bin\Release HANA\ITCO.SboAddon.Framework.XML</DocumentationFile>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>bin\Release\ITCO.SboAddon.Framework.XML</DocumentationFile>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
@@ -89,6 +88,7 @@
     <Compile Include="Extensions\TransactionExtensions.cs" />
     <Compile Include="Extensions\UserQueryExtensions.cs" />
     <Compile Include="Forms\IFormMenuItem.cs" />
+    <Compile Include="Helpers\SimpleHanaTranslator.cs" />
     <Compile Include="Helpers\DatabaseHelper.cs" />
     <Compile Include="Helpers\DocumentSeriesHelper.cs" />
     <Compile Include="Helpers\MessageHelper.cs" />

@@ -19,24 +19,41 @@ namespace ITCO.SboAddon.Framework.Helpers
         {
             _recordSetObject = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;
 
+            SboApp.Logger.Debug($"SQL: {sql}, Args = {string.Join(",", args)}");
             _recordSetObject.DoQuery(string.Format(sql, args));
         }
 
+        /// <summary>
+        /// Run query
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="args"></param>
         public void DoQuery(string sql, params object[] args)
         {
+
             try
             {
+                SboApp.Logger.Debug($"SQL: {sql}, Args = {string.Join(",", args)}");
+
                 _recordSetObject.DoQuery(string.Format(sql, args));
                 if (_recordSetObject.EoF)
                     _recordSetObject.MoveFirst();
             }
             catch (Exception e)
             {
+                SboApp.Logger.Error($"DoQuery Error {e.Message}", e);
+                throw;
             }
         }
 
+        /// <summary>
+        /// Record cound
+        /// </summary>
         public int Count => _recordSetObject.RecordCount;
 
+        /// <summary>
+        /// Recordset object
+        /// </summary>
         public Recordset Recordset => _recordSetObject;
 
         /// <summary>

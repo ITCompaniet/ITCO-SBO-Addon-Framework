@@ -31,11 +31,10 @@ namespace ITCO.SboAddon.Framework.Extensions
         /// <returns></returns>
         public static bool GetByDocNum<T>(this BusinessObject<T> businessObject, int docNum) where T : Documents
         {
-#if HANA
-            return businessObject.Object.Search(businessObject.BoObjectType.GetTableName(), $"\"DocNum\"={docNum}");
-#else
-            return businessObject.Object.Search(businessObject.BoObjectType.GetTableName(), $"[DocNum]={docNum}");
-#endif
+            if (SboApp.IsHana)
+                return businessObject.Object.Search(businessObject.BoObjectType.GetTableName(), $"\"DocNum\"={docNum}");
+            else
+                return businessObject.Object.Search(businessObject.BoObjectType.GetTableName(), $"[DocNum]={docNum}");
         }
 
         /// <summary>

@@ -20,19 +20,20 @@
             var cardCode = businessPartners.CardCode;
             var contactEmployees = businessPartners.ContactEmployees;
 
-#if HANA
-            using (var query = new SboRecordsetQuery(
-                "SELECT \"LineNum\" FROM (SELECT ROW_NUMBER() OVER (ORDER BY \"CntctCode\" ASC) - 1 AS \"LineNum\", \"CntctCode\" FROM \"OCPR\" " +
-                $"WHERE \"CardCode\"='{cardCode}') AS \"T0\" WHERE \"CntctCode\"={contactCode}"))
-#else
-                    using (var query = new SboRecordsetQuery(
-                "SELECT [LineNum] FROM (SELECT ROW_NUMBER() OVER (ORDER BY [CntctCode] ASC) - 1 AS [LineNum], [CntctCode] FROM [OCPR] " +
-                $"WHERE [CardCode]='{cardCode}') AS [T0] WHERE [CntctCode]={contactCode}"))
-#endif
+            var sql = string.Empty;
+            if (SboApp.IsHana)
+                sql = "SELECT \"LineNum\" FROM (SELECT ROW_NUMBER() OVER (ORDER BY \"CntctCode\" ASC) - 1 AS \"LineNum\", \"CntctCode\" FROM \"OCPR\" " +
+                $"WHERE \"CardCode\"='{cardCode}') AS \"T0\" WHERE \"CntctCode\"={contactCode}";
+            else
+                sql = "SELECT [LineNum] FROM (SELECT ROW_NUMBER() OVER (ORDER BY [CntctCode] ASC) - 1 AS [LineNum], [CntctCode] FROM [OCPR] " +
+                $"WHERE [CardCode]='{cardCode}') AS [T0] WHERE [CntctCode]={contactCode}";
+
+            using (var query = new SboRecordsetQuery(sql))
+
             {
                 if (query.Count == 0) return false;
 
-                var lineNum = (int) query.Result.First().Item(0).Value;
+                var lineNum = (int)query.Result.First().Item(0).Value;
                 SboApp.Logger.Debug($"CntctCode {contactCode} is LineNum {lineNum} for CardCode {cardCode}");
 
                 contactEmployees.SetCurrentLine(lineNum);
@@ -51,19 +52,19 @@
             var cardCode = businessPartners.CardCode;
             var contactEmployees = businessPartners.ContactEmployees;
 
-#if HANA
-            using (var query = new SboRecordsetQuery(
-                "SELECT \"LineNum\" FROM (SELECT ROW_NUMBER() OVER (ORDER BY \"CntctCode\" ASC) - 1 AS \"LineNum\", \"Name\" FROM \"OCPR\" " +
-                $"WHERE \"CardCode\"='{cardCode}') AS \"T0\" WHERE \"Name\"='{contactId}'"))
-#else
-                using (var query = new SboRecordsetQuery(
-                "SELECT [LineNum] FROM (SELECT ROW_NUMBER() OVER (ORDER BY [CntctCode] ASC) - 1 AS [LineNum], [Name] FROM [OCPR] " +
-                $"WHERE [CardCode]='{cardCode}') AS [T0] WHERE [Name]='{contactId}'"))
-#endif
+            var sql = string.Empty;
+            if (SboApp.IsHana)
+                sql = "SELECT \"LineNum\" FROM (SELECT ROW_NUMBER() OVER (ORDER BY \"CntctCode\" ASC) - 1 AS \"LineNum\", \"Name\" FROM \"OCPR\" " +
+                $"WHERE \"CardCode\"='{cardCode}') AS \"T0\" WHERE \"Name\"='{contactId}'";
+            else
+                sql = "SELECT [LineNum] FROM (SELECT ROW_NUMBER() OVER (ORDER BY [CntctCode] ASC) - 1 AS [LineNum], [Name] FROM [OCPR] " +
+                $"WHERE [CardCode]='{cardCode}') AS [T0] WHERE [Name]='{contactId}'";
+
+            using (var query = new SboRecordsetQuery(sql))
             {
                 if (query.Count == 0) return false;
 
-                var lineNum = (int) query.Result.First().Item(0).Value;
+                var lineNum = (int)query.Result.First().Item(0).Value;
                 SboApp.Logger.Debug($"Contact ID '{contactId}' is LineNum {lineNum} for CardCode {cardCode}");
 
                 contactEmployees.SetCurrentLine(lineNum);
