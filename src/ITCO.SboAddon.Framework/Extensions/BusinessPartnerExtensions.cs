@@ -3,6 +3,7 @@
     using System.Linq;
     using Helpers;
     using SAPbobsCOM;
+    using ITCO.SboAddon.Framework.Queries;
 
     /// <summary>
     /// Business Partner Extensions
@@ -19,17 +20,7 @@
         {
             var cardCode = businessPartners.CardCode;
             var contactEmployees = businessPartners.ContactEmployees;
-
-            var sql = string.Empty;
-            if (SboApp.IsHana)
-                sql = "SELECT \"LineNum\" FROM (SELECT ROW_NUMBER() OVER (ORDER BY \"CntctCode\" ASC) - 1 AS \"LineNum\", \"CntctCode\" FROM \"OCPR\" " +
-                $"WHERE \"CardCode\"='{cardCode}') AS \"T0\" WHERE \"CntctCode\"={contactCode}";
-            else
-                sql = "SELECT [LineNum] FROM (SELECT ROW_NUMBER() OVER (ORDER BY [CntctCode] ASC) - 1 AS [LineNum], [CntctCode] FROM [OCPR] " +
-                $"WHERE [CardCode]='{cardCode}') AS [T0] WHERE [CntctCode]={contactCode}";
-
-            using (var query = new SboRecordsetQuery(sql))
-
+            using (var query = new SboRecordsetQuery(FrameworkQueries.Instance.SetContactEmployeesLineByContactCodeQuery(cardCode, contactCode)))
             {
                 if (query.Count == 0) return false;
 
@@ -52,15 +43,7 @@
             var cardCode = businessPartners.CardCode;
             var contactEmployees = businessPartners.ContactEmployees;
 
-            var sql = string.Empty;
-            if (SboApp.IsHana)
-                sql = "SELECT \"LineNum\" FROM (SELECT ROW_NUMBER() OVER (ORDER BY \"CntctCode\" ASC) - 1 AS \"LineNum\", \"Name\" FROM \"OCPR\" " +
-                $"WHERE \"CardCode\"='{cardCode}') AS \"T0\" WHERE \"Name\"='{contactId}'";
-            else
-                sql = "SELECT [LineNum] FROM (SELECT ROW_NUMBER() OVER (ORDER BY [CntctCode] ASC) - 1 AS [LineNum], [Name] FROM [OCPR] " +
-                $"WHERE [CardCode]='{cardCode}') AS [T0] WHERE [Name]='{contactId}'";
-
-            using (var query = new SboRecordsetQuery(sql))
+            using (var query = new SboRecordsetQuery(FrameworkQueries.Instance.SetContactEmployeesLineByContactIdQuery(cardCode, contactId)))
             {
                 if (query.Count == 0) return false;
 

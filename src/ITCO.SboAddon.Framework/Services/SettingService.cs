@@ -7,6 +7,7 @@
     using Dialogs;
     using Dialogs.Inputs;
     using Helpers;
+    using ITCO.SboAddon.Framework.Queries;
 
     #region Interface
 
@@ -71,9 +72,9 @@
     /// </summary>
     public class SettingService : ISettingService
     {
-        private const string UdtSettings = "ITCO_FW_SETTINGS";
+        public const string UdtSettings = "ITCO_FW_SETTINGS";
 
-        private const string UdfSettingValue = "ITCO_FW_SValue";
+        public const string UdfSettingValue = "ITCO_FW_SValue";
         /// <summary>
         /// Max Length of setting value
         /// </summary>
@@ -173,12 +174,7 @@
             if (userCode != null)
                 sqlKey = $"{sqlKey}[{userCode}]";
 
-            var sql = string.Empty;
-            if (SboApp.IsHana)
-                sql = $"SELECT \"U_{UdfSettingValue}\", \"Name\" FROM \"@{UdtSettings}\" WHERE \"Code\" = '{sqlKey}'";
-            else
-                sql = $"SELECT [U_{UdfSettingValue}], [Name] FROM [@{UdtSettings}] WHERE [Code] = '{sqlKey}'";
-
+            var sql = FrameworkQueries.Instance.GetSettingAsStringQuery(sqlKey);
             using (var query = new SboRecordsetQuery(sql))
             {
                 if (query.Count == 0)
@@ -279,12 +275,7 @@
             if (sqlKey.Length > KeyMaxLength)
                 throw new Exception($"SQL Key '{sqlKey}' for Setting is to long (Max {KeyMaxLength}, Actual {sqlKey.Length})");
 
-            var sql = string.Empty;
-            if (SboApp.IsHana)
-                sql = $"SELECT \"U_{UdfSettingValue}\", \"Name\" FROM \"@{UdtSettings}\" WHERE \"Code\" = '{sqlKey}'";
-            else
-                sql = $"SELECT [U_{UdfSettingValue}], [Name] FROM [@{UdtSettings}] WHERE [Code] = '{sqlKey}'";
-            
+            var sql = FrameworkQueries.Instance.SaveSettingExistsQuery(sqlKey);
             bool exists;
             using (var query = new SboRecordsetQuery(sql))
             {
@@ -297,10 +288,7 @@
 
             if (exists)
             {
-                if (SboApp.IsHana)
-                    sql = $"UPDATE \"@{UdtSettings}\" SET \"U_{UdfSettingValue}\" = {sqlValue} WHERE \"Code\" = '{sqlKey}'";
-                else
-                    sql = $"UPDATE [@{UdtSettings}] SET [U_{UdfSettingValue}] = {sqlValue} WHERE [Code] = '{sqlKey}'";
+                sql = FrameworkQueries.Instance.SaveSettingUpdateQuery(sqlKey, sqlValue);
             }
             else
             {
@@ -313,10 +301,7 @@
                 if (name.Length > KeyMaxLength)
                     name = name.Substring(0, KeyMaxLength); // Max Length is 50
 
-                if (SboApp.IsHana)
-                    sql = $"INSERT INTO \"@{UdtSettings}\" (\"Code\", \"Name\", \"U_{UdfSettingValue}\") VALUES ('{sqlKey}', '{name}', {sqlValue})";
-                else
-                    sql = $"INSERT INTO [@{UdtSettings}] ([Code], [Name], [U_{UdfSettingValue}]) VALUES ('{sqlKey}', '{name}', {sqlValue})";
+                sql = FrameworkQueries.Instance.SaveSettingInsertQuery(sqlKey, name, sqlValue);
             }
 
             SboRecordset.NonQuery(sql);
@@ -374,13 +359,7 @@
         private static string GetSettingTitle(string key)
         {
             var sqlKey = key.Trim().ToLowerInvariant();
-
-            var sql = string.Empty;
-            if (SboApp.IsHana)
-                sql = $"SELECT \"Name\" FROM \"@{UdtSettings}\" WHERE \"Code\" = '{sqlKey}'";
-            else
-                sql = $"SELECT [Name] FROM [@{UdtSettings}] WHERE [Code] = '{sqlKey}'";
-
+            var sql = FrameworkQueries.Instance.GetSettingTitleQuery(key);
             using (var query = new SboRecordsetQuery(sql))
             {
                 if (query.Count == 0)

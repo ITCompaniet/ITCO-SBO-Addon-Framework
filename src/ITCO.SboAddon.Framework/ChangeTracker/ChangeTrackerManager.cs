@@ -5,6 +5,7 @@
     using Helpers;
     using SAPbobsCOM;
     using Setup;
+    using ITCO.SboAddon.Framework.Queries;
 
     /// <summary>
     /// Interface for Change Tracker Manager
@@ -45,17 +46,7 @@
         /// <returns>Collection of Key and timestamp for updated objects</returns>
         public ICollection<KeyAndTimeStampModel> GetChanged(int timeStamp, BoObjectTypes objectType)
         {
-            var sql = string.Empty;
-            if (SboApp.IsHana)
-                sql = "SELECT DISTINCT \"U_ITCO_CT_Key\" AS \"Key\", CAST(\"Code\" AS int) AS \"Timestamp\" FROM \"@ITCO_CHANGETRACKER\" " +
-                $"WHERE \"U_ITCO_CT_Obj\" = {(int)objectType} AND CAST(\"Code\" AS int) > {timeStamp} " +
-                "ORDER BY CAST(\"Code\" AS int) ASC";
-            else
-                sql = "SELECT DISTINCT [U_ITCO_CT_Key] AS [Key], CAST([Code] AS int) AS [Timestamp] FROM [@ITCO_CHANGETRACKER] " +
-                    $"WHERE [U_ITCO_CT_Obj] = {(int)objectType} AND CAST([Code] AS int) > {timeStamp} " +
-                    "ORDER BY CAST([Code] AS int) ASC";
-
-            using (var query = new SboRecordsetQuery(sql))
+            using (var query = new SboRecordsetQuery(FrameworkQueries.Instance.GetChangedQuery(timeStamp,(int)objectType)))
             {
                 if (query.Count == 0)
                     return new List<KeyAndTimeStampModel>();

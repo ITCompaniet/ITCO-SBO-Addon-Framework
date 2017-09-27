@@ -5,6 +5,7 @@
     using System.Linq;
     using Helpers;
     using SAPbobsCOM;
+    using ITCO.SboAddon.Framework.Queries;
 
     /// <summary>
     /// SBO Document helper methods
@@ -89,11 +90,7 @@
         {
             var recordSet = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;
 
-            if (SboApp.IsHana)
-                recordSet.DoQuery($"SELECT * FROM \"{table}\" WHERE {where}");
-            else
-                recordSet.DoQuery($"SELECT * FROM [{table}] WHERE {where}");
-
+            recordSet.DoQuery(FrameworkQueries.Instance.SearchQuery(table, where));
             document.Browser.Recordset = recordSet;
             return recordSet.RecordCount != 0;
         }
@@ -235,13 +232,7 @@
         /// <returns>DocEntry</returns>
         public static int? GetDocEntry(this int docNum, string table)
         {
-            var sql = string.Empty;
-            if (SboApp.IsHana)
-                sql = $"SELECT \"DocEntry\" FROM \"{table}\" WHERE \"DocNum\"={docNum}";
-            else
-                sql = $"SELECT [DocEntry] FROM [{table}] WHERE [DocNum]={docNum}";
-
-            using (var query = new SboRecordsetQuery(sql))
+            using (var query = new SboRecordsetQuery(FrameworkQueries.Instance.GetDocEntryQuery(table, docNum)))
             {
                 if (query.Count == 0) return null;
                 return int.Parse(query.Result.First().Item("DocEntry").Value.ToString());
