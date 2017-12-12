@@ -19,7 +19,7 @@ namespace ITCO.SboAddon.Framework
         {
             get
             {
-                throw new NotImplementedException();
+                throw new NotImplementedException(nameof(GlobalVariablesContext));
             }
         }
 
@@ -39,13 +39,13 @@ namespace ITCO.SboAddon.Framework
         {
             get
             {
-                throw new NotImplementedException();
+                throw new NotImplementedException(nameof(ThreadVariablesContext));
             }
         }
 
         public INestedVariablesContext NestedThreadVariablesContext
         {
-            get { throw new NotImplementedException();}
+            get { throw new NotImplementedException(nameof(NestedThreadVariablesContext));}
         }
 
 public void Debug(Action<FormatMessageHandler> formatMessageCallback)

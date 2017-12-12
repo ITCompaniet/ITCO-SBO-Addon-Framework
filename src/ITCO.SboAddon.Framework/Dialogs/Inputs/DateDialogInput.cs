@@ -97,13 +97,12 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
             return DateTime.ParseExact(_editText.Value, "yyyyMMdd", CultureInfo.InvariantCulture);
         }
         /// <summary>
-        /// Not Implemented
+        /// Extras
         /// </summary>
         /// <param name="form"></param>
         /// <param name="yPos"></param>
         public void Extras(Form form, int yPos)
         {
-            throw new NotImplementedException();
         }
     }
 }

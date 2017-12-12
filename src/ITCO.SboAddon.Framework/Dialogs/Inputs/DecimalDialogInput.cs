@@ -98,13 +98,12 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
             return decimal.Parse(_editText.Value, NumberStyles.Any, CultureInfo.InvariantCulture);
         }
         /// <summary>
-        /// Not Implemented
+        /// Extras
         /// </summary>
         /// <param name="form"></param>
         /// <param name="yPos"></param>
         public void Extras(Form form, int yPos)
         {
-            throw new NotImplementedException();
         }
     }
 }

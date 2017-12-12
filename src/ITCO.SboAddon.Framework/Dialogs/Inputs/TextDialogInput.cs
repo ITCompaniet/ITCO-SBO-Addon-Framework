@@ -95,13 +95,12 @@ namespace ITCO.SboAddon.Framework.Dialogs.Inputs
             return _editText.Value;
         }
         /// <summary>
-        /// Not Implemented
+        /// Extras
         /// </summary>
         /// <param name="form"></param>
         /// <param name="yPos"></param>
         public void Extras(Form form, int yPos)
         {
-            throw new NotImplementedException();
         }
     }
 }
