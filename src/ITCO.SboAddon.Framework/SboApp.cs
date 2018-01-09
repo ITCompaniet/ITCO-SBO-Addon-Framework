@@ -159,16 +159,7 @@ namespace ITCO.SboAddon.Framework
         {
             var serverName = ConfigurationManager.AppSettings["Sbo:ServerName"];
 
-            SAPbobsCOM.BoDataServerTypes serverType;
-            if (ConfigurationManager.AppSettings["Sbo:ServerType"] == "MSSQL2016")
-            {
-                serverType = SAPbobsCOM.BoDataServerTypes.dst_MSSQL2016;
-            }
-            else if (!Enum.TryParse("dst_" + ConfigurationManager.AppSettings["Sbo:ServerType"], out serverType))
-            {
-                var availableServerTypes = string.Join(",", Enum.GetNames(typeof(SAPbobsCOM.BoDataServerTypes)));
-                throw new Exception($"Could not parse server type from '{ConfigurationManager.AppSettings["Sbo:ServerType"]}'. Available server types {availableServerTypes}");
-            }
+            var serverType = GetServiceType(ConfigurationManager.AppSettings["Sbo:ServerType"]);
 
             var companyDb = ConfigurationManager.AppSettings["Sbo:CompanyDb"];
             var dbUsername = ConfigurationManager.AppSettings["Sbo:DbUsername"];
@@ -178,6 +169,21 @@ namespace ITCO.SboAddon.Framework
             var licenceServer = ConfigurationManager.AppSettings["Sbo:LicenceServer"];
 
             DiConnect(serverName, serverType, companyDb, dbUsername, dbPassword, username, password, licenceServer);
+        }
+
+        internal static SAPbobsCOM.BoDataServerTypes GetServiceType(string serverTypeString)
+        {
+            SAPbobsCOM.BoDataServerTypes serverType;
+            if (serverTypeString == "MSSQL2016")
+            {
+                serverType = SAPbobsCOM.BoDataServerTypes.dst_MSSQL2016;
+            }
+            else if (!Enum.TryParse("dst_" + serverTypeString, out serverType))
+            {
+                var availableServerTypes = string.Join(",", Enum.GetNames(typeof(SAPbobsCOM.BoDataServerTypes)));
+                throw new Exception($"Could not parse server type from '{serverTypeString}'. Available server types {availableServerTypes}");
+            }
+            return serverType;
         }
 
         /// <summary>
