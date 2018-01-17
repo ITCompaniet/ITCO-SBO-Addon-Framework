@@ -191,15 +191,13 @@ namespace ITCO.SboAddon.Framework.Helpers
         /// <returns></returns>
         public static int GetFieldId(string tableName, string fieldAlias)
         {
-            var recordSet = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;
-
-            if (recordSet == null)
+            if (!(SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) is Recordset recordSet))
                 throw new NullReferenceException("Failed to get Recordset object");
 
             try
             {
-
-                recordSet.DoQuery(FrameworkQueries.Instance.GetFieldIdQuery(tableName, fieldAlias));
+                var sql = FrameworkQueries.Instance.GetFieldIdQuery(tableName, fieldAlias);
+                recordSet.DoQuery(sql);
                 if (recordSet.RecordCount == 1)
                 {
                     var fieldId = recordSet.Fields.Item("FieldID").Value as int?;
@@ -228,22 +226,17 @@ namespace ITCO.SboAddon.Framework.Helpers
             try
             {
                 userFieldsMd = SboApp.Company.GetBusinessObject(BoObjectTypes.oUserFields) as UserFieldsMD;
-                if (userFieldsMd != null)
-                {
-                    var fieldId = GetFieldId(tableName, fieldAlias);
-                    if (fieldId != -1)
-                    {
-                        if (userFieldsMd.GetByKey(tableName, fieldId))
-                        {
-                            if (userFieldsMd.Size < size)
-                            {
-                                userFieldsMd.Size = size;
-                                userFieldsMd.EditSize = size;
-                                userFieldsMd.Update();
-                            }
-                        }
-                    }
-                }
+                if (userFieldsMd == null) return;
+
+                var fieldId = GetFieldId(tableName, fieldAlias);
+                if (fieldId == -1) return;
+                if (!userFieldsMd.GetByKey(tableName, fieldId)) return;
+
+                if (userFieldsMd.Size >= size) return;
+
+                userFieldsMd.Size = size;
+                userFieldsMd.EditSize = size;
+                userFieldsMd.Update();
             }
             catch (Exception ex)
             {
