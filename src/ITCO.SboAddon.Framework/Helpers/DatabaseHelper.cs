@@ -69,7 +69,7 @@ namespace ITCO.SboAddon.Framework.Helpers
             if (serverType == BoDataServerTypes.dst_HANADB)
                 return new ConnectionStringSettings("SBO", $"Server={serverName};UserName={dbUsername};Password={dbPassword};CS={companyDb}", "Sap.Data.Hana");
 
-            return new ConnectionStringSettings("SBO", $"Server={serverName};UserName={dbUsername};Password={dbPassword};Database={companyDb}", "System.Data.SqlClient");
+            return new ConnectionStringSettings("SBO", $"Server={serverName};User Id={dbUsername};Password={dbPassword};Database={companyDb}", "System.Data.SqlClient");
         }
     }
 }
