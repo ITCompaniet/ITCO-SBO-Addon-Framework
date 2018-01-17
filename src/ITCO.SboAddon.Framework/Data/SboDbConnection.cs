@@ -11,7 +11,7 @@
     /// <summary>
     /// Connection handler using Dapper
     /// </summary>
-    public class SboDbConnection
+    public class SboDbConnection : IDisposable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Data.SboDbConnection"/> class. 
