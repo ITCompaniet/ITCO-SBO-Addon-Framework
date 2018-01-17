@@ -62,6 +62,12 @@
     <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Dapper, Version=1.50.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.1.50.4\lib\net451\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sap.Data.Hana.v4.5">
+      <HintPath>..\lib\hdbclient.ado.net.4.5\Sap.Data.Hana.v4.5.dll</HintPath>
+    </Reference>
     <Reference Include="SAPBusinessOneSDK, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c7c3cb60e45d119f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\SAPBusinessOneSDK-90-9.20.181\SAPBusinessOneSDK.dll</HintPath>
@@ -91,6 +97,8 @@
     <Compile Include="Extensions\TransactionExtensions.cs" />
     <Compile Include="Extensions\UserQueryExtensions.cs" />
     <Compile Include="Forms\IFormMenuItem.cs" />
+    <Compile Include="Helpers\Dapper\HanaDecimalTypeHandler.cs" />
+    <Compile Include="Helpers\Dapper\HanaHandlers.cs" />
     <Compile Include="Helpers\SimpleHanaTranslator.cs" />
     <Compile Include="Helpers\DatabaseHelper.cs" />
     <Compile Include="Helpers\DocumentSeriesHelper.cs" />
@@ -134,7 +142,9 @@
     <Compile Include="Setup\SetupManager.cs" />
     <Compile Include="UserDefinitions\UserDefinedTable.cs" />
     <Compile Include="UserDefinitions\UserDefiniedField.cs" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
