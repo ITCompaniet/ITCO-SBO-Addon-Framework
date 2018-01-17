@@ -7,16 +7,16 @@
     public class MockupSettingService : ISettingService
     {
         private readonly IDictionary<string, object> _settingsRepository;
-        private readonly string _currencyUser;
+        private readonly string _currentUser;
         /// <summary>
         /// MockupSettingService
         /// </summary>
         /// <param name="settingsRepository"></param>
-        /// <param name="currencyUser"></param>
-        public MockupSettingService(IDictionary<string, object> settingsRepository, string currencyUser)
+        /// <param name="currentUser"></param>
+        public MockupSettingService(IDictionary<string, object> settingsRepository, string currentUser)
         {
             _settingsRepository = settingsRepository;
-            _currencyUser = currencyUser;
+            _currentUser = currentUser;
         }
         /// <summary>
         /// Initialize Settigns
@@ -40,7 +40,7 @@
         /// <returns></returns>
         public T GetCurrentUserSettingByKey<T>(string key, T defaultValue = default(T), bool askIfNotFound = false)
         {
-            key = $"{key}[{_currencyUser}]";
+            key = $"{key}[{_currentUser}]";
 
             if (_settingsRepository.ContainsKey(key))
                 return (T) _settingsRepository[key];
@@ -55,7 +55,7 @@
         /// <param name="value"></param>
         public void SaveCurrentUserSetting<T>(string key, T value)
         {
-            SaveSetting($"{key}[{_currencyUser}]", value);
+            SaveSetting($"{key}[{_currentUser}]", value);
         }
         /// <summary>
         /// Get Setting
