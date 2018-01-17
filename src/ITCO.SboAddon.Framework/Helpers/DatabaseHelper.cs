@@ -2,9 +2,8 @@
 namespace ITCO.SboAddon.Framework.Helpers
 {
     using System.Configuration;
-    using System.Linq;
     using SAPbobsCOM;
-    using ITCO.SboAddon.Framework.Queries;
+    using Queries;
 
     /// <summary>
     /// Database Helper Functions
@@ -19,7 +18,7 @@ namespace ITCO.SboAddon.Framework.Helpers
             switch (SboApp.Company.DbServerType)
             {
                 case BoDataServerTypes.dst_HANADB:
-                    return DatabaseVersion.HANA;
+                    return DatabaseVersion.Hana;
                 case BoDataServerTypes.dst_MSSQL2005:
                     return DatabaseVersion.Mssql2005;
                 case BoDataServerTypes.dst_MSSQL2008:
@@ -35,26 +34,22 @@ namespace ITCO.SboAddon.Framework.Helpers
         /// <summary>
         /// Check If Procedure Exists
         /// </summary>
-        public static bool ProcedureExists(string ProcedureName)
+        public static bool ProcedureExists(string procedureName)
         {
-            var DatabaseName = SboApp.Application.Company.DatabaseName;
-            var count = SboRecordset.NonQuery(FrameworkQueries.Instance.ProcedureExistsQuery(DatabaseName, ProcedureName));
-            if (count > 0)
-            {
-                return true;
-            }
-            return false;
+            var databaseName = SboApp.Application.Company.DatabaseName;
+            var count = SboRecordset.NonQuery(FrameworkQueries.Instance.ProcedureExistsQuery(databaseName, procedureName));
+            return count > 0;
         }
 
         /// <summary>
         /// Drops Procedure If It Exists
         /// </summary>
-        public static void DropProcedureIfExists(string ProcedureName)
+        public static void DropProcedureIfExists(string procedureName)
         {
-            var DatabaseName = SboApp.Application.Company.DatabaseName;
-            if(ProcedureExists(ProcedureName))
+            var databaseName = SboApp.Application.Company.DatabaseName;
+            if(ProcedureExists(procedureName))
             {
-                SboRecordset.NonQuery(FrameworkQueries.Instance.DropProcedureIfExistsQuery(DatabaseName, ProcedureName));
+                SboRecordset.NonQuery(FrameworkQueries.Instance.DropProcedureIfExistsQuery(databaseName, procedureName));
             }
         }
 
@@ -87,7 +82,7 @@ public enum DatabaseVersion
     /// <summary>
     /// Hana Version
     /// </summary>
-    HANA,
+    Hana,
 
     /// <summary>
     /// Mssql Version
