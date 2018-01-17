@@ -144,6 +144,7 @@ publish/
 #!**/packages/repositories.config
 
 !*SAPBusinessOneSDK.dll
+!*Sap.Data.Hana.v4.5.dll
 
 # Windows Azure Build Output
 csx/
