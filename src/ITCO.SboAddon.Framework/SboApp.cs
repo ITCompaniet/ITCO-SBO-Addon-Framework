@@ -5,6 +5,10 @@ using Common.Logging;
 
 namespace ITCO.SboAddon.Framework
 {
+    using ITCO.SboAddon.Framework.Data.Dapper;
+
+    using SAPbobsCOM;
+
     /// <summary>
     /// SBO Application Connector
     /// </summary>
@@ -43,7 +47,7 @@ namespace ITCO.SboAddon.Framework
         }
 
         /// <summary>
-        /// Connect UI and DI Api
+        /// Connect UI and DI API
         /// </summary>
         /// <param name="connectionString">Connection String from SBO Main Application</param>
         /// <param name="loggingEnabled">Is SBO Common Logging enabled</param>
@@ -52,8 +56,7 @@ namespace ITCO.SboAddon.Framework
             if (connectionString == null)
             {
                 connectionString = Environment.GetCommandLineArgs().Length > 1 ? 
-                    Convert.ToString(Environment.GetCommandLineArgs().GetValue(1)) : 
-                    "";
+                    Convert.ToString(Environment.GetCommandLineArgs().GetValue(1)) : string.Empty;
             }
 
             var sboGuiApi = new SAPbouiCOM.SboGuiApi();
@@ -74,7 +77,9 @@ namespace ITCO.SboAddon.Framework
                 ErrorHelper.HandleErrorWithException(connectResponse, "DI API Could not connect");
 
                 if (loggingEnabled)
+                {
                     SboAppLogger.Enable();
+                }
 
                 var assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
                 Logger.Info($"{assemblyName} connected");
@@ -140,6 +145,11 @@ namespace ITCO.SboAddon.Framework
                              $"LicenceServer={licenceServer}");
 
                 throw new Exception($"DI Connect Error: {errCode} {errMsg}");
+            }
+
+            if (serverType == BoDataServerTypes.dst_HANADB)
+            {
+                HanaHandlers.Register();
             }
         }
         /// <summary>

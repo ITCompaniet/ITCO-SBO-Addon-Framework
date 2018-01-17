@@ -1,7 +1,9 @@
-﻿namespace ITCO.SboAddon.Framework.Helpers.Dapper
+﻿namespace ITCO.SboAddon.Framework.Data.Dapper
 {
     using System.Data;
+
     using global::Dapper;
+
     using Sap.Data.Hana;
 
     /// <summary>

@@ -1,4 +1,4 @@
-﻿namespace ITCO.SboAddon.Framework.Helpers.Dapper
+﻿namespace ITCO.SboAddon.Framework.Data.Dapper
 {
     /// <summary>
     /// All type-handlers for Hana

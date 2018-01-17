@@ -1,22 +1,23 @@
-﻿namespace ITCO.SboAddon.Framework.Helpers.Dapper
+﻿namespace ITCO.SboAddon.Framework.Data
 {
     using System;
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.SqlClient;
     using global::Dapper;
+    using ITCO.SboAddon.Framework.Helpers;
     using Sap.Data.Hana;
 
     /// <summary>
     /// Connection handler using Dapper
     /// </summary>
-    public class DapperConnection
+    public class SboDbConnection
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DapperConnection"/> class. 
+        /// Initializes a new instance of the <see cref="Data.SboDbConnection"/> class. 
         /// Creates new connection
         /// </summary>
-        public DapperConnection()
+        public SboDbConnection()
         {
             var connectionString = DatabaseHelper.GetConnectionString();
 
