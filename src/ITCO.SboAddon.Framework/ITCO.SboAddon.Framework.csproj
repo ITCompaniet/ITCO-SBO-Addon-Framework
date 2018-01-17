@@ -97,6 +97,7 @@
     <Compile Include="Extensions\TransactionExtensions.cs" />
     <Compile Include="Extensions\UserQueryExtensions.cs" />
     <Compile Include="Forms\IFormMenuItem.cs" />
+    <Compile Include="Helpers\Dapper\DapperConnection.cs" />
     <Compile Include="Helpers\Dapper\HanaDecimalTypeHandler.cs" />
     <Compile Include="Helpers\Dapper\HanaHandlers.cs" />
     <Compile Include="Helpers\SimpleHanaTranslator.cs" />

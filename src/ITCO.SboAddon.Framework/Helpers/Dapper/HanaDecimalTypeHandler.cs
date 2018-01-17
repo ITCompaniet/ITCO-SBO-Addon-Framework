@@ -21,9 +21,9 @@
         /// <returns>The typed value.</returns>
         public override decimal Parse(object value)
         {
-            if (value is HanaDecimal hanaDecimal)
+            if (value is HanaDecimal)
             {
-                return hanaDecimal.ToDecimal();
+                return ((HanaDecimal)value).ToDecimal();
             }
 
             return decimal.Parse(value.ToString());
