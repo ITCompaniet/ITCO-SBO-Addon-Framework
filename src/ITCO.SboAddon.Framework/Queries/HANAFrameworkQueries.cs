@@ -30,7 +30,7 @@ namespace ITCO.SboAddon.Framework.Queries
 
         public string GetFieldIdQuery(string tableName, string fieldAlias)
         {
-            return $"SELECT \"FieldID\" FROM CUFD WHERE \"TableID\"='{tableName}' AND \"AliasID\"='{fieldAlias}'";
+            return $"SELECT \"FieldID\" FROM \"CUFD\" WHERE \"TableID\"='{tableName}' AND \"AliasID\"='{fieldAlias}'";
         }
 
         public string GetOrCreateQueryCategoryQuery(string queryCategoryName)
