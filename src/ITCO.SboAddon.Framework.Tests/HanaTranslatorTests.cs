@@ -9,9 +9,9 @@ namespace ITCO.SboAddon.Framework.Tests
         [TestMethod]
         public void ConvertSqlToHana_Test()
         {
-            var hanaQuery = SimpleHanaTranslator.ConvertSqlToHana("SELECT [ABC] FROM [T0]");
+            var hanaQuery = SimpleHanaTranslator.ConvertSqlToHana("SELECT ISNULL([ABC], '') + '-' + [DEF], [IntVal] + 5 AS [IntValPlus], GETDATE() AS [DateTime] FROM [T0]");
             
-            Assert.AreEqual("SELECT \"ABC\" FROM \"T0\"", hanaQuery);
+            Assert.AreEqual("SELECT IFNULL(\"ABC\", '') || '-' || \"DEF\", \"IntVal\" + 5 AS \"IntValPlus\", NOW() AS \"DateTime\" FROM \"T0\"", hanaQuery);
         }
     }
 }
