@@ -1,5 +1,8 @@
 ﻿namespace ITCO.SboAddon.Framework.Helpers
 {
+    using System.Collections.Generic;
+    using System.Text.RegularExpressions;
+
     /// <summary>
     /// Simple HANA SQL-SCript translator
     /// </summary>
@@ -27,11 +30,25 @@
         public static string ConvertSqlToHana(string sql)
         {
             var hanaSql = sql;
-            var sqlChars = new char[] { '[', ']' };
-            var hanaChars = new char[] { '"', '"' };
+            var sqlToHanaWords = new Dictionary<string, string>
+                                     {
+                                         { "[", "\"" },
+                                         { "]", "\"" },
+                                         { "ISNULL", "IFNULL" },
+                                         { "GETDATE", "NOW" },
+                                         { "AS BIT", "AS BOOLEAN" },
 
-            for (int i = 0; i < sqlChars.Length; i++)
-                hanaSql = hanaSql.Replace(sqlChars[i], hanaChars[i]);
+                                         // Try replace + with || only when strings are involved
+                                         { "'+", "'||" },
+                                         { "+'", "||'" },
+                                         { "' +", "' ||" },
+                                         { "+ '", "|| '" }
+                                     };
+
+            foreach (var sqlToHanaWord in sqlToHanaWords)
+            {
+                hanaSql = Regex.Replace(hanaSql, sqlToHanaWord.Key, sqlToHanaWord.Value, RegexOptions.IgnoreCase);
+            }
 
             SboApp.Logger.Debug($"ConvertSqlToHana: '{sql}' -> '{hanaSql}'");
 
