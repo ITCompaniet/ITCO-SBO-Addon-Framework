@@ -87,6 +87,7 @@
     <Compile Include="ChangeTracker\ChangeTrackerManager.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerSetup.cs" />
     <None Include="ChangeTracker\SBO_SP_PostTransactionNotice_MOD.sql" />
+    <Compile Include="ChangeTracker\KeyAndTimeStampModel.cs" />
     <Compile Include="Dialogs\Inputs\OpenFileDialogInput.cs" />
     <Compile Include="Dialogs\Inputs\SaveFileDialogInput.cs" />
     <Compile Include="Dialogs\Inputs\InputExtensions.cs" />

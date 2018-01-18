@@ -196,6 +196,7 @@ namespace ITCO.SboAddon.Framework.Helpers
     /// <summary>
     /// System SQL Connection for faster queries
     /// </summary>
+    [Obsolete("Use SboDbConnection instead")]
     public class SboSqlConnection : IDisposable
     {
         private readonly SqlConnection _sqlConnection;
