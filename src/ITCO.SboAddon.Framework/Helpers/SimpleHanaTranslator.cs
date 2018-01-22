@@ -30,19 +30,22 @@
         public static string ConvertSqlToHana(string sql)
         {
             var hanaSql = sql;
+
             var sqlToHanaWords = new Dictionary<string, string>
                                      {
-                                         { "[", "\"" },
-                                         { "]", "\"" },
+                                         { @"\[", @"""" },
+                                         { @"\]", @"""" },
                                          { "ISNULL", "IFNULL" },
                                          { "GETDATE", "NOW" },
                                          { "AS BIT", "AS BOOLEAN" },
+                                         { @"DATEDIFF\(SECOND,", @"SECONDS_BETWEEN(" },
+                                         { @"DATEDIFF\(DAY,", @"DAYS_BETWEEN(" },
 
                                          // Try replace + with || only when strings are involved
-                                         { "'+", "'||" },
-                                         { "+'", "||'" },
-                                         { "' +", "' ||" },
-                                         { "+ '", "|| '" }
+                                         { @"'\+", "'||" },
+                                         { @"\+'", "||'" },
+                                         { @"' \+", "' ||" },
+                                         { @"\+ '", "|| '" }
                                      };
 
             foreach (var sqlToHanaWord in sqlToHanaWords)
