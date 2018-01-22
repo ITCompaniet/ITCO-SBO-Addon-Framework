@@ -1,11 +1,36 @@
 ﻿namespace ITCO.SboAddon.Framework.Extensions
 {
+    using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
     using Helpers;
-    using SAPbobsCOM;
     using ITCO.SboAddon.Framework.Queries;
-    using System.Collections.Generic;
+    using SAPbobsCOM;
+    
+    /// <summary>
+    /// Query Parameter Format
+    /// </summary>
+    public enum ParameterFormat
+    {
+        /// <summary>
+        /// SBO [%0]
+        /// </summary>
+        Sbo,
+
+        /// <summary>
+        /// Db parameter: SQL @p0, HANA :p0
+        /// </summary>
+        Database,
+
+        /// <summary>
+        /// String {0}
+        /// </summary>
+        String,
+        
+        [Obsolete("Use 'Database' instead")]
+        Sql
+    }
 
     /// <summary>
     /// SBO User Query Helper
@@ -19,10 +44,11 @@
         /// </summary>
         /// <param name="company">Company Object</param>
         /// <param name="userQueryName">User Query Name</param>
-        /// <param name="userQueryDefaultQuery">Query</param>
-        /// <param name="parameterFormat">Define parameter format [%0]/@p0/{0}</param>
-        /// <returns>SQL</returns>
-        public static string GetOrCreateUserQuery(this Company company, string userQueryName, string userQueryDefaultQuery, ParameterFormat parameterFormat = ParameterFormat.Sbo, string queryCategoryName = null)
+        /// <param name="userQueryDefaultQuery">Default query</param>
+        /// <param name="parameterFormat">Define parameter format [%0]/(@p0/:p0)/{0}</param>
+        /// <param name="queryCategoryName">Add query in category with this name</param>
+        /// <returns>SQL Query</returns>
+        public static string GetOrCreateUserQuery(this Company company, string userQueryName, string userQueryDefaultQuery, ParameterFormat parameterFormat = ParameterFormat.Database, string queryCategoryName = null)
         {
             var userQuery = userQueryDefaultQuery;
             using (var userQueryObject = new SboRecordsetQuery<UserQueries>(FrameworkQueries.Instance.GetOrCreateUserQueryQuery(userQueryName), BoObjectTypes.oUserQueries))
@@ -54,29 +80,35 @@
 
             return userQuery;
         }
+
         /// <summary>
         /// Get query category code, create if not exists
         /// </summary>
         /// <param name="queryCategoryName">Query category name</param>
-        /// <returns></returns>
+        /// <returns>Returns query category key</returns>
         public static int GetOrCreateQueryCategory(string queryCategoryName)
         {
             var queryCategoryCode = -1;
             if (string.IsNullOrEmpty(queryCategoryName))
+            {
                 return queryCategoryCode;
- 
+            }
+
             if (QueryCategoryCache.ContainsKey(queryCategoryName))
+            {
                 return QueryCategoryCache[queryCategoryName];
+            }
 
             var sql = FrameworkQueries.Instance.GetOrCreateQueryCategoryQuery(queryCategoryName);
 
             using (var queryCategoryObject = new SboRecordsetQuery<QueryCategories>(sql, BoObjectTypes.oQueryCategories))
             {
                 if (queryCategoryObject.Count == 1)
+                {
                     queryCategoryCode = queryCategoryObject.BusinessObject.Code;
+                }
                 else
                 {
-                     
                     queryCategoryObject.BusinessObject.Name = queryCategoryName;
                     var response = queryCategoryObject.BusinessObject.Add();
                     ErrorHelper.HandleErrorWithException(response, $"Could not create Query Category '{queryCategoryName}'");
@@ -87,46 +119,36 @@
             QueryCategoryCache.Add(queryCategoryName, queryCategoryCode);
             return queryCategoryCode;
         }
+
         /// <summary>
-        /// Replace parameters with requested parameterformat
+        /// Replace parameters with requested parameter format
         /// </summary>
-        /// <param name="userQuery">SQL Query with SAP parmeters</param>
-        /// <param name="parameterFormat"></param>
-        /// <returns>SQL Query with requsted parameter format</returns>
+        /// <param name="userQuery">SQL Query with SAP parameters</param>
+        /// <param name="parameterFormat">Parameter format</param>
+        /// <returns>SQL Query with requested parameter format</returns>
         public static string ReturnParameterStyle(string userQuery, ParameterFormat parameterFormat)
         {
             switch (parameterFormat)
             {
+                case ParameterFormat.Database:
                 case ParameterFormat.Sql:
-                    userQuery = Regex.Replace(userQuery, @"'?\[%([0-9])\]'?", "@p$1");
+                    if (SboApp.Company.DbServerType == BoDataServerTypes.dst_HANADB)
+                    {
+                        userQuery = Regex.Replace(userQuery, @"'?\[%([0-9])\]'?", ":p$1");
+                    }
+                    else
+                    {
+                        userQuery = Regex.Replace(userQuery, @"'?\[%([0-9])\]'?", "@p$1");
+                    }
+
                     break;
                 case ParameterFormat.String:
                     userQuery = Regex.Replace(userQuery, @"'\[%([0-9])\]'", "'{$1}'");
                     userQuery = Regex.Replace(userQuery, @"\[%([0-9])\]", "{$1}");
                     break;
             }
+
             return userQuery;
         }
-    }
-
-    /// <summary>
-    /// Query Parameter Format
-    /// </summary>
-    public enum ParameterFormat
-    {
-        /// <summary>
-        /// SBO [%0]
-        /// </summary>
-        Sbo,
-
-        /// <summary>
-        /// SQL @p0
-        /// </summary>
-        Sql,
-
-        /// <summary>
-        /// String {0}
-        /// </summary>
-        String
     }
 }
