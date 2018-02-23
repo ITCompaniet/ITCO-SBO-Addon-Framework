@@ -6,7 +6,9 @@
     using System.Data.SqlClient;
     using global::Dapper;
     using ITCO.SboAddon.Framework.Helpers;
+#if (HANA)
     using Sap.Data.Hana;
+#endif
 
     /// <summary>
     /// Connection handler using Dapper
@@ -23,9 +25,11 @@
 
             switch (connectionString.ProviderName)
             {
+#if (HANA)
                 case "Sap.Data.Hana":
                     this.DbConnection = new HanaConnection(connectionString.ConnectionString);
                     break;
+#endif
 
                 case "System.Data.SqlClient":
                     this.DbConnection = new SqlConnection(connectionString.ConnectionString);

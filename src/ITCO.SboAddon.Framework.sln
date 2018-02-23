@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITCO.SboAddon.Framework", "ITCO.SboAddon.Framework\ITCO.SboAddon.Framework.csproj", "{B5D76FA3-B0C1-4C49-907F-9345866F6BEA}"
 EndProject
@@ -13,6 +13,8 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
+		Hana|Any CPU = Hana|Any CPU
+		Hana|x86 = Hana|x86
 		Release|Any CPU = Release|Any CPU
 		Release|x86 = Release|x86
 	EndGlobalSection
@@ -21,6 +23,10 @@ Global
 		{B5D76FA3-B0C1-4C49-907F-9345866F6BEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5D76FA3-B0C1-4C49-907F-9345866F6BEA}.Debug|x86.ActiveCfg = Debug|x86
 		{B5D76FA3-B0C1-4C49-907F-9345866F6BEA}.Debug|x86.Build.0 = Debug|x86
+		{B5D76FA3-B0C1-4C49-907F-9345866F6BEA}.Hana|Any CPU.ActiveCfg = Hana|Any CPU
+		{B5D76FA3-B0C1-4C49-907F-9345866F6BEA}.Hana|Any CPU.Build.0 = Hana|Any CPU
+		{B5D76FA3-B0C1-4C49-907F-9345866F6BEA}.Hana|x86.ActiveCfg = Hana|x86
+		{B5D76FA3-B0C1-4C49-907F-9345866F6BEA}.Hana|x86.Build.0 = Hana|x86
 		{B5D76FA3-B0C1-4C49-907F-9345866F6BEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5D76FA3-B0C1-4C49-907F-9345866F6BEA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B5D76FA3-B0C1-4C49-907F-9345866F6BEA}.Release|x86.ActiveCfg = Release|x86
@@ -29,6 +35,10 @@ Global
 		{A1B31136-EAF0-463C-83BC-9679252DD999}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1B31136-EAF0-463C-83BC-9679252DD999}.Debug|x86.ActiveCfg = Debug|x86
 		{A1B31136-EAF0-463C-83BC-9679252DD999}.Debug|x86.Build.0 = Debug|x86
+		{A1B31136-EAF0-463C-83BC-9679252DD999}.Hana|Any CPU.ActiveCfg = Hana|Any CPU
+		{A1B31136-EAF0-463C-83BC-9679252DD999}.Hana|Any CPU.Build.0 = Hana|Any CPU
+		{A1B31136-EAF0-463C-83BC-9679252DD999}.Hana|x86.ActiveCfg = Hana|x86
+		{A1B31136-EAF0-463C-83BC-9679252DD999}.Hana|x86.Build.0 = Hana|x86
 		{A1B31136-EAF0-463C-83BC-9679252DD999}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1B31136-EAF0-463C-83BC-9679252DD999}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A1B31136-EAF0-463C-83BC-9679252DD999}.Release|x86.ActiveCfg = Release|x86
@@ -37,6 +47,10 @@ Global
 		{B26B3AE0-E285-4681-A801-AE05B595F8C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B26B3AE0-E285-4681-A801-AE05B595F8C1}.Debug|x86.ActiveCfg = Debug|x86
 		{B26B3AE0-E285-4681-A801-AE05B595F8C1}.Debug|x86.Build.0 = Debug|x86
+		{B26B3AE0-E285-4681-A801-AE05B595F8C1}.Hana|Any CPU.ActiveCfg = Hana|Any CPU
+		{B26B3AE0-E285-4681-A801-AE05B595F8C1}.Hana|Any CPU.Build.0 = Hana|Any CPU
+		{B26B3AE0-E285-4681-A801-AE05B595F8C1}.Hana|x86.ActiveCfg = Hana|x86
+		{B26B3AE0-E285-4681-A801-AE05B595F8C1}.Hana|x86.Build.0 = Hana|x86
 		{B26B3AE0-E285-4681-A801-AE05B595F8C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B26B3AE0-E285-4681-A801-AE05B595F8C1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B26B3AE0-E285-4681-A801-AE05B595F8C1}.Release|x86.ActiveCfg = Release|x86
@@ -44,5 +58,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D5D62658-95BD-4A92-A708-3ACDD4975463}
 	EndGlobalSection
 EndGlobal

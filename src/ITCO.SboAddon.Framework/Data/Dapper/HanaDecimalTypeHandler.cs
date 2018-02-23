@@ -3,9 +3,9 @@
     using System.Data;
 
     using global::Dapper;
-
+#if (HANA)
     using Sap.Data.Hana;
-
+#endif
     /// <summary>
     /// Type-handler for HanaDecimal.
     /// </summary>
@@ -23,10 +23,12 @@
         /// <returns>The typed value.</returns>
         public override decimal Parse(object value)
         {
+#if (HANA)
             if (value is HanaDecimal)
             {
                 return ((HanaDecimal)value).ToDecimal();
             }
+#endif
 
             return decimal.Parse(value.ToString());
         }
