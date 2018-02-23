@@ -33,6 +33,7 @@
 
             var sqlToHanaWords = new Dictionary<string, string>
                                      {
+                                         { @"\(SELECT 'X' AS \[DUMMY\]\) \[T\]", @"""DUMMY""" },
                                          { @"\[", @"""" },
                                          { @"\]", @"""" },
                                          { "ISNULL", "IFNULL" },
@@ -54,6 +55,14 @@
             foreach (var sqlToHanaWord in sqlToHanaWords)
             {
                 hanaSql = Regex.Replace(hanaSql, sqlToHanaWord.Key, sqlToHanaWord.Value, RegexOptions.IgnoreCase);
+            }
+
+            const string TopPattern = @" TOP\(([0-9]+)\)";
+            var topMatch = Regex.Match(hanaSql, TopPattern);
+            if (topMatch.Success && topMatch.Groups.Count > 1)
+            {
+                hanaSql = Regex.Replace(hanaSql, TopPattern, string.Empty);
+                hanaSql += $" LIMIT {topMatch.Groups[1].Value}";
             }
 
             SboApp.Logger.Debug($"ConvertSqlToHana: '{sql}' -> '{hanaSql}'");
