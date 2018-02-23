@@ -25,7 +25,7 @@
         /// <summary>
         /// Convert T-SQL to HANA SQL-Script
         /// </summary>
-        /// <param name="sql"></param>
+        /// <param name="sql">T-SQL Query</param>
         /// <returns></returns>
         public static string ConvertSqlToHana(string sql)
         {
@@ -40,6 +40,9 @@
                                          { "AS BIT", "AS BOOLEAN" },
                                          { @"DATEDIFF\(SECOND,", @"SECONDS_BETWEEN(" },
                                          { @"DATEDIFF\(DAY,", @"DAYS_BETWEEN(" },
+
+                                         // Try convert back UQ parameter format
+                                         { "\"%([0-9])\"", "[%$1]" },
 
                                          // Try replace + with || only when strings are involved
                                          { @"'\+", "'||" },

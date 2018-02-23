@@ -13,13 +13,15 @@ namespace ITCO.SboAddon.Framework.Tests
                 "SELECT ISNULL([ABC], '') + '-' + [DEF], " +
                 "[IntVal] + 5 AS [IntValPlus], " +
                 "DATEDIFF(DAY, '2017-01-01', GETDATE()) AS [DateTime] FROM [T0], " +
-                "DATEDIFF(SECOND, '2017-01-01', GETDATE()) AS [DateTime] FROM [T0]");
+                "DATEDIFF(SECOND, '2017-01-01', GETDATE()) AS [DateTime] FROM [T0] " + 
+                "WHERE [%0] = '123'");
 
             Assert.AreEqual(
                 "SELECT IFNULL(\"ABC\", '') || '-' || \"DEF\", " +
                 "\"IntVal\" + 5 AS \"IntValPlus\", " +
                 "DAYS_BETWEEN( '2017-01-01', NOW()) AS \"DateTime\" FROM \"T0\", " +
-                "SECONDS_BETWEEN( '2017-01-01', NOW()) AS \"DateTime\" FROM \"T0\"",
+                "SECONDS_BETWEEN( '2017-01-01', NOW()) AS \"DateTime\" FROM \"T0\" " +
+                "WHERE [%0] = '123'",
                 hanaQuery);
         }
     }
