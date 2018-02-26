@@ -39,25 +39,36 @@
     {
         private static readonly Dictionary<string, int> QueryCategoryCache = new Dictionary<string, int>();
 
+        [Obsolete("UserQueryDefaultQuery should be an Function")]
+        public static string GetOrCreateUserQuery(
+            this Company company,
+            string userQueryName,
+            string userQueryDefaultQuery,
+            ParameterFormat parameterFormat = ParameterFormat.Database,
+            string queryCategoryName = null)
+        {
+            return GetOrCreateUserQuery(company, userQueryName, () => userQueryDefaultQuery, parameterFormat, queryCategoryName);
+        }
+
         /// <summary>
         /// Get or create User Query
         /// </summary>
         /// <param name="company">Company Object</param>
         /// <param name="userQueryName">User Query Name</param>
-        /// <param name="userQueryDefaultQuery">Default query</param>
+        /// <param name="userQueryDefaultQueryFunc">Default query</param>
         /// <param name="parameterFormat">Define parameter format [%0]/(@p0/:p0)/{0}</param>
         /// <param name="queryCategoryName">Add query in category with this name</param>
         /// <returns>SQL Query</returns>
-        public static string GetOrCreateUserQuery(this Company company, string userQueryName, string userQueryDefaultQuery, ParameterFormat parameterFormat = ParameterFormat.Database, string queryCategoryName = null)
+        public static string GetOrCreateUserQuery(this Company company, string userQueryName, Func<string> userQueryDefaultQueryFunc, ParameterFormat parameterFormat = ParameterFormat.Database, string queryCategoryName = null)
         {
-            var userQuery = userQueryDefaultQuery;
+            var userQuery = string.Empty;
             using (var userQueryObject = new SboRecordsetQuery<UserQueries>(FrameworkQueries.Instance.GetOrCreateUserQueryQuery(userQueryName), BoObjectTypes.oUserQueries))
             {
                 var queryCategoryCode = GetOrCreateQueryCategory(queryCategoryName);
                 if (userQueryObject.Count == 0)
                 {
                     userQueryObject.BusinessObject.QueryDescription = userQueryName;
-                    userQueryObject.BusinessObject.Query = userQueryDefaultQuery;
+                    userQueryObject.BusinessObject.Query = userQueryDefaultQueryFunc.Invoke();
                     userQueryObject.BusinessObject.QueryCategory = queryCategoryCode;
                     var response = userQueryObject.BusinessObject.Add();
 
