@@ -50,10 +50,10 @@
         /// <summary>
         /// Executes a query
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sql"></param>
-        /// <param name="param"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">Return row type</typeparam>
+        /// <param name="sql">SQL Query</param>
+        /// <param name="param">SQL Parameters</param>
+        /// <returns>Returns result set</returns>
         public IEnumerable<T> Query<T>(string sql, object param = null)
         {
             return this.DbConnection.Query<T>(sql, param);
@@ -62,10 +62,10 @@
         /// <summary>
         /// Executes a single-row connection
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sql"></param>
-        /// <param name="param"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">Return row type</typeparam>
+        /// <param name="sql">SQL Query</param>
+        /// <param name="param">SQL Parameters</param>
+        /// <returns>Return first result set row</returns>
         public T QueryFirst<T>(string sql, object param = null)
         {
             return this.DbConnection.QueryFirst<T>(sql, param);

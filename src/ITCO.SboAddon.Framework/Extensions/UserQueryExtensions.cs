@@ -61,14 +61,15 @@
         /// <returns>SQL Query</returns>
         public static string GetOrCreateUserQuery(this Company company, string userQueryName, Func<string> userQueryDefaultQueryFunc, ParameterFormat parameterFormat = ParameterFormat.Database, string queryCategoryName = null)
         {
-            var userQuery = string.Empty;
+            string userQuery;
             using (var userQueryObject = new SboRecordsetQuery<UserQueries>(FrameworkQueries.Instance.GetOrCreateUserQueryQuery(userQueryName), BoObjectTypes.oUserQueries))
             {
                 var queryCategoryCode = GetOrCreateQueryCategory(queryCategoryName);
                 if (userQueryObject.Count == 0)
                 {
+                    userQuery = userQueryDefaultQueryFunc.Invoke();
                     userQueryObject.BusinessObject.QueryDescription = userQueryName;
-                    userQueryObject.BusinessObject.Query = userQueryDefaultQueryFunc.Invoke();
+                    userQueryObject.BusinessObject.Query = userQuery;
                     userQueryObject.BusinessObject.QueryCategory = queryCategoryCode;
                     var response = userQueryObject.BusinessObject.Add();
 
