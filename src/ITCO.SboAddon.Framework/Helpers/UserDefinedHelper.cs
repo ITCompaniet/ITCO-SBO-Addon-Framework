@@ -2,6 +2,7 @@
 using SAPbobsCOM;
 using System;
 using System.Collections.Generic;
+using ITCO.SboAddon.Framework.Helpers;
 
 namespace ITCO.SboAddon.Framework.Helpers
 {
@@ -81,7 +82,6 @@ namespace ITCO.SboAddon.Framework.Helpers
                     userTablesMd.TableName = tableName;
                     userTablesMd.TableDescription = tableDescription;
                     userTablesMd.TableType = tableType;
-                    
                     ErrorHelper.HandleErrorWithException(
                         userTablesMd.Add(),
                         $"Could not create UDT {tableName}");
@@ -112,12 +112,13 @@ namespace ITCO.SboAddon.Framework.Helpers
         /// <param name="type">BoFieldTypes type</param>
         /// <param name="size"></param>
         /// <param name="subType"></param>
+        /// <param name="linkedTable"> use '@' with usertables</param>
         /// <returns></returns>
         public static void CreateFieldOnUDT(string tableName, string fieldName, string fieldDescription, 
-            BoFieldTypes type = BoFieldTypes.db_Alpha, int size = 50, BoFldSubTypes subType = BoFldSubTypes.st_None)
+            BoFieldTypes type = BoFieldTypes.db_Alpha, int size = 50, BoFldSubTypes subType = BoFldSubTypes.st_None, string linkedTable = null)
         {
             tableName = "@" + tableName;
-            CreateField(tableName, fieldName, fieldDescription, type, size, subType);
+            CreateField(tableName, fieldName, fieldDescription, type, size, subType, linkedTable:linkedTable);
         }
 
         /// <summary>
@@ -131,10 +132,12 @@ namespace ITCO.SboAddon.Framework.Helpers
         /// <param name="subType"></param>
         /// <param name="validValues">Dropdown values</param>
         /// <param name="defaultValue"></param>
+        /// <param name="linkedTable"> use '@' with usertables</param>
         /// <returns></returns>
         public static void CreateField(string tableName, string fieldName, string fieldDescription, 
             BoFieldTypes type = BoFieldTypes.db_Alpha, int size = 50, BoFldSubTypes subType = BoFldSubTypes.st_None, 
-            IDictionary<string, string> validValues = null, string defaultValue = null)
+            IDictionary<string, string> validValues = null, string defaultValue = null,
+            string linkedTable = null)
         {
             UserFieldsMD userFieldsMd = null;
 
@@ -165,6 +168,14 @@ namespace ITCO.SboAddon.Framework.Helpers
                         userFieldsMd.ValidValues.Description = validValue.Value;
                         userFieldsMd.ValidValues.Add();
                     }
+                }
+
+                if(linkedTable != null)
+                {
+                    if (DatabaseHelper.TableExists(linkedTable))
+                        userFieldsMd.LinkedTable = linkedTable.Trim('@');
+                    else
+                        throw new Exception($"Linked table '{linkedTable}' could not be found");
                 }
 
                 ErrorHelper.HandleErrorWithException(userFieldsMd.Add(), "Could not create field");

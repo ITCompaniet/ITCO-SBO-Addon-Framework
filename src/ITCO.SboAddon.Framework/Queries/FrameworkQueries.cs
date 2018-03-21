@@ -62,6 +62,7 @@ namespace ITCO.SboAddon.Framework.Queries
         string SearchQuery(string table, string where);
         string SetContactEmployeesLineByContactCodeQuery(string cardCode, int contactCode);
         string SetContactEmployeesLineByContactIdQuery(string cardCode, string contactId);
+        string TableExistsQuery(string DatabaseName, string TableName);
         string WaitForOpenTransactionsQuery(string companyDB);
     }
 }

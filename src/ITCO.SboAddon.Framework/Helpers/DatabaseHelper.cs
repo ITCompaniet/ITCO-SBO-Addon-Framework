@@ -32,6 +32,15 @@ namespace ITCO.SboAddon.Framework.Helpers
             }
         }
         /// <summary>
+        /// Check If Table Exists
+        /// </summary>
+        public static bool TableExists(string tableName)
+        {
+            var databaseName = SboApp.Application.Company.DatabaseName;
+            var count = SboRecordset.NonQuery(FrameworkQueries.Instance.TableExistsQuery(databaseName, tableName));
+            return count > 0;
+        }
+        /// <summary>
         /// Check If Procedure Exists
         /// </summary>
         public static bool ProcedureExists(string procedureName)
