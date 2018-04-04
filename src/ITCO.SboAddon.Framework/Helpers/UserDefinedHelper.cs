@@ -202,8 +202,12 @@ namespace ITCO.SboAddon.Framework.Helpers
         /// <returns></returns>
         public static int GetFieldId(string tableName, string fieldAlias)
         {
-            if (!(SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) is Recordset recordSet))
+            var recordSet = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;
+
+            if (recordSet == null)
+            {
                 throw new NullReferenceException("Failed to get Recordset object");
+            }
 
             try
             {
