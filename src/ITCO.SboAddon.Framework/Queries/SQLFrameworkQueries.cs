@@ -90,6 +90,14 @@ namespace ITCO.SboAddon.Framework.Queries
                 $"WHERE [CardCode]='{cardCode}') AS [T0] WHERE [Name]='{contactId}'";
         }
 
+        public string TableExistsQuery(string DatabaseName, string TableName)
+        {
+            return "SELECT 1\n" +
+                "FROM INFORMATION_SCHEMA.TABLES\n" +
+                $"WHERE TABLE_SCHEMA = 'dbo'\n" +
+                $"AND TABLE_NAME = '{TableName}'";
+        }
+
         public string WaitForOpenTransactionsQuery(string companyDB)
         {
             return $"SELECT hostname, loginame FROM sys.sysprocesses WHERE open_tran=1 AND dbid=DB_ID('{companyDB}')";

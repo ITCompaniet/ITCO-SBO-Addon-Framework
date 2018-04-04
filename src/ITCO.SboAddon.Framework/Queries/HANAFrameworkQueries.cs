@@ -90,6 +90,11 @@ namespace ITCO.SboAddon.Framework.Queries
                 $"WHERE \"CardCode\"='{cardCode}') AS \"T0\" WHERE \"Name\"='{contactId}'";
         }
 
+        public string TableExistsQuery(string DatabaseName, string TableName)
+        {
+            return $"SELECT 1 FROM TABLES WHERE SCHEMA_NAME = '{DatabaseName}' AND TABLE_NAME = '{TableName}'";
+        }
+
         public string WaitForOpenTransactionsQuery(string companyDB)
         {
             throw new NotImplementedException(); //Impossible in HANA it seems
