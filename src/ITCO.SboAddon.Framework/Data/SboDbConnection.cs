@@ -72,6 +72,18 @@
         }
 
         /// <summary>
+        /// Executes a single-row connection
+        /// </summary>
+        /// <typeparam name="T">Return row type</typeparam>
+        /// <param name="sql">SQL Query</param>
+        /// <param name="param">SQL Parameters</param>
+        /// <returns>Return first result set row</returns>
+        public T QueryFirstOrDefault<T>(string sql, object param = null)
+        {
+            return this.DbConnection.QueryFirstOrDefault<T>(sql, param);
+        }
+
+        /// <summary>
         /// Dispose current connection
         /// </summary>
         public void Dispose()
