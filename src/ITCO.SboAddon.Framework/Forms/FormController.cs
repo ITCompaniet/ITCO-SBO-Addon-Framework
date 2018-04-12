@@ -71,7 +71,7 @@ namespace ITCO.SboAddon.Framework.Forms
         /// <summary>
         /// Initalize and show form
         /// </summary>
-        public void Start()
+        public void Start(BoFormModality modality = BoFormModality.fm_None)
         {
             if (Form != null)
             {
@@ -82,7 +82,7 @@ namespace ITCO.SboAddon.Framework.Forms
             try
             {
                 var assembly = GetType().Assembly;
-                Form = FormHelper.CreateFormFromResource(FormResource, FormType, null, assembly);
+                Form = FormHelper.CreateFormFromResource(FormResource, FormType, null, assembly, modality);
                 SboApp.Logger.Debug($"Form created: Type={Form.Type}, UID={Form.UniqueID}");
 
                 try
