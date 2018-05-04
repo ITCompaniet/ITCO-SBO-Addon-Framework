@@ -36,6 +36,13 @@
                                          { @"\(SELECT 'X' AS \[DUMMY\]\) \[T\]", @"""DUMMY""" },
                                          { @"\[", @"""" },
                                          { @"\]", @"""" },
+
+                                         // Replace variables
+                                         { @"@", @":" },
+                                         
+                                         // Revert back possible table names starting with @
+                                         { @""":", @"""@" },
+
                                          { "ISNULL", "IFNULL" },
                                          { "GETDATE", "NOW" },
                                          { "AS BIT", "AS BOOLEAN" },
@@ -50,6 +57,7 @@
                                          { @"\+'", "||'" },
                                          { @"' \+", "' ||" },
                                          { @"\+ '", "|| '" }
+
                                      };
 
             foreach (var sqlToHanaWord in sqlToHanaWords)
