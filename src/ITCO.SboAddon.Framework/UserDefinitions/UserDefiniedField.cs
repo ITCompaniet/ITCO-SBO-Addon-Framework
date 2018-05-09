@@ -42,6 +42,15 @@
         /// </summary>
         public readonly string DefaultValue;
         /// <summary>
+        /// Get LinkedTable
+        /// </summary>
+        public readonly string LinkedTable;
+        /// <summary>
+        /// Get EditSize
+        /// </summary>
+        public readonly int EditSize;
+
+        /// <summary>
         /// User Defined Field
         /// </summary>
         /// <param name="tableName"></param>
@@ -52,9 +61,11 @@
         /// <param name="subType"></param>
         /// <param name="validValues"></param>
         /// <param name="defaultValue"></param>
+        /// <param name="linkedTable"></param>
+        /// <param name="editSize"></param>
         public UserDefiniedField(string tableName, string fieldName, string fieldDescription,
             BoFieldTypes type = BoFieldTypes.db_Alpha, int size = 50, BoFldSubTypes subType = BoFldSubTypes.st_None,
-            IDictionary<string, string> validValues = null, string defaultValue = null)
+            IDictionary<string, string> validValues = null, string defaultValue = null, string linkedTable = null, int editSize = 0)
         {
             TableName = tableName;
             FieldName = fieldName;
@@ -64,12 +75,14 @@
             SubType = subType;
             ValidValues = validValues;
             DefaultValue = defaultValue;
+            LinkedTable = linkedTable;
+            EditSize = editSize;
         }
 
         /// <summary>
         /// Create field
         /// </summary>
-        public void Create() => UserDefinedHelper.CreateField(TableName, FieldName, FieldDescription, Type, Size, SubType, ValidValues,DefaultValue);
+        public void Create() => UserDefinedHelper.CreateField(TableName, FieldName, FieldDescription, Type, Size, SubType, ValidValues, DefaultValue, LinkedTable, EditSize);
         
         /// <summary>
         /// Get field name with U_ prefix

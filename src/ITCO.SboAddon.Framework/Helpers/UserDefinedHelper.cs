@@ -49,12 +49,15 @@ namespace ITCO.SboAddon.Framework.Helpers
             /// <param name="subType"></param>
             /// <param name="validValues"></param>
             /// <param name="defaultValue"></param>
+            /// <param name="linkedTable"></param>
+            /// <param name="editSize"></param>
             /// <returns></returns>
             public UserDefinedTable CreateUDF(string fieldName, string fieldDescription,
             BoFieldTypes type = BoFieldTypes.db_Alpha, int size = 50, BoFldSubTypes subType = BoFldSubTypes.st_None,
-            IDictionary<string, string> validValues = null, string defaultValue = null)
+            IDictionary<string, string> validValues = null, string defaultValue = null,
+            string linkedTable = null, int editSize = 0)
             {
-                CreateField(TableName, fieldName, fieldDescription, type, size, subType, validValues, defaultValue);            
+                CreateField(TableName, fieldName, fieldDescription, type, size, subType, validValues, defaultValue, linkedTable, editSize);            
                 return this;
             }
         }
@@ -112,13 +115,18 @@ namespace ITCO.SboAddon.Framework.Helpers
         /// <param name="type">BoFieldTypes type</param>
         /// <param name="size"></param>
         /// <param name="subType"></param>
+        /// <param name="validValues"></param>
+        /// <param name="defaultValue"></param>
         /// <param name="linkedTable"> use '@' with usertables</param>
+        /// <param name="editSize"></param>
         /// <returns></returns>
         public static void CreateFieldOnUDT(string tableName, string fieldName, string fieldDescription, 
-            BoFieldTypes type = BoFieldTypes.db_Alpha, int size = 50, BoFldSubTypes subType = BoFldSubTypes.st_None, string linkedTable = null)
+            BoFieldTypes type = BoFieldTypes.db_Alpha, int size = 50, BoFldSubTypes subType = BoFldSubTypes.st_None,
+            IDictionary<string, string> validValues = null, string defaultValue = null,
+            string linkedTable = null, int editSize = 0)
         {
             tableName = "@" + tableName;
-            CreateField(tableName, fieldName, fieldDescription, type, size, subType, linkedTable:linkedTable);
+            CreateField(tableName, fieldName, fieldDescription, type, size, subType, validValues, defaultValue, linkedTable, editSize);
         }
 
         /// <summary>
@@ -129,6 +137,7 @@ namespace ITCO.SboAddon.Framework.Helpers
         /// <param name="fieldDescription"></param>
         /// <param name="type"></param>
         /// <param name="size"></param>
+        /// <param name="editSize"></param>
         /// <param name="subType"></param>
         /// <param name="validValues">Dropdown values</param>
         /// <param name="defaultValue"></param>
@@ -137,7 +146,7 @@ namespace ITCO.SboAddon.Framework.Helpers
         public static void CreateField(string tableName, string fieldName, string fieldDescription, 
             BoFieldTypes type = BoFieldTypes.db_Alpha, int size = 50, BoFldSubTypes subType = BoFldSubTypes.st_None, 
             IDictionary<string, string> validValues = null, string defaultValue = null,
-            string linkedTable = null)
+            string linkedTable = null, int editSize = 0)
         {
             UserFieldsMD userFieldsMd = null;
 
@@ -157,7 +166,7 @@ namespace ITCO.SboAddon.Framework.Helpers
                 userFieldsMd.Type = type;
                 userFieldsMd.SubType = subType;
                 userFieldsMd.Size = size;
-                userFieldsMd.EditSize = size;
+                userFieldsMd.EditSize = editSize != 0 ? editSize : size;
                 userFieldsMd.DefaultValue = defaultValue;
 
                 if (validValues != null)
@@ -234,8 +243,9 @@ namespace ITCO.SboAddon.Framework.Helpers
         /// <param name="tableName"></param>
         /// <param name="fieldAlias"></param>
         /// <param name="size"></param>
+        /// <param name="editSize"></param>
         /// <returns></returns>
-        public static void IncreaseUserFieldSize(string tableName, string fieldAlias, int size)
+        public static void IncreaseUserFieldSize(string tableName, string fieldAlias, int size, int editSize = 0)
         {
             UserFieldsMD userFieldsMd = null;
             try
@@ -247,15 +257,31 @@ namespace ITCO.SboAddon.Framework.Helpers
                 if (fieldId == -1) return;
                 if (!userFieldsMd.GetByKey(tableName, fieldId)) return;
 
-                if (userFieldsMd.Size >= size) return;
-
-                userFieldsMd.Size = size;
-                userFieldsMd.EditSize = size;
-                userFieldsMd.Update();
+                bool changed = false;
+                if(userFieldsMd.Size < size && userFieldsMd.EditSize < editSize)
+                {
+                    if (editSize == 0)
+                        editSize = size;
+                    userFieldsMd.Size = size;
+                    userFieldsMd.EditSize = editSize;
+                    changed = true;
+                }
+                else if (userFieldsMd.Size < size)
+                {
+                    userFieldsMd.Size = size;
+                    changed = true;
+                }
+                else if (userFieldsMd.EditSize < editSize)
+                {
+                    userFieldsMd.EditSize = editSize;
+                    changed = true;
+                }
+                if(changed)
+                    userFieldsMd.Update();
             }
             catch (Exception ex)
             {
-                SboApp.Logger.Error($"UDT Create Error: {ex.Message}", ex);
+                SboApp.Logger.Error($"Increase User Field Size Error: {ex.Message}", ex);
                 throw;
             }
             finally
