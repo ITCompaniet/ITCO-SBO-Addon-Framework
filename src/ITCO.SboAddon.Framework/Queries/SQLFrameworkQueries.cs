@@ -77,7 +77,7 @@ namespace ITCO.SboAddon.Framework.Queries
         {
             return $"SELECT * FROM [{table}] WHERE {where}";
         }
-
+        
         public string SetContactEmployeesLineByContactCodeQuery(string cardCode, int contactCode)
         {
             return "SELECT [LineNum] FROM (SELECT ROW_NUMBER() OVER (ORDER BY [CntctCode] ASC) - 1 AS [LineNum], [CntctCode] FROM [OCPR] " +
