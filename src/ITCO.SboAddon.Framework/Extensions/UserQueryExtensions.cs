@@ -101,34 +101,45 @@
         public static int GetOrCreateQueryCategory(string queryCategoryName)
         {
             var queryCategoryCode = -1;
-            if (string.IsNullOrEmpty(queryCategoryName))
+            try
             {
-                return queryCategoryCode;
-            }
-
-            if (QueryCategoryCache.ContainsKey(queryCategoryName))
-            {
-                return QueryCategoryCache[queryCategoryName];
-            }
-
-            var sql = FrameworkQueries.Instance.GetOrCreateQueryCategoryQuery(queryCategoryName);
-
-            using (var queryCategoryObject = new SboRecordsetQuery<QueryCategories>(sql, BoObjectTypes.oQueryCategories))
-            {
-                if (queryCategoryObject.Count == 1)
+                if (string.IsNullOrEmpty(queryCategoryName))
                 {
-                    queryCategoryCode = queryCategoryObject.BusinessObject.Code;
+                    return queryCategoryCode;
                 }
-                else
+
+                if (QueryCategoryCache.ContainsKey(queryCategoryName))
                 {
-                    queryCategoryObject.BusinessObject.Name = queryCategoryName;
-                    var response = queryCategoryObject.BusinessObject.Add();
-                    ErrorHelper.HandleErrorWithException(response, $"Could not create Query Category '{queryCategoryName}'");
-                    queryCategoryCode = int.Parse(SboApp.Company.GetNewObjectKey());
+                    return QueryCategoryCache[queryCategoryName];
+                }
+
+                var sql = FrameworkQueries.Instance.GetOrCreateQueryCategoryQuery(queryCategoryName);
+
+                using (var queryCategoryObject = new SboRecordsetQuery<QueryCategories>(sql, BoObjectTypes.oQueryCategories))
+                {
+                    if (queryCategoryObject.Count == 1)
+                    {
+                        queryCategoryCode = queryCategoryObject.BusinessObject.Code;
+                    }
+                    else
+                    {
+                        queryCategoryObject.BusinessObject.Name = queryCategoryName;
+                        var response = queryCategoryObject.BusinessObject.Add();
+                        ErrorHelper.HandleErrorWithException(response, $"Could not create Query Category '{queryCategoryName}'");
+                        queryCategoryCode = int.Parse(SboApp.Company.GetNewObjectKey());
+                    }
+                }
+
+                if (!QueryCategoryCache.ContainsKey(queryCategoryName))
+                {
+                    QueryCategoryCache.Add(queryCategoryName, queryCategoryCode);
                 }
             }
- 
-            QueryCategoryCache.Add(queryCategoryName, queryCategoryCode);
+            catch (Exception e)
+            {
+                SboApp.Logger.Error($"GetOrCreateQueryCategory({queryCategoryName}) error: {e.Message}", e);
+            }
+
             return queryCategoryCode;
         }
 
