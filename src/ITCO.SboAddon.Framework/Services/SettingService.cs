@@ -309,16 +309,18 @@
                     throw new Exception($"SaveSetting sqlValue '{sqlValue}' value is to long (max {ValueMaxLength}) ");
 
                 if (name == null)
-                    name = {sqlKey};
+                    name = sqlKey;
 
                 if (userCode != null)
                     name = $"{name}[{userCode}]";
-
-                if (name.Length + userCode.Length + 2 > KeyMaxLength)
+                if (userCode != null)
                 {
-                    if (userCode != null)
+                    if (name.Length + userCode.Length + 2 > KeyMaxLength)
                         name = $"{name.Substring(0, KeyMaxLength - userCode.Length - 2)}[{userCode}]"; // Max Length is 50
-                    else
+                }
+                else
+                {
+                    if (name.Length  > KeyMaxLength)
                         name = name.Substring(0, KeyMaxLength);
                 }
 
