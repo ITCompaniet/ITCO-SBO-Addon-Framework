@@ -140,6 +140,19 @@
             if (GetSettingAsString(key) == null)
                 SaveSetting(key, defaultValue, name: name);
         }
+        /// <summary>
+        /// Create Empty Setting if not exists
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="name"></param>
+        /// <param name="defaultValue">Default Value</param>
+        public void InitSettingForCurrentUser<T>(string key, string name, T defaultValue = default(T))
+        {
+            var userCode = SboApp.Company.UserName;
+            if (GetSettingAsString(key, userCode) == null)
+                SaveSetting(key, defaultValue, userCode, name);
+        }
 
         /// <summary>
         /// Get Setting for Current User
@@ -296,10 +309,18 @@
                     throw new Exception($"SaveSetting sqlValue '{sqlValue}' value is to long (max {ValueMaxLength}) ");
 
                 if (name == null)
-                    name = sqlKey;
+                    name = {sqlKey};
 
-                if (name.Length > KeyMaxLength)
-                    name = name.Substring(0, KeyMaxLength); // Max Length is 50
+                if (userCode != null)
+                    name = $"{name}[{userCode}]";
+
+                if (name.Length + userCode.Length + 2 > KeyMaxLength)
+                {
+                    if (userCode != null)
+                        name = $"{name.Substring(0, KeyMaxLength - userCode.Length - 2)}[{userCode}]"; // Max Length is 50
+                    else
+                        name = name.Substring(0, KeyMaxLength);
+                }
 
                 sql = FrameworkQueries.Instance.SaveSettingInsertQuery(sqlKey, name, sqlValue);
             }
