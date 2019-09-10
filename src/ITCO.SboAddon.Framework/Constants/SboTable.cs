@@ -8,9 +8,11 @@ namespace ITCO.SboAddon.Framework.Constants
         public const string Invoice = "OINV";
         public const string Order = "ORDR";
         public const string DeliveryNote = "ODLN";
+        public const string DeliveryNoteRows = "DLN1";
         public const string DeliveryNotePackage = "DLN7";
         public const string PaymentTerm = "OCTG";
         public const string ShippingType = "OSHP";
+        public const string PackageType = "OPKG";
         /// <summary>
         /// Sales Tax. Non EU Taxes
         /// </summary>
