@@ -11,6 +11,8 @@ namespace ITCO.SboAddon.Framework.Constants
         public const string DeliveryNotePackage = "DLN7";
         public const string PaymentTerm = "OCTG";
         public const string ShippingType = "OSHP";
+        public const string PurchaseOrder = "OPOR";
+        public const string PackageType = "OPKG";
         /// <summary>
         /// Sales Tax. Non EU Taxes
         /// </summary>
