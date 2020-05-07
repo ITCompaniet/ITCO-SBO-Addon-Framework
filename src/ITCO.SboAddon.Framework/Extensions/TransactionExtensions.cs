@@ -22,7 +22,6 @@ namespace ITCO.SboAddon.Framework.Extensions
         /// <param name="tryCount"></param>
         public static void WaitForOpenTransactions(this Company company, int sleep = 500, int tryCount = 10)
         {
-#warning WaitForOpenTransaction does not work in HANA
             for (var i = 0; i < tryCount; i++)
             {
                 using (var query = new SboRecordsetQuery(FrameworkQueries.Instance.WaitForOpenTransactionsQuery(company.CompanyDB)))

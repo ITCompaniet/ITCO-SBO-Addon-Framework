@@ -97,7 +97,7 @@ namespace ITCO.SboAddon.Framework.Queries
 
         public string WaitForOpenTransactionsQuery(string companyDB)
         {
-            throw new NotImplementedException(); //Impossible in HANA it seems
+            return "select \"HOST\" as \"hostname\" from \"M_TRANSACTIONS\" WHERE \"TRANSACTION_STATUS\" <> 'INACTIVE'";
         }
     }
 }
