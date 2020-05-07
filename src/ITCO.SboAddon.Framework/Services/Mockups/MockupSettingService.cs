@@ -1,5 +1,6 @@
 ﻿namespace ITCO.SboAddon.Framework.Services.Mockups
 {
+    using System;
     using System.Collections.Generic;
     /// <summary>
     /// MockupSettingService
@@ -90,6 +91,11 @@
                 _settingsRepository[key] = value;
             else
                 _settingsRepository.Add(key, value);
+        }
+
+        public void InitSettingForCurrentUser<T>(string key, string name, T defaultValue = default(T))
+        {
+            throw new NotImplementedException();
         }
     }
 }

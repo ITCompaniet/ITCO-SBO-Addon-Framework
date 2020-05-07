@@ -63,6 +63,15 @@
         /// <param name="userCode"></param>
         /// <param name="name"></param>
         void SaveSetting<T>(string key, T value = default(T), string userCode = null, string name = null);
+
+        /// <summary>
+        /// Create Empty Setting if not exists
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="name"></param>
+        /// <param name="defaultValue">Default Value</param>
+        void InitSettingForCurrentUser<T>(string key, string name, T defaultValue = default(T));
     }
 
     #endregion
@@ -84,16 +93,19 @@
         /// </summary>
         public const int KeyMaxLength = 50;
         private bool _setupOk;
-        private static SettingService _instance;
+        private static ISettingService _instance;
 
         /// <summary>
         /// Static instance of SettingService
         /// </summary>
-        public static SettingService Instance => _instance ?? (_instance = new SettingService());
+        public static ISettingService Instance
+        {
+            get { return _instance ?? (_instance = new SettingService()); }
+            set { _instance = value;  }
+        }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
+        
+
         public SettingService()
         {
             Init();
