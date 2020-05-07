@@ -53,6 +53,8 @@ namespace ITCO.SboAddon.Framework
         /// <param name="loggingEnabled">Is SBO Common Logging enabled</param>
         public static void Connect(string connectionString = null, bool loggingEnabled = true)
         {
+
+            // connectionString = DebugConnectionString;
             if (connectionString == null)
             {
                 connectionString = Environment.GetCommandLineArgs().Length > 1 ? 

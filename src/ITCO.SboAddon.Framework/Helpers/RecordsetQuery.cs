@@ -124,7 +124,7 @@ namespace ITCO.SboAddon.Framework.Helpers
             }
             catch (Exception e)
             {
-                
+                SboApp.Logger.Debug($"Unexpected errorin DoQuery", e);
             }
         }
 

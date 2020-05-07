@@ -154,7 +154,9 @@
             switch (parameterFormat)
             {
                 case ParameterFormat.Database:
+#pragma warning disable CS0618 // Type or member is obsolete
                 case ParameterFormat.Sql:
+#pragma warning restore CS0618 // Type or member is obsolete
                     if (SboApp.Company.DbServerType == BoDataServerTypes.dst_HANADB)
                     {
                         userQuery = Regex.Replace(userQuery, @"'?\[%([0-9])\]'?", ":p$1");
