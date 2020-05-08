@@ -220,6 +220,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\lib\**\*.*">
+      <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
       <PackagePath>%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>true</Pack>
