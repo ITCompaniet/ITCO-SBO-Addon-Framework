@@ -219,10 +219,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\lib\SAPBusinessOneSDK-90-9.20.181\SAPBusinessOneSDK.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="..\lib\**\*.*">
+      <PackagePath>%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>true</Pack>
-      <PackagePath>lib\$(TargetFramework)</PackagePath>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
