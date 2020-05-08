@@ -225,9 +225,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>true</Pack>
     </Content>
-    <Content Include="..\lib\SAPBusinessOneSDK-90-9.10.190\SAPBusinessOneSDK.dll">
-      <Link>SAPBusinessOneSDK-90-9.10.190\SAPBusinessOneSDK.dll</Link>
-      <PackagePath>SAPBusinessOneSDK-90-9.10.190\SAPBusinessOneSDK.dll</PackagePath>
+    <Content Include="..\lib\SAPBusinessOneSDK-90-9.20.181\SAPBusinessOneSDK.dll">
+      <Link>SAPBusinessOneSDK-90-9.20.181\SAPBusinessOneSDK.dll</Link>
+      <PackagePath>SAPBusinessOneSDK-90-9.20.181\SAPBusinessOneSDK.dll</PackagePath>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>true</Pack>
     </Content>
@@ -237,12 +237,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>true</Pack>
     </Content>
-    <Content Include="..\lib\SAPBusinessOneSDK-90-9.20.181\SAPBusinessOneSDK.dll">
-      <Link>SAPBusinessOneSDK-90-9.20.181\SAPBusinessOneSDK.dll</Link>
-      <PackagePath>SAPBusinessOneSDK-90-9.20.181\SAPBusinessOneSDK.dll</PackagePath>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Pack>true</Pack>
-    </Content>
+
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
