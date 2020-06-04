@@ -97,6 +97,8 @@
                 _sql = sql;
         }
 
+        public static implicit operator string(Query q) => q.ToString();
+
         private readonly string _sql;
 
         public override string ToString()
