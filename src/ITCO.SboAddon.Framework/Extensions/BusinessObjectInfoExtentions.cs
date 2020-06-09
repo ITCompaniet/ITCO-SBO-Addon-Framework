@@ -20,7 +20,7 @@ namespace ITCO.SboAddon.Framework.Extensions
         {
             var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(businessObjectInfo.ObjectKey);
-            return int.Parse(xmlDoc.SelectSingleNode("/DocumentParams/DocEntry | AbsoluteEntry").InnerText); 
+            return int.Parse(xmlDoc.SelectSingleNode("/DocumentParams/DocEntry | //AbsoluteEntry").InnerText); 
         }
 
         /// <summary>
