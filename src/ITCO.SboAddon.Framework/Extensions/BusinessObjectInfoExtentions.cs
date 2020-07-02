@@ -26,7 +26,7 @@ namespace ITCO.SboAddon.Framework.Extensions
         public static string GetItemCode(this BusinessObjectInfo businessObjectInfo)
         {
             var xmlDoc = new XmlDocument();
-            xmlDoc.loadXml(businessObjectInfo.ObjectKey);
+            xmlDoc.LoadXml(businessObjectInfo.ObjectKey);
             return xmlDoc.SelectSingleNode("//ItemCode").InnerText
         }
 
