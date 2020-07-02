@@ -27,7 +27,7 @@ namespace ITCO.SboAddon.Framework.Extensions
         {
             var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(businessObjectInfo.ObjectKey);
-            return xmlDoc.SelectSingleNode("//ItemCode").InnerText
+            return xmlDoc.SelectSingleNode("//ItemCode").InnerText;
         }
 
         /// <summary>
