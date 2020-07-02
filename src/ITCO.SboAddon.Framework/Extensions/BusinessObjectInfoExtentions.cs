@@ -23,6 +23,13 @@ namespace ITCO.SboAddon.Framework.Extensions
             return int.Parse(xmlDoc.SelectSingleNode("/DocumentParams/DocEntry | //AbsoluteEntry").InnerText); 
         }
 
+        public static string GetItemCode(this BusinessObjectInfo businessObjectInfo)
+        {
+            var xmlDoc = new XmlDocument();
+            xmlDoc.loadXml(businessObjectInfo.ObjectKey);
+            return xmlDoc.SelectSingleNode("//ItemCode").InnerText
+        }
+
         /// <summary>
         /// Get Document By DocNum
         /// </summary>
