@@ -80,7 +80,7 @@ namespace ITCO.SboAddon.Framework.Helpers
                 if (userTablesMd == null)
                     throw new NullReferenceException("Failed to get UserTablesMD object");
 
-                if (!userTablesMd.GetByKey("@" + tableName))
+                if (!userTablesMd.GetByKey(tableName))
                 {
                     userTablesMd.TableName = tableName;
                     userTablesMd.TableDescription = tableDescription;
