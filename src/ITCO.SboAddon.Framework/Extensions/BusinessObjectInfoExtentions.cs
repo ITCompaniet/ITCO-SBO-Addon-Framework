@@ -30,14 +30,27 @@ namespace ITCO.SboAddon.Framework.Extensions
             return xmlDoc.SelectSingleNode("//ItemCode").InnerText;
         }
 
-        /// <summary>
-        /// Get Document By DocNum
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="businessObject"></param>
-        /// <param name="docNum">DocNum</param>
-        /// <returns></returns>
-        public static bool GetByDocNum<T>(this BusinessObject<T> businessObject, int docNum) where T : Documents
+        public static string GetItemCode(this BusinessObject businessObject)
+        {
+            var xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(businessObject.Key);
+            return xmlDoc.SelectSingleNode("//ItemCode").InnerText;
+        }
+
+        public static int GetDocEntry(this BusinessObject businessObject)
+        {
+            var xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(businessObject.Key);
+            return int.Parse(xmlDoc.SelectSingleNode("/DocumentParams/DocEntry | //AbsoluteEntry").InnerText);
+
+            /// <summary>
+            /// Get Document By DocNum
+            /// </summary>
+            /// <typeparam name="T"></typeparam>
+            /// <param name="businessObject"></param>
+            /// <param name="docNum">DocNum</param>
+            /// <returns></returns>
+            public static bool GetByDocNum<T>(this BusinessObject<T> businessObject, int docNum) where T : Documents
         {
             return businessObject.Object.Search(businessObject.BoObjectType.GetTableName(), FrameworkQueries.Instance.GetByDocNumQuery(docNum));
         }
