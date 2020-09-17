@@ -10,8 +10,7 @@ namespace ITCO.SboAddon.Framework.Forms
     public abstract class FormController
     {
         private IForm _form;
-        public bool IsClosing { get; private set; } 
-
+        
         /// <summary>
         /// Form Object
         /// </summary>
@@ -23,10 +22,15 @@ namespace ITCO.SboAddon.Framework.Forms
                 {
                     var dummy = _form?.VisibleEx;
                 }
+                catch (System.Runtime.InteropServices.COMException)
+                {
+                    _form = null;
+                }
                 catch
                 {
                     _form = null;
                 }
+
                 return _form;
             }
             set
@@ -57,7 +61,6 @@ namespace ITCO.SboAddon.Framework.Forms
         /// </summary>        
         public FormController(bool autoStart = false)
         {
-            IsClosing = false;
             if (autoStart)
                 Start();
         }
@@ -118,20 +121,17 @@ namespace ITCO.SboAddon.Framework.Forms
         /// </summary>
         public void Close()
         {
-            IsClosing = true;
             Form.Close();
             Form = null;
         }
 
         protected bool thisForm(string FormUID)
         {
-            if (IsClosing)
-                return false;
             try
             {
                 return FormUID.Equals(Form.UniqueID);
             }
-            catch (System.Runtime.InteropServices.COMException)
+            catch
             {
                 // Happens during closeing.
                 return false;
