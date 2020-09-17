@@ -42,8 +42,9 @@ namespace ITCO.SboAddon.Framework.Extensions
             var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(businessObject.Key);
             return int.Parse(xmlDoc.SelectSingleNode("/DocumentParams/DocEntry | //AbsoluteEntry").InnerText);
+        }
 
-            /// <summary>
+        /// <summary>
             /// Get Document By DocNum
             /// </summary>
             /// <typeparam name="T"></typeparam>
