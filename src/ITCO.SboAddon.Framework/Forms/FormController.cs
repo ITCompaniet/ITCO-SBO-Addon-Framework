@@ -79,7 +79,7 @@ namespace ITCO.SboAddon.Framework.Forms
         /// </summary>
         public void Start(BoFormModality modality = BoFormModality.fm_None)
         {
-            if (Form != null)
+            if (!IsFormNull)
             {
                 Form.Select();
                 return;
