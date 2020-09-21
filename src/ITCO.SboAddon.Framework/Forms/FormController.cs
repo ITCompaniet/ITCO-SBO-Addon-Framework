@@ -10,7 +10,8 @@ namespace ITCO.SboAddon.Framework.Forms
     public abstract class FormController
     {
         private IForm _form;
-        
+
+        public bool IsFormNull => _form == null;
         /// <summary>
         /// Form Object
         /// </summary>

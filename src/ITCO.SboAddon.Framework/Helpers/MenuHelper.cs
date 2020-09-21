@@ -139,7 +139,7 @@ namespace ITCO.SboAddon.Framework.Helpers
         private static void CreateOrStartController(Type formControllerType)
         {
             // Clean up disposed Form Controllers
-            FormControllerIntances.RemoveAll(i => i.Form == null);
+            FormControllerIntances.RemoveAll(i => i.IsFormNull);
             GC.Collect();
 
             var formController = FormControllerIntances.FirstOrDefault(i => i.GetType() == formControllerType && i.Unique);
