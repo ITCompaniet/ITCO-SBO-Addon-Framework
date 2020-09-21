@@ -8,19 +8,17 @@ namespace ITCO.SboAddon.Framework.Helpers
 {
     public class SboRecordsetQuery : IDisposable
     {
-        private Recordset _recordSetObject;
-
         public SboRecordsetQuery()
         {
-            _recordSetObject = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;
+            Recordset = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;
         }
 
         public SboRecordsetQuery(string sql, params object[] args)
         {
-            _recordSetObject = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;
+            Recordset = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;
 
             SboApp.Logger.Debug($"SQL: {sql}, Args = {string.Join(",", args)}");
-            _recordSetObject.DoQuery(string.Format(sql, args));
+            Recordset.DoQuery(string.Format(sql, args));
         }
 
         /// <summary>
@@ -35,9 +33,9 @@ namespace ITCO.SboAddon.Framework.Helpers
             {
                 SboApp.Logger.Debug($"SQL: {sql}, Args = {string.Join(",", args)}");
 
-                _recordSetObject.DoQuery(string.Format(sql, args));
-                if (_recordSetObject.EoF)
-                    _recordSetObject.MoveFirst();
+                Recordset.DoQuery(string.Format(sql, args));
+                if (Recordset.EoF)
+                    Recordset.MoveFirst();
             }
             catch (Exception e)
             {
@@ -49,12 +47,12 @@ namespace ITCO.SboAddon.Framework.Helpers
         /// <summary>
         /// Record cound
         /// </summary>
-        public int Count => _recordSetObject.RecordCount;
+        public int Count => Recordset.RecordCount;
 
         /// <summary>
         /// Recordset object
         /// </summary>
-        public Recordset Recordset => _recordSetObject;
+        public Recordset Recordset { get; private set; }
 
         /// <summary>
         /// Note that Fields is COM object reference
@@ -64,20 +62,20 @@ namespace ITCO.SboAddon.Framework.Helpers
         {
             get
             {
-                while (!_recordSetObject.EoF)
+                while (!Recordset.EoF)
                 {
-                    yield return _recordSetObject.Fields;
-                    _recordSetObject.MoveNext();
+                    yield return Recordset.Fields;
+                    Recordset.MoveNext();
                 }
             }
         }
 
         public void Dispose()
         {
-            if (_recordSetObject != null)
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(_recordSetObject);
+            if (Recordset != null)
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(Recordset);
 
-            _recordSetObject = null;
+            Recordset = null;
             GC.Collect();
         }
     }
@@ -88,39 +86,38 @@ namespace ITCO.SboAddon.Framework.Helpers
     /// <typeparam name="T">SBO Business Object</typeparam>
     public class SboRecordsetQuery<T> : IDisposable
     {
-        private Recordset _recordSetObject;
         private dynamic _businessObject;
 
         public SboRecordsetQuery(BoObjectTypes boObjectTypes)
         {
-            _recordSetObject = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;
+            Recordset = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;
             _businessObject = SboApp.Company.GetBusinessObject(boObjectTypes);
         }
 
         public SboRecordsetQuery(string sql, BoObjectTypes boObjectTypes, params object[] args)
         {
-            _recordSetObject = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;
+            Recordset = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;
             _businessObject = SboApp.Company.GetBusinessObject(boObjectTypes);
 
-            _recordSetObject.DoQuery(string.Format(sql, args));
-            _businessObject.Browser.Recordset = _recordSetObject;
+            Recordset.DoQuery(string.Format(sql, args));
+            _businessObject.Browser.Recordset = Recordset;
         }
 
-        public int Count => _recordSetObject.RecordCount;
+        public int Count => Recordset.RecordCount;
 
         public T BusinessObject => _businessObject;
-        public Recordset Recordset => _recordSetObject;
+        public Recordset Recordset { get; private set; }
 
         public void DoQuery(string sql, params object[] args)
         {
             try
             {
-                _recordSetObject.DoQuery(string.Format(sql, args));
-                if (_recordSetObject.EoF)
-                    _recordSetObject.MoveFirst();
+                Recordset.DoQuery(string.Format(sql, args));
+                if (Recordset.EoF)
+                    Recordset.MoveFirst();
 
-                if (_recordSetObject.RecordCount > 0)
-                    _businessObject.Browser.Recordset = _recordSetObject;
+                if (Recordset.RecordCount > 0)
+                    _businessObject.Browser.Recordset = Recordset;
             }
             catch (Exception e)
             {
@@ -146,13 +143,13 @@ namespace ITCO.SboAddon.Framework.Helpers
 
         public void Dispose()
         {
-            if (_recordSetObject != null)
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(_recordSetObject);
+            if (Recordset != null)
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(Recordset);
 
             if (_businessObject != null)
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(_businessObject);
 
-            _recordSetObject = null;
+            Recordset = null;
             _businessObject = null;
         }
     }
@@ -199,23 +196,22 @@ namespace ITCO.SboAddon.Framework.Helpers
     [Obsolete("Use SboDbConnection instead")]
     public class SboSqlConnection : IDisposable
     {
-        private readonly SqlConnection _sqlConnection;
         private readonly SqlDataReader _reader;
 
         public SboSqlConnection(string query = null)
         {
             var dbPassword = ConfigurationManager.AppSettings["Sbo:DbPassword"];
             var connectionString = $"Server={SboApp.Company.Server};Initial Catalog={SboApp.Company.CompanyDB};User ID={SboApp.Company.DbUserName};Password={dbPassword}";
-            _sqlConnection = new SqlConnection(connectionString);
+            SqlConnection = new SqlConnection(connectionString);
 
             if (query == null) return;
 
-            var command = new SqlCommand(query, _sqlConnection);
-            _sqlConnection.Open();
+            var command = new SqlCommand(query, SqlConnection);
+            SqlConnection.Open();
             _reader = command.ExecuteReader();
         }
 
-        public SqlConnection SqlConnection => _sqlConnection;
+        public SqlConnection SqlConnection { get; }
         public bool HasRows => _reader.HasRows;
 
         /// <summary>
@@ -235,6 +231,6 @@ namespace ITCO.SboAddon.Framework.Helpers
         /// <summary>
         /// Dispose
         /// </summary>
-        public void Dispose() => _sqlConnection.Close();
+        public void Dispose() => SqlConnection.Close();
     }
 }

@@ -127,6 +127,8 @@ namespace ITCO.SboAddon.Framework.Forms
 
         protected bool thisForm(string FormUID)
         {
+            if (_form == null)
+                return false;
             try
             {
                 return FormUID.Equals(Form.UniqueID);
