@@ -99,7 +99,8 @@ namespace ITCO.SboAddon.Framework.Forms
                 {
                     SboApp.Application.MessageBox($"FormCreated Error: {e.Message}");
                 }
-
+                SboApp.Application.ItemEvent -= ItemEventHandler;
+                SboApp.Application.ItemEvent += ItemEventHandler;
                 try
                 {
                     BindFormEvents();
@@ -114,6 +115,15 @@ namespace ITCO.SboAddon.Framework.Forms
             catch (Exception e)
             {
                 SboApp.Application.MessageBox($"Failed to open form {FormType}: {e.Message}");
+            }
+        }
+
+        private void ItemEventHandler(string FormUID, ref ItemEvent pVal, out bool BubbleEvent)
+        {
+            BubbleEvent = true;
+            if (thisForm(FormUID) && pVal.BeforeAction == false && pVal.EventType == BoEventTypes.et_FORM_CLOSE)
+            {
+                Form = null;
             }
         }
 
