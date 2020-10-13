@@ -292,5 +292,45 @@ namespace ITCO.SboAddon.Framework.Helpers
                 GC.Collect();
             }
         }
+
+        public static void UpdateFieldSettings(string tableName, string fieldAlias, string linkedTable)
+        {
+            UserFieldsMD userFieldsMd = null;
+            try
+            {
+                userFieldsMd = SboApp.Company.GetBusinessObject(BoObjectTypes.oUserFields) as UserFieldsMD;
+                if (userFieldsMd == null) return;
+
+                var fieldId = GetFieldId(tableName, fieldAlias);
+                if (fieldId == -1) return;
+                if (!userFieldsMd.GetByKey(tableName, fieldId)) return;
+
+                bool changed = false;
+
+                if (linkedTable != null && linkedTable.Trim('@') != userFieldsMd.LinkedTable.Trim('@'))
+                {
+                    if (DatabaseHelper.TableExists(linkedTable))
+                        userFieldsMd.LinkedTable = linkedTable.Trim('@');
+                    else
+                        throw new Exception($"Linked table '{linkedTable}' could not be found");
+                    changed = true;
+                }
+
+                if (changed)
+                    userFieldsMd.Update();
+            }
+            catch (Exception ex)
+            {
+                SboApp.Logger.Error($"Increase User Field Size Error: {ex.Message}", ex);
+                throw;
+            }
+            finally
+            {
+                if (userFieldsMd != null)
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userFieldsMd);
+                userFieldsMd = null;
+                GC.Collect();
+            }
+        }
     }
 }
