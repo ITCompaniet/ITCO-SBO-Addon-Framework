@@ -293,7 +293,7 @@ namespace ITCO.SboAddon.Framework.Helpers
             }
         }
 
-        public static void UpdateFieldSettings(string tableName, string fieldAlias, string linkedTable)
+        public static void UpdateFieldSettings(string tableName, string fieldAlias, string fieldDescription, string linkedTable)
         {
             UserFieldsMD userFieldsMd = null;
             try
@@ -313,6 +313,12 @@ namespace ITCO.SboAddon.Framework.Helpers
                         userFieldsMd.LinkedTable = linkedTable.Trim('@');
                     else
                         throw new Exception($"Linked table '{linkedTable}' could not be found");
+                    changed = true;
+                }
+
+                if (userFieldsMd.Description != fieldDescription)
+                {
+                    userFieldsMd.Description = fieldDescription;
                     changed = true;
                 }
 
