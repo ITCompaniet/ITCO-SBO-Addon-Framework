@@ -11,5 +11,6 @@ namespace ITCO.SboAddon.Framework.Constants
         public const string BusinessPartner = "43535";
         public const string Payments = "43537";
         public const string Inventory = "3072";
+        public const string Addons = "43523";
     }
 }

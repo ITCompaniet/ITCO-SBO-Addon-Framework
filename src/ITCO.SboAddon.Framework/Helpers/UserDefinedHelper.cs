@@ -327,7 +327,7 @@ namespace ITCO.SboAddon.Framework.Helpers
             }
             catch (Exception ex)
             {
-                SboApp.Logger.Error($"Increase User Field Size Error: {ex.Message}", ex);
+                SboApp.Logger.Error($"Failed updating field: {ex.Message}", ex);
                 throw;
             }
             finally
