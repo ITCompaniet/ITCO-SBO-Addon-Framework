@@ -64,7 +64,7 @@ namespace ITCO.SboAddon.Framework.Helpers
             // ColumnAliases should be without U_ according to https://answers.sap.com/questions/6567025/udt-key-creation-udf-index-creation.html
             public UserDefinedTable CreateKey(string keyName, string[] columnAliases, bool unique)
             {
-                CreateKey(TableName, keyName, columnAliases, unique);
+                CreateUserKey(TableName, keyName, columnAliases, unique);
                 return this;
             }
         }
@@ -210,8 +210,7 @@ namespace ITCO.SboAddon.Framework.Helpers
             }
         }
 
-        public static void CreateKey(string tableName, string keyName, string[] columnAliases,
-            bool unique)
+        public static void CreateUserKey(string tableName, string keyName, string[] columnAliases, bool unique)
         {
             UserKeysMD userKeysMd = null;
             try
