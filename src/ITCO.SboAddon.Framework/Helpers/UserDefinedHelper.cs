@@ -3,6 +3,7 @@ using SAPbobsCOM;
 using System;
 using System.Collections.Generic;
 using ITCO.SboAddon.Framework.Helpers;
+using SAPbouiCOM;
 
 namespace ITCO.SboAddon.Framework.Helpers
 {
@@ -58,6 +59,12 @@ namespace ITCO.SboAddon.Framework.Helpers
             string linkedTable = null, int editSize = 0)
             {
                 CreateField(TableName, fieldName, fieldDescription, type, size, subType, validValues, defaultValue, linkedTable, editSize);            
+                return this;
+            }
+            // ColumnAliases should be without U_ according to https://answers.sap.com/questions/6567025/udt-key-creation-udf-index-creation.html
+            public UserDefinedTable CreateKey(string keyName, string[] columnAliases, bool unique)
+            {
+                CreateKey(TableName, keyName, columnAliases, unique);
                 return this;
             }
         }
@@ -199,6 +206,37 @@ namespace ITCO.SboAddon.Framework.Helpers
                 if (userFieldsMd != null)
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(userFieldsMd);
                 userFieldsMd = null;
+                GC.Collect();
+            }
+        }
+
+        public static void CreateKey(string tableName, string keyName, string[] columnAliases,
+            bool unique)
+        {
+            UserKeysMD userKeysMd = null;
+            try
+            {
+                userKeysMd = SboApp.Company.GetBusinessObject(BoObjectTypes.oUserKeys) as UserKeysMD;
+                userKeysMd.TableName = tableName;
+                userKeysMd.KeyName = keyName;
+                userKeysMd.Unique = unique ? BoYesNoEnum.tYES : BoYesNoEnum.tNO;
+                foreach (var columnAlias in columnAliases)
+                {
+                    userKeysMd.Elements.ColumnAlias = columnAlias;
+                    userKeysMd.Elements.Add();
+                }
+            }
+            catch (Exception e)
+            {
+                SboApp.Application.SetStatusBarMessage("Couldn't create Key {keyName}", BoMessageTime.bmt_Long, true);
+                SboApp.Logger.Error($"Create Key {tableName}.{keyName}. Possible cause: Table must be Empty. Error: {e.Message}", e);
+                throw;
+            }
+            finally
+            {
+                if (userKeysMd != null)
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userKeysMd);
+                userKeysMd = null;
                 GC.Collect();
             }
         }
