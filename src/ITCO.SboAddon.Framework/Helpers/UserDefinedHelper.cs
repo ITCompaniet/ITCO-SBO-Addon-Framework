@@ -224,6 +224,8 @@ namespace ITCO.SboAddon.Framework.Helpers
                     userKeysMd.Elements.ColumnAlias = columnAlias;
                     userKeysMd.Elements.Add();
                 }
+
+                userKeysMd.Add();
             }
             catch (Exception e)
             {
