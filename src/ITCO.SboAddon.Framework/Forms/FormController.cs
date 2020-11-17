@@ -121,7 +121,7 @@ namespace ITCO.SboAddon.Framework.Forms
         private void ItemEventHandler(string FormUID, ref ItemEvent pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-            if (thisForm(FormUID) && pVal.BeforeAction == false && pVal.EventType == BoEventTypes.et_FORM_CLOSE)
+            if (pVal.BeforeAction == false && pVal.EventType == BoEventTypes.et_FORM_CLOSE && thisForm(FormUID))
             {
                 Form = null;
             }
