@@ -81,7 +81,7 @@ namespace ITCO.SboAddon.Framework.Forms
         {
             if (!IsFormNull)
             {
-                Form.Select();
+                //Form.Select();
                 return;
             }
             
