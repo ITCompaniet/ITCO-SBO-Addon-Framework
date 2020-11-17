@@ -44,6 +44,7 @@
                                          { @""":", @"""@" },
 
                                          { "ISNULL", "IFNULL" },
+                                         { "NEWID", "NEWUID"},
                                          { "GETDATE", "NOW" },
                                          { "AS BIT", "AS BOOLEAN" },
                                          { @"DATEDIFF\(SECOND,", @"SECONDS_BETWEEN(" },
