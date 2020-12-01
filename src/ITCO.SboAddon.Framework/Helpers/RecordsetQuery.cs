@@ -98,7 +98,7 @@ namespace ITCO.SboAddon.Framework.Helpers
         {
             Recordset = SboApp.Company.GetBusinessObject(BoObjectTypes.BoRecordset) as Recordset;
             _businessObject = SboApp.Company.GetBusinessObject(boObjectTypes);
-
+            SboApp.Logger.Debug($"SQL: {sql}, Args = {string.Join(",", args)}");
             Recordset.DoQuery(string.Format(sql, args));
             _businessObject.Browser.Recordset = Recordset;
         }
@@ -112,6 +112,7 @@ namespace ITCO.SboAddon.Framework.Helpers
         {
             try
             {
+                SboApp.Logger.Debug($"SQL: {sql}, Args = {string.Join(",", args)}");
                 Recordset.DoQuery(string.Format(sql, args));
                 if (Recordset.EoF)
                     Recordset.MoveFirst();
@@ -170,6 +171,7 @@ namespace ITCO.SboAddon.Framework.Helpers
                 if (recordSetObject == null)
                     throw new Exception("Failed to get Recordset Object");
 
+                SboApp.Logger.Debug($"SQL: {sql}, Args = {string.Join(",", args)}");
                 recordSetObject.DoQuery(string.Format(sql, args));
                 return recordSetObject.RecordCount;
             }

@@ -54,7 +54,7 @@ namespace ITCO.SboAddon.Framework
         public static void Connect(string connectionString = null, bool loggingEnabled = true)
         {
 
-            // connectionString = DebugConnectionString;
+            //connectionString = DebugConnectionString;
             if (connectionString == null)
             {
                 connectionString = Environment.GetCommandLineArgs().Length > 1 ? 

@@ -29,5 +29,21 @@ namespace ITCO.SboAddon.Framework.Tests
                 " LIMIT 123",
                 hanaQuery);
         }
+
+        [TestMethod]
+        public void RepeatedConvertShouldntDoAnything()
+        {
+            var query = $@"
+SELECT 
+'                                                                      ' AS [ObjTypNam]
+    ,'abc' AS  [U_PrimaryKey]
+    ,'abc' AS  [U_ObjectType]
+     FROM [DUMMY]";
+
+            var translatedOnce = SimpleHanaTranslator.ConvertSqlToHana(query);
+            var translatedTwice = SimpleHanaTranslator.ConvertSqlToHana(translatedOnce);
+            Assert.AreEqual(translatedOnce, translatedTwice);
+
+        }
     }
 }
