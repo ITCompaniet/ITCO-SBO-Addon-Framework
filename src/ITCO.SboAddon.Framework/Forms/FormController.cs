@@ -79,18 +79,12 @@ namespace ITCO.SboAddon.Framework.Forms
         /// </summary>
         public void Start(BoFormModality modality = BoFormModality.fm_None)
         {
-            /*if (!IsFormNull)
-            {
-                Form.Select();
-                return;
-            }*/
-            
             try
             {
                 var assembly = GetType().Assembly;
                 Form = FormHelper.CreateFormFromResource(FormResource, FormType, null, assembly, modality);
                 SboApp.Logger.Debug($"Form created: Type={Form.Type}, UID={Form.UniqueID}");
-
+                UniqueID = Form.UniqueID;
                 try
                 {
                     FormCreated();
@@ -138,17 +132,7 @@ namespace ITCO.SboAddon.Framework.Forms
 
         protected bool thisForm(string FormUID)
         {
-            if (_form == null)
-                return false;
-            try
-            {
-                return FormUID.Equals(Form.UniqueID);
-            }
-            catch
-            {
-                // Happens during closeing.
-                return false;
-            }
+            return FormUID.Equals(UniqueID);
         }
 
         /// <summary>
@@ -175,7 +159,9 @@ namespace ITCO.SboAddon.Framework.Forms
         /// Menu position, -1 = Last
         /// </summary>
         public int MenuItemPosition => -1;
-        
+
+        public string UniqueID { get; private set; }
+
         #endregion
     }
 }
