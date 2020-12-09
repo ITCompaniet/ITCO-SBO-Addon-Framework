@@ -34,6 +34,7 @@
             var sqlToHanaWords = new Dictionary<string, string>
                                      {
                                          { @"\(SELECT 'X' AS \[DUMMY\]\) \[T\]", @"""DUMMY""" },
+                                         { @"\(SELECT 'X' AS 'DUMMY'\) \[T\]", @"""DUMMY""" },
                                          { @"\[", @"""" },
                                          { @"\]", @"""" },
 
@@ -57,7 +58,10 @@
                                          { @"'\+", "'||" },
                                          { @"\+'", "||'" },
                                          { @"' \+", "' ||" },
-                                         { @"\+ '", "|| '" }
+                                         { @"\+ '", "|| '" },
+
+                                         // Try replace ' with " ONLY when AS is involved!
+                                         { @"AS '(\w*)'", @"AS ""$1"""}
 
                                      };
 
