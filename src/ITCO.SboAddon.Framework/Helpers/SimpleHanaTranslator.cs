@@ -61,7 +61,7 @@
                                          { @"\+ '", "|| '" },
 
                                          // Try replace ' with " ONLY when AS is involved!
-                                         { @"AS '(\w*)'", @"AS ""$1"""}
+                                         { @"AS '([\w /\.]*)'", @"AS ""$1"""}
 
                                      };
 

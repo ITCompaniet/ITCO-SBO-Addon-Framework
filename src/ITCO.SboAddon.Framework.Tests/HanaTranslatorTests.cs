@@ -51,7 +51,7 @@ SELECT
         {
             var hanaQuery = SimpleHanaTranslator.ConvertSqlToHana(
                 "SELECT TOP(123) ISNULL([ABC], '') + '-' + [DEF], " +
-                "[IntVal] + 5 AS 'IntValPlus', " +
+                "[IntVal] + 5 AS 'A/R Int Val Plus.', " +
                 "DATEDIFF(DAY, '2017-01-01', GETDATE()) AS 'DateTime' FROM [T0], " +
                 "DATEDIFF(SECOND, '2017-01-01', GETDATE()) AS 'DateTime' FROM [T0] " +
                 "FROM (SELECT 'X' AS 'DUMMY') [T] " +
@@ -60,7 +60,7 @@ SELECT
 
             Assert.AreEqual(
                 "SELECT IFNULL(\"ABC\", '') || '-' || \"DEF\", " +
-                "\"IntVal\" + 5 AS \"IntValPlus\", " +
+                "\"IntVal\" + 5 AS \"A/R Int Val Plus.\", " +
                 "DAYS_BETWEEN( '2017-01-01', NOW()) AS \"DateTime\" FROM \"T0\", " +
                 "SECONDS_BETWEEN( '2017-01-01', NOW()) AS \"DateTime\" FROM \"T0\" " +
                 "FROM \"DUMMY\" " +
