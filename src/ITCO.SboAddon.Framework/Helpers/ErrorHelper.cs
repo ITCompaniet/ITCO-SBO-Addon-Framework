@@ -32,9 +32,17 @@ namespace ITCO.SboAddon.Framework.Helpers
             if (returnCode == 0)
                 return;
 
-            var error = GetLastErrorMessage();
-            throw new Exception($"{errorDescription}: {error.Code} {error.Message}");
+            try
+            {
+                var error = GetLastErrorMessage();
+                throw new Exception($"{errorDescription}: {error.Code} {error.Message}");
+            }
+            catch (Exception)
+            {
+                throw new Exception($"{errorDescription}: ReturnCode: {returnCode}");
+            }
         }
+
         /// <summary>
         /// Handle Return Code
         /// Shows MessageBox if Return Code != 0
