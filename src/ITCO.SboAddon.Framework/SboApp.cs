@@ -76,7 +76,7 @@ namespace ITCO.SboAddon.Framework
                 ErrorHelper.HandleErrorWithException(responseCode, "DI API Could not Set Sbo Login Context");
 
                 var connectResponse = _diCompany.Connect();
-                ErrorHelper.HandleErrorWithException(connectResponse, "DI API Could not connect");
+                ErrorHelper.HandleErrorWithException(connectResponse, $"DI API Could not connect. LicenseServer: {_diCompany.LicenseServer}");
 
                 if (loggingEnabled)
                 {
