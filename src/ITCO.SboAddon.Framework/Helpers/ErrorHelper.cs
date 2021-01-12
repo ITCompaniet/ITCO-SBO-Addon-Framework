@@ -13,11 +13,12 @@ namespace ITCO.SboAddon.Framework.Helpers
         /// Get Last Error Message from SBO DI API
         /// </summary>
         /// <returns></returns>
-        public static SboError GetLastErrorMessage()
+        public static SboError GetLastErrorMessage(SAPbobsCOM.Company company = null)
         {
+            var _company = company ?? SboApp.Company;
             int errCode;
             string errMsg;
-            SboApp.Company.GetLastError(out errCode, out errMsg);
+            _company.GetLastError(out errCode, out errMsg);
             return new SboError(errCode, errMsg);
         }
 
@@ -27,14 +28,14 @@ namespace ITCO.SboAddon.Framework.Helpers
         /// </summary>
         /// <param name="returnCode"></param>
         /// <param name="errorDescription"></param>
-        public static void HandleErrorWithException(int returnCode, string errorDescription)
+        public static void HandleErrorWithException(int returnCode, string errorDescription, SAPbobsCOM.Company company = null)
         {
             if (returnCode == 0)
                 return;
 
             try
             {
-                var error = GetLastErrorMessage();
+                var error = GetLastErrorMessage(company);
                 throw new Exception($"{errorDescription}: {error.Code} {error.Message}");
             }
             catch (Exception)

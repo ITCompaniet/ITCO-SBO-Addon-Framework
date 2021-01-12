@@ -46,6 +46,7 @@ namespace ITCO.SboAddon.Framework
                 SboAppLogger.Enable();
         }
 
+
         /// <summary>
         /// Connect UI and DI API
         /// </summary>
@@ -73,10 +74,12 @@ namespace ITCO.SboAddon.Framework
                 var diCompanyConnectionString = _application.Company.GetConnectionContext(contextCookie);
 
                 var responseCode = _diCompany.SetSboLoginContext(diCompanyConnectionString);
-                ErrorHelper.HandleErrorWithException(responseCode, "DI API Could not Set Sbo Login Context");
+
+
+                ErrorHelper.HandleErrorWithException(responseCode, "DI API Could not Set Sbo Login Context", _diCompany);
 
                 var connectResponse = _diCompany.Connect();
-                ErrorHelper.HandleErrorWithException(connectResponse, $"DI API Could not connect. LicenseServer: {_diCompany.LicenseServer}");
+                ErrorHelper.HandleErrorWithException(connectResponse, $"DI API Could not connect.", _diCompany);
 
                 if (loggingEnabled)
                 {
