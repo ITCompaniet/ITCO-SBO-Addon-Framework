@@ -33,15 +33,9 @@ namespace ITCO.SboAddon.Framework.Helpers
             if (returnCode == 0)
                 return;
 
-            try
-            {
-                var error = GetLastErrorMessage(company);
-                throw new Exception($"{errorDescription}: {error.Code} {error.Message}");
-            }
-            catch (Exception)
-            {
-                throw new Exception($"{errorDescription}: ReturnCode: {returnCode}");
-            }
+            var error = GetLastErrorMessage(company);
+            throw new Exception($"{errorDescription}: {error.Code} {error.Message}");
+       
         }
 
         /// <summary>
