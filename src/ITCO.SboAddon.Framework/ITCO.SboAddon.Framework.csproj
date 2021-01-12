@@ -143,8 +143,13 @@
     </Reference>
     <Reference Include="SAPBusinessOneSDK, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c7c3cb60e45d119f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\SAPBusinessOneSDK.dll</HintPath>
+    </Reference>
+    <!--<Reference Include="SAPBusinessOneSDK, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c7c3cb60e45d119f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\SAPBusinessOneSDK-90-9.20.181\SAPBusinessOneSDK.dll</HintPath>
     </Reference>
+    -->
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -225,18 +230,6 @@
     <Content Include="..\lib\hdbclient.ado.net.4.5\Sap.Data.Hana.v4.5.dll">
       <Link>hdbclient.ado.net.4.5\Sap.Data.Hana.v4.5.dll</Link>
       <PackagePath>hdbclient.ado.net.4.5\Sap.Data.Hana.v4.5.dll</PackagePath>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Pack>true</Pack>
-    </Content>
-    <Content Include="..\lib\SAPBusinessOneSDK-90-9.20.181\SAPBusinessOneSDK.dll">
-      <Link>SAPBusinessOneSDK-90-9.20.181\SAPBusinessOneSDK.dll</Link>
-      <PackagePath>SAPBusinessOneSDK-90-9.20.181\SAPBusinessOneSDK.dll</PackagePath>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Pack>true</Pack>
-    </Content>
-    <Content Include="..\lib\SAPBusinessOneSDK-90-9.20.170\SAPBusinessOneSDK.dll">
-      <Link>SAPBusinessOneSDK-90-9.20.170\SAPBusinessOneSDK.dll</Link>
-      <PackagePath>SAPBusinessOneSDK-90-9.20.170\SAPBusinessOneSDK.dll</PackagePath>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>true</Pack>
     </Content>
