@@ -62,7 +62,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
-  <ContentTargetFolders>contentFiles</ContentTargetFolders>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Hana|AnyCPU'">
     <OutputPath>bin\Hana\</OutputPath>
@@ -230,9 +229,10 @@
   <ItemGroup>
     <Content Include="..\lib\hdbclient.ado.net.4.5\Sap.Data.Hana.v4.5.dll">
       <Link>hdbclient.ado.net.4.5\Sap.Data.Hana.v4.5.dll</Link>
-      <!--<PackagePath>contentFiles</PackagePath> --> 
+      <PackagePath>contentFiles\</PackagePath>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>true</Pack>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
