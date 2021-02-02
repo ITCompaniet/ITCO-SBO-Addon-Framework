@@ -228,7 +228,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\lib\hdbclient.ado.net.4.5\Sap.Data.Hana.v4.5.dll">
-      <Link>hdbclient.ado.net.4.5\Sap.Data.Hana.v4.5.dll</Link>
+      <!-- <Link>hdbclient.ado.net.4.5\Sap.Data.Hana.v4.5.dll</Link>-->
       <PackagePath>contentFiles\</PackagePath>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>true</Pack>
