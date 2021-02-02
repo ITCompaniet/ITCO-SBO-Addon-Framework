@@ -62,6 +62,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
+  <ContentTargetFolders>contentFiles</ContentTargetFolders>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Hana|AnyCPU'">
     <OutputPath>bin\Hana\</OutputPath>
