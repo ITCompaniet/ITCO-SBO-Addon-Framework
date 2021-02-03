@@ -128,7 +128,7 @@
     </When>
   </Choose>
   <ItemGroup Label="FilesToCopy">
-    <Content Include="contentFiles\SboAddonFiles\SAPBusinessOneSDK.dll" />
+    <Content Include="contentFiles\cs\SboAddonFiles\SAPBusinessOneSDK.dll" />
     <Content Include="ITCO.SboAddon.Framework.targets" PackagePath="build/ITCO.SboAddon.Framework.targets" />
     <Content Include="SboAddonFiles\*" Pack="true" PackagePath="contentFiles\SboAddonFiles">
       <PackageCopyToOutput>true</PackageCopyToOutput>
