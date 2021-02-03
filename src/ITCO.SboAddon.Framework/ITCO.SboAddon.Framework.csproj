@@ -127,7 +127,7 @@
     </When>
   </Choose>
   <ItemGroup Label="FilesToCopy">
-    <None Include="lib\SAPBusinessOneSDK.dll">
+    <None Include="contentFiles\any\any\SboAddonFiles\SAPBusinessOneSDK.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Content Include="ITCO.SboAddon.Framework.targets" PackagePath="build/ITCO.SboAddon.Framework.targets" />
@@ -228,7 +228,7 @@
       <!-- <Link>hdbclient.ado.net.4.5\Sap.Data.Hana.v4.5.dll</Link>-->
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Pack>true</Pack>
-      <Link>lib\Sap.Data.Hana.v4.5.dll</Link>
+      <Link>contentFiles\any\any\SboAddonFiles\Sap.Data.Hana.v4.5.dll</Link>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -247,6 +247,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
