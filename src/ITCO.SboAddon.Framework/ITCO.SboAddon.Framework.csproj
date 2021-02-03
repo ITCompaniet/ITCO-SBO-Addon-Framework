@@ -128,7 +128,7 @@
     </When>
   </Choose>
   <ItemGroup Label="FilesToCopy">
-    <None Include="contentFiles\cs\SboAddonFiles\SAPBusinessOneSDK.dll" />
+    <None Include="lib\SAPBusinessOneSDK.dll" />
     <Content Include="ITCO.SboAddon.Framework.targets" PackagePath="build/ITCO.SboAddon.Framework.targets" />
     <Content Include="SboAddonFiles\*" Pack="true" PackagePath="contentFiles\SboAddonFiles">
       <PackageCopyToOutput>true</PackageCopyToOutput>
@@ -237,9 +237,9 @@
   <ItemGroup>
     <None Include="..\lib\hdbclient.ado.net.4.5\Sap.Data.Hana.v4.5.dll">
       <!-- <Link>hdbclient.ado.net.4.5\Sap.Data.Hana.v4.5.dll</Link>-->
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Pack>true</Pack>
-      <Link>contentFiles\SboAddonFiles\Sap.Data.Hana.v4.5.dll</Link>
+      <Link>lib\Sap.Data.Hana.v4.5.dll</Link>
     </None>
   </ItemGroup>
   <ItemGroup />
