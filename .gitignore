@@ -197,3 +197,4 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+/src/MigrationBackup/150f4ca4/ITCO.SboAddon.Framework
