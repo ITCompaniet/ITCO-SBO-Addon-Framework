@@ -127,6 +127,13 @@
       </ItemGroup>
     </When>
   </Choose>
+  <ItemGroup Label="FilesToCopy">
+    <Content Include="contentFiles\SboAddonFiles\SAPBusinessOneSDK.dll" />
+    <Content Include="ITCO.SboAddon.Framework.targets" PackagePath="build/ITCO.SboAddon.Framework.targets" />
+    <Content Include="SboAddonFiles\*" Pack="true" PackagePath="contentFiles\SboAddonFiles">
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+    </Content>
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
@@ -144,7 +151,6 @@
     <Reference Include="SAPBusinessOneSDK, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c7c3cb60e45d119f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\SAPBusinessOneSDK.dll</HintPath>
-      <Pack>true</Pack>
     </Reference>
     <!--<Reference Include="SAPBusinessOneSDK, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c7c3cb60e45d119f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -223,6 +229,7 @@
     <Compile Include="Setup\SetupManager.cs" />
     <Compile Include="UserDefinitions\UserDefinedTable.cs" />
     <Compile Include="UserDefinitions\UserDefiniedField.cs" />
+    <None Include="ITCO.SboAddon.Framework.targets" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -232,8 +239,10 @@
       <!-- <Link>hdbclient.ado.net.4.5\Sap.Data.Hana.v4.5.dll</Link>-->
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>true</Pack>
+      <Link>contentFiles\SboAddonFiles\Sap.Data.Hana.v4.5.dll</Link>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

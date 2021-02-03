@@ -1,0 +1,6 @@
+﻿<ItemGroup>
+    <SboAddonFiles Include="$(MSBuildThisFileDirectory)\..\contentFiles\SboAddonFiles\*" />
+</ItemGroup>
+<Target Name="CopyLogFiles" BeforeTargets="Build">
+    <Copy SourceFiles="@(SboAddonFiles)" DestinationFolder="$(TargetDir)SboAddonFiles\" />
+</Target>
