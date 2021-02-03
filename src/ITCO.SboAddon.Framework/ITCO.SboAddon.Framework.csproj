@@ -144,6 +144,7 @@
     <Reference Include="SAPBusinessOneSDK, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c7c3cb60e45d119f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\SAPBusinessOneSDK.dll</HintPath>
+      <Pack>true</Pack>
     </Reference>
     <!--<Reference Include="SAPBusinessOneSDK, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c7c3cb60e45d119f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -229,10 +230,8 @@
   <ItemGroup>
     <Content Include="..\lib\hdbclient.ado.net.4.5\Sap.Data.Hana.v4.5.dll">
       <!-- <Link>hdbclient.ado.net.4.5\Sap.Data.Hana.v4.5.dll</Link>-->
-      <PackagePath>contentFiles\</PackagePath>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>true</Pack>
-      <PackageCopyToOutput>true</PackageCopyToOutput>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
