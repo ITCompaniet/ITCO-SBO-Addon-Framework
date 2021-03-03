@@ -14,7 +14,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ITCO.SboAddon.Framework</RootNamespace>
-    <AssemblyName>ITCO.SboAddon.Framework</AssemblyName>
+    <AssemblyName>ITCO.SboAddon.Framework.SBO10</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
