@@ -1,15 +1,22 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
+#if SBO10
+[assembly: AssemblyProduct("ITCO.SboAddon.Framework.SBO10")]
 [assembly: AssemblyTitle("ITCompaniet SboAddon Framework for SBO10")]
+#endif
+
+#if SBO9
+[assembly: AssemblyProduct("ITCO.SboAddon.Framework.SBO9")]
+[assembly: AssemblyTitle("ITCompaniet SboAddon Framework for SBO 9")]
+#endif
+
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ITCompaniet AB")]
-[assembly: AssemblyProduct("ITCO.SboAddon.Framework.SBO10")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
