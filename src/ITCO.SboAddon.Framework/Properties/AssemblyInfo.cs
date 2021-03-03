@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ITCompaniet AB")]
-[assembly: AssemblyProduct("ITCO.SboAddon.Framework")]
+[assembly: AssemblyProduct("ITCO.SboAddon.Framework.SBO10")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
