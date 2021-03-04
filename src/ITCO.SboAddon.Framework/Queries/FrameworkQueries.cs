@@ -24,8 +24,10 @@ namespace ITCO.SboAddon.Framework.Queries
                 case BoDataServerTypes.dst_MSSQL2012:
                 case BoDataServerTypes.dst_MSSQL2014:
                 case BoDataServerTypes.dst_MSSQL2016:
+#if SBO10
                 case BoDataServerTypes.dst_MSSQL2017:
                 case BoDataServerTypes.dst_MSSQL2019:
+#endif
                     _instance = new SQLFrameworkQueries();
                     break;
                 default:
