@@ -56,6 +56,20 @@ namespace ITCO.SboAddon.Framework.Extensions
             return businessObject.Object.Search(businessObject.BoObjectType.GetTableName(), FrameworkQueries.Instance.GetByDocNumQuery(docNum));
         }
 
+        public static string GetCardCode(this BusinessObjectInfo businessObjectInfo)
+        {
+            var xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(businessObjectInfo.ObjectKey);
+            return xmlDoc.SelectSingleNode("/DocumentParams/DocEntry | //AbsoluteEntry").InnerText;
+        }
+
+        public static string GetCardCode(this BusinessObject businessObject)
+        {
+            var xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(businessObject.Key);
+            return xmlDoc.SelectSingleNode("/DocumentParams/DocEntry | //AbsoluteEntry").InnerText;
+        }
+
         /// <summary>
         /// Get Disposable BusinessObject for better COM-object dispose handling
         /// </summary>
