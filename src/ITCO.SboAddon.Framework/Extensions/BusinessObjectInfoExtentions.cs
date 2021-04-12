@@ -60,14 +60,14 @@ namespace ITCO.SboAddon.Framework.Extensions
         {
             var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(businessObjectInfo.ObjectKey);
-            return xmlDoc.SelectSingleNode("/DocumentParams/DocEntry | //AbsoluteEntry").InnerText;
+            return xmlDoc.SelectSingleNode("//CardCode").InnerText;
         }
 
         public static string GetCardCode(this BusinessObject businessObject)
         {
             var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(businessObject.Key);
-            return xmlDoc.SelectSingleNode("/DocumentParams/DocEntry | //AbsoluteEntry").InnerText;
+            return xmlDoc.SelectSingleNode("//CardCode").InnerText;
         }
 
         /// <summary>
