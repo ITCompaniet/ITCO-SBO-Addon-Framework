@@ -54,7 +54,7 @@ static class Program
     <add key="Sbo:DbPassword" value=""/>
     <add key="Sbo:Username" value="manager"/>
     <add key="Sbo:Password" value=""/>
-    <add key="Sbo:LicenceService" value="SAP-SERVER:30000"/>
+    <add key="Sbo:LicenceServer" value="SAP-SERVER:30000"/>
   </appSettings>
 ```
 
